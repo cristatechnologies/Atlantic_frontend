@@ -27,14 +27,14 @@ const Header = ({ parms }) => {
       <div className="container">
         <nav className="navbar navbar-expand-lg header-nav">
           <div className="navbar-header">
-            <Link id="mobile_btn" href="#" onClick={() => onHandleMobileMenu()}>
+            <Link id="mobile_btn" href="/" onClick={() => onHandleMobileMenu()}>
               <span className="bar-icon">
                 <span></span>
                 <span></span>
                 <span></span>
               </span>
             </Link>
-            <Link href="/index" className="navbar-brand logo">
+            <Link href="/" className="navbar-brand logo">
               <img src="./img/logo.svg" className="img-fluid" alt="Logo" />
             </Link>
           </div>
@@ -54,13 +54,16 @@ const Header = ({ parms }) => {
               </Link>
             </div>
             <ul className="main-nav">
-              <HomeMenu activeMenu={"Classified"} />
-              <ListingMenu activeMenu={parms} />
-              <PagesMenu activeMenus={parms} />
-              <UserPagesMenu />
-              <BlogMenu activesMenus={parms} />
               <li>
-                <Link href="/contact">Contact</Link>
+                <Link href="/about">About Us</Link>
+              </li>
+              {/* <HomeMenu activeMenu={"Classified"} /> */}
+              {/* <ListingMenu activeMenu={parms} /> */}
+              {/* <PagesMenu activeMenus={parms} /> */}
+              {/* <UserPagesMenu /> */}
+              {/* <BlogMenu activesMenus={parms} /> */}
+              <li>
+                <Link href="/contactUs">Contact</Link>
               </li>
               <li className="login-link">
                 <Link href="/signup">Sign Up</Link>

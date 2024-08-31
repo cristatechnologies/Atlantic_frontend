@@ -1150,7 +1150,9 @@ const HomePage = () => {
         {/* Partners Section */}
 
         {/* Pricing Plan Section */}
-        <section className="pricingplan-section">
+
+
+        {/* <section className="pricingplan-section">
           <div className="section-heading">
             <div className="container">
               <div className="row text-center">
@@ -1273,11 +1275,16 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-        </section>
+        
+        
+        </section> */}
+        
         {/* Pricing Plan Section */}
 
         {/* Blog Section */}
-        <section className="blog-section">
+        
+        
+        {/* <section className="blog-section">
           <div className="section-heading">
             <div className="container">
               <div className="row align-items-center">
@@ -1459,8 +1466,13 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-        </section>
-        {/* Blog Section */}
+        
+        
+        </section> */}
+
+
+         {/* Blog Section */}
+
 
         {/* Footer */}
         <Footer />

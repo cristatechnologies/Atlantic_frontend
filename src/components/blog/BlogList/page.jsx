@@ -1,10 +1,10 @@
 import React from "react";
 import { ProfileAvatar12, ProfileAvatar13, ProfileAvatar14, bloglistingimg_1, bloglistingimg_2, bloglistingimg_3, category_icon, details_icon } from "../../imagepath";
 import Link from "next/link";
-import Footer from "../../home/footer/page";
+import Footer from "@/components/HomePage/footer/page";
 import StickyBox from "react-sticky-box";
-import Header from "../../home/header/page";
-
+// import Header from "../../home/header/page";
+import Header from "@/components/HomePage/header/page";
 
 
 const BlogList = () => {

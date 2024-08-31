@@ -69,7 +69,7 @@ export default function Carousel() {
                     <div className="blog-img">
                       <Link href ="/service-details">
                         <img
-                          src={Feature9}
+                          src="./img/featured/feature-9.jpg"
                           className="img-fluid"
                           alt="blog-img"
                         />
