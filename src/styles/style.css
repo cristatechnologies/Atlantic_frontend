@@ -2092,10 +2092,27 @@ html.menu-opened body {
 .search-box .group-img input::placeholder {
   color: #8d8d8d;
 }
+/*added from here */
+
+.group-img select {
+  padding-left: 35px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+
+/*added from here */
+
 .search-box .group-img i {
   top: 18px;
   color: #8d8d8d;
 }
+
+
 .arrow-img {
   position: absolute;
   top: 157px;
@@ -2126,7 +2143,7 @@ html.menu-opened body {
 .section-heading h2 span {
   color: #fff;
   background: #fff;
-  background: url(/public/img/headingred-bg.png);
+  background: url(/img/headingred-bg.png);
   height: 62px;
   width: 62px;
   display: flex;
@@ -2409,7 +2426,7 @@ a:focus {
 .popular-locations .section-heading h2 span {
   color: #c10037;
   background: #fff;
-  background: url(/public/img/headingspan-bg.png);
+  background: url(/img/headingspan-bg.png);
   height: 62px;
   width: 62px;
   display: flex;
@@ -2497,7 +2514,7 @@ a:focus {
 }
 .cta-section {
   padding: 100px 0;
-  background-image: url(/public/img/whitebg.png);
+  background-image: url(/img/whitebg.png);
   background-repeat: no-repeat;
   background-position: right center;
 }
@@ -2533,7 +2550,7 @@ a:focus {
   position: relative;
 }
 .testimonials-section .rightimg {
-  background-image: url(/public/img/testi-bg.png);
+  background-image: url(/img/testi-bg.png);
   min-height: 600px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2616,7 +2633,7 @@ a:focus {
   align-items: center;
 }
 .pricingplan-section {
-  background: url("/public/img/Rosebg.png");
+  background: url("/img/Rosebg.png");
   padding: 100px 0;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2675,7 +2692,7 @@ a:focus {
   margin: 0 0 20px;
 }
 .price-body ul li:before {
-  background-image: url(/public/img/pricingli-bg.svg);
+  background-image: url("/img/pricingli-bg.svg");
 }
 .price-body ul li:before {
   position: absolute;
@@ -2694,7 +2711,7 @@ a:focus {
   width: 100%;
   left: auto;
   height: 120px;
-  background-image: url(/public/img/pricingcircle.png);
+  background-image: url("/img/pricingcircle.png");
   background-repeat: no-repeat;
   z-index: 2;
   opacity: 0.4;
@@ -2737,7 +2754,7 @@ a:focus {
   -webkit-transition: ease all 0.5s;
 }
 .price-card:hover .price-body ul li:before {
-  background-image: url(/public/img/pricinglihover-bg.svg);
+  background-image: url("/img/pricinglihover-bg.svg");
 }
 .price-card:hover .viewdetails-btn {
   background: #fff;
@@ -3279,7 +3296,7 @@ a:focus {
 .gallery-section .gallery-widget a:hover::after {
   content: "";
   position: absolute;
-  background: url("/public/img/eye-icon.png");
+  background: url("/img/eye-icon.png");
   top: 45%;
   left: 45%;
   color: #fff;
@@ -3768,7 +3785,7 @@ a:focus {
 }
 .breadcrumb-bar:before {
   content: "";
-  background: url("/public/img/breadcrumbleft-bg.png") no-repeat;
+  background: url("/img/breadcrumbleft-bg.png") no-repeat;
   position: absolute;
   top: 0;
   left: 0;
@@ -3778,7 +3795,7 @@ a:focus {
 }
 .breadcrumb-bar:after {
   content: "";
-  background: url("/public/img/breadcrumbright-bg.png") no-repeat;
+  background: url("/img/breadcrumbright-bg.png") no-repeat;
   position: absolute;
   right: 0;
   width: 175px;
@@ -4640,7 +4657,7 @@ a:focus {
   opacity: 0;
 }
 .categories-content a:before {
-  background-image: url(/public/img/categoriesbg.png);
+  background-image: url("/img/categoriesbg.png");
   background-repeat: no-repeat;
   background-position: left bottom;
   content: "";
@@ -4801,13 +4818,13 @@ ul.tags {
   margin: 0 0 25px;
 }
 .rightsidebar .card .article .articleimg-1 {
-  background-image: url("/public/img/blog/article-1.jpg");
+  background-image: url("/img/blog/article-1.jpg");
 }
 .rightsidebar .card .article .articleimg-2 {
-  background-image: url("/public/img/blog/article-2.jpg");
+  background-image: url("/img/blog/article-2.jpg");
 }
 .rightsidebar .card .article .articleimg-3 {
-  background-image: url("/public/img/blog/article-3.jpg");
+  background-image: url("/img/blog/article-3.jpg");
 }
 .rightsidebar .card .article a {
   display: block;
@@ -4965,7 +4982,7 @@ ul.tags {
 
 .blogbanner {
   position: relative;
-  background: url("/public/img/blog/blogbanner.jpg");
+  background: url("/img/blog/blogbanner.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -5210,7 +5227,7 @@ ul.tags {
 }
 .aboutbanner {
   position: relative;
-  background: url("/public/img/banner/aboutbanner.jpg");
+  background: url("/img/banner/aboutbanner.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -5464,7 +5481,7 @@ ul.tags {
 .gallerypage-info .gallery-widget a:after {
   content: "";
   position: absolute;
-  background: url(/public/img/eye-icon.png);
+  background: url("/img/eye-icon.png");
   top: 45%;
   left: 45%;
   color: #fff;
@@ -5505,7 +5522,7 @@ ul.tags {
 
 .contactbanner {
   position: relative;
-  background: url("/public/img/banner/contactbanner.jpg");
+  background: url("/img/banner/contactbanner.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -5624,7 +5641,7 @@ ul.tags {
 -----------------------*/
 
 .pricingplan-section.how-work {
-  background: url(/public/img/priceplanbg.png);
+  background: url("/img/priceplanbg.png");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -5757,11 +5774,11 @@ ul.tags {
 -----------------------*/
 
 .pricing-page.pricingplan-section {
-  background-image: url(/public/img/priceplanbg.png);
+  background-image: url("/img/priceplanbg.png");
   padding: 70px 0;
 }
 .pricinginner-page {
-  background-image: url(/public/img/priceplanbg.png);
+  background-image: url("/img/priceplanbg.png");
 }
 
 /*-----------------.
@@ -5792,7 +5809,7 @@ ul.tags {
 .login-wrap {
   color: #666;
   background: #fff;
-  max-width: 425px;
+  max-width: auto;
   margin: 0 auto;
 }
 .login-wrap .group-img input {
@@ -7266,7 +7283,7 @@ textarea.form-control {
   font-size: 36px;
 }
 .popular-section {
-  background: url(/public/img/bg/popular-bg.png) no-repeat;
+  background: url("/img/bg/popular-bg.png") no-repeat;
   background-position: right center;
   background-size: contain;
   padding: 70px 0;
@@ -7315,7 +7332,7 @@ textarea.form-control {
 }
 .popular-wrap:before {
   content: "";
-  background: url(/public/img/bg/search-bg.png) no-repeat;
+  background: url("/img/bg/search-bg.png") no-repeat;
   position: absolute;
   top: -38px;
   left: 50%;
@@ -7346,7 +7363,7 @@ textarea.form-control {
   transition: all 0.4s ease;
 }
 .celebrate-section {
-  background: url(/public/img/bg/celebrate-bg.png) no-repeat;
+  background: url(/img/bg/celebrate-bg.png) no-repeat;
   background-position: right bottom;
   background-size: cover;
   padding: 0 0 70px;
@@ -7361,7 +7378,7 @@ textarea.form-control {
 }
 .celebrate-wrap:before {
   content: "";
-  background: url(/public/img/bg/celebrate-img.png) no-repeat;
+  background: url(/img/bg/celebrate-img.png) no-repeat;
   position: absolute;
   bottom: -109px;
   right: -94px;
@@ -7438,7 +7455,7 @@ textarea.form-control {
   }
 }
 .wedding-section {
-  background: url(/public/img/bg/wedding-bg.png) no-repeat;
+  background: url("/img/bg/wedding-bg.png") no-repeat;
   background-position: left center;
   background-size: contain;
   padding: 70px 0 56px;
@@ -7488,18 +7505,67 @@ textarea.form-control {
 .wedding-content a i {
   margin-left: 3px;
 }
+
+
+
+.categorySection {
+  padding: 20px 0;
+}
+
+.categoryLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryContent {
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.categoryContent h5 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.categoryContent span {
+  font-size: 14px;
+  color: #666;
+}
+
+.imageContainer {
+  width: 100%;
+  padding-top: 100%; /* Creates a 1:1 aspect ratio */
+  position: relative;
+  overflow: hidden;
+}
+
+.imageContainer img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .wedding-content a:hover {
   letter-spacing: 0.5px;
 }
 .appointment-sec {
-  background: url(/public/img/bg/appointment-bg-01.png) no-repeat;
+  background: url("/img/bg/appointment-bg-01.png") no-repeat;
   background-size: contain;
   background-position: bottom;
 }
 .wedding-form {
   max-width: 634px;
   width: 100%;
-  background: url(/public/img/bg/appointment-bg.png) no-repeat;
+  background: url("/img/bg/appointment-bg.png") no-repeat;
   background-size: cover;
   padding: 170px 100px 36px;
   margin: 0 auto;
@@ -7540,8 +7606,8 @@ textarea.form-control {
 }
 .vendor-sec {
   background: #c10037;
-  background-image: url(/public/img/bg/vector-bg-01.png),
-    url(/public/img/bg/vector-bg-02.png);
+  background-image: url(/img/bg/vector-bg-01.png),
+    url(/img/bg/vector-bg-02.png);
   background-repeat: no-repeat;
   background-position: left 20px top 10px, right 20px top 10px;
   border-radius: 15px;
@@ -7589,7 +7655,7 @@ textarea.form-control {
 }
 .blog-section-two {
   padding: 70px 0;
-  background: url(/public/img/bg/venue-bg.png) no-repeat;
+  background: url(/img/bg/venue-bg.png) no-repeat;
   background-position: right center;
   background-size: contain;
 }
@@ -7643,12 +7709,12 @@ textarea.form-control {
   padding: 8px 8px 0;
 }
 .feedback-section {
-  background: url(/public/img/bg/wedding-bg.png) no-repeat;
+  background: url(/img/bg/wedding-bg.png) no-repeat;
   background-position: left center;
   background-size: contain;
 }
 .feedback-slider {
-  background: url("/public/img/bg/map.png") no-repeat;
+  background: url("/img/bg/map.png") no-repeat;
   background-position: center;
 }
 .testimonial-item {
@@ -7735,7 +7801,7 @@ textarea.form-control {
   margin-bottom: 2px;
 }
 .categories-section {
-  background: url(/public/img/bg/venue.png) no-repeat;
+  background: url(/img/bg/venue.png) no-repeat;
   background-position: right bottom;
   background-size: 400px;
   padding: 0 0 46px;
@@ -7784,7 +7850,7 @@ textarea.form-control {
   transition: all 0.7s;
 }
 .portfolio-section {
-  background: url(/public/img/bg/portfolio-bg.jpg) no-repeat;
+  background: url(/img/bg/portfolio-bg.jpg) no-repeat;
   background-size: cover;
   padding: 70px 0;
 }
@@ -7845,8 +7911,8 @@ textarea.form-control {
 }
 .package-section {
   padding: 70px 0;
-  background: url("/public/img/bg/package-bg-01.png"),
-    url("/public/img/bg/package-bg-02.png");
+  background: url("/img/bg/package-bg-01.png"),
+    url("/img/bg/package-bg-02.png");
   background-repeat: no-repeat;
   background-position: left top, right bottom;
   background-size: 400px;
@@ -7863,7 +7929,7 @@ textarea.form-control {
   z-index: -1;
 }
 .package-wrap {
-  background: url(/public/img/bg/package-bg.png) no-repeat;
+  background: url(/img/bg/package-bg.png) no-repeat;
   background-size: 100% 100%;
   padding: 80px 70px;
   position: relative;
@@ -7903,7 +7969,7 @@ textarea.form-control {
   padding: 11px 34px;
 }
 .success-section {
-  background: url(/public/img/bg/wedding-bg.png), url(/public/img/bg/venue-bg.png);
+  background: url(/img/bg/wedding-bg.png), url(/img/bg/venue-bg.png);
   background-position: left center, right center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -7930,7 +7996,7 @@ textarea.form-control {
   padding: 70px 0;
 }
 .offer-sec {
-  background: url(/public/img/bg/celebration-bg.png) #f3ebeb;
+  background: url(/img/bg/celebration-bg.png) #f3ebeb;
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: cover;
@@ -7966,7 +8032,7 @@ textarea.form-control {
   padding: 10px 32px;
 }
 .venue-section {
-  background: url(/public/img/bg/venue-bg.png) no-repeat;
+  background: url(/img/bg/venue-bg.png) no-repeat;
   background-position: right center;
   background-size: contain;
   padding: 0 0 70px;
@@ -8087,7 +8153,7 @@ textarea.form-control {
 .timeline-wrap li:before {
   position: absolute;
   content: "";
-  background: url(/public/img/bg/line-bg.png) no-repeat;
+  background: url(/img/bg/line-bg.png) no-repeat;
   width: 76px;
   height: 15px;
   background-position: top center, left center;
@@ -8345,7 +8411,7 @@ textarea.form-control {
   font-size: 14px !important;
 }
 .banner-section.banner-three {
-  background: url("/public/img/banner-01.png") no-repeat 380px 0;
+  background: url("/img/banner-01.png") no-repeat 380px 0;
   background-position: top right;
   position: relative;
   padding-top: 86px;
@@ -8496,7 +8562,7 @@ textarea.form-control {
 .banner-btm-img-blk:before {
   position: absolute;
   content: "";
-  background: url("/public/img/banner-btm-shape.png") no-repeat;
+  background: url("/img/banner-btm-shape.png") no-repeat;
   width: 336px;
   height: 302px;
   top: 59px;
@@ -8518,7 +8584,7 @@ textarea.form-control {
 .section-blk .title-blk h2:before {
   position: absolute;
   content: "";
-  background: url("/public/img/trip-icon.png") no-repeat top right;
+  background: url("/img/trip-icon.png") no-repeat top right;
   width: 55px;
   height: 32px;
   right: -35px;
@@ -8537,7 +8603,7 @@ textarea.form-control {
 .destination-blk:before {
   position: absolute;
   content: "";
-  background: url(/public/img/balloon-img.png) no-repeat center left;
+  background: url(/img/balloon-img.png) no-repeat center left;
   width: 125px;
   height: 182px;
   top: 140px;
@@ -8641,8 +8707,8 @@ textarea.form-control {
   margin-top: 50px;
 }
 .section-blk.service-blk {
-  background: url("/public/img/bg/service-bg-01.png"),
-    url("/public/img/bg/service-bg-02.png");
+  background: url("/img/bg/service-bg-01.png"),
+    url("/img/bg/service-bg-02.png");
   background-repeat: no-repeat;
   background-position: top left, bottom 80px right 50px;
   padding: 0 0 80px;
@@ -8687,7 +8753,7 @@ textarea.form-control {
 .section-blk .service-content h2:before {
   position: absolute;
   content: "";
-  background: url("/public/img/trip-icon.png") no-repeat top right;
+  background: url("/img/trip-icon.png") no-repeat top right;
   width: 55px;
   height: 32px;
   right: -35px;
@@ -8792,7 +8858,7 @@ textarea.form-control {
 .offer-blk:before {
   position: absolute;
   content: "";
-  background: url(/public/img/offer-bg.png) no-repeat top center;
+  background: url(/img/offer-bg.png) no-repeat top center;
   width: 100%;
   height: 423px;
   top: 0px;
@@ -8800,7 +8866,7 @@ textarea.form-control {
 .offer-blk:after {
   position: absolute;
   content: "";
-  background: url(/public/img/balloon-img.png) no-repeat center right;
+  background: url(/img/balloon-img.png) no-repeat center right;
   width: 125px;
   height: 182px;
   top: 140px;
@@ -8832,7 +8898,7 @@ textarea.form-control {
   width: 100%;
 }
 .box-style .btm-box-style:before {
-  background: url(/public/img/offer-arrow.svg) no-repeat center left;
+  background: url(/img/offer-arrow.svg) no-repeat center left;
   content: "";
   width: 100%;
   height: 80%;
@@ -8913,13 +8979,13 @@ textarea.form-control {
   margin-top: 50px;
 }
 .recommended-blk.style2-blk {
-  background: url(/public/img/bg/recom-bg-01.png), url(/public/img/bg/recom-bg-02.png);
+  background: url(/img/bg/recom-bg-01.png), url(/img/bg/recom-bg-02.png);
   background-repeat: no-repeat;
   background-position: left bottom, right bottom;
   background-size: contain, 125px;
 }
 .recommended-blk.style1-blk {
-  background: url(/public/img/recomended-bg-btm.png) #f5fcff no-repeat center bottom;
+  background: url(/img/recomended-bg-btm.png) #f5fcff no-repeat center bottom;
   width: 100%;
   min-height: 300px;
   padding: 80px 0px;
@@ -9100,7 +9166,7 @@ textarea.form-control {
   margin-bottom: 0;
 }
 .testi-blk {
-  background: url("/public/img/testimonial-banner-bg.jpg") no-repeat center top;
+  background: url("/img/testimonial-banner-bg.jpg") no-repeat center top;
   width: 100%;
   position: relative;
   height: 100%;
@@ -9108,7 +9174,7 @@ textarea.form-control {
   margin-top: 80px;
 }
 .testi-blk:before {
-  background: url(/public/img/testi-after-img.png) no-repeat center left;
+  background: url(/img/testi-after-img.png) no-repeat center left;
   content: "";
   width: 100%;
   height: 100%;
@@ -9129,7 +9195,7 @@ textarea.form-control {
   color: white;
 }
 .testi-blk .btn-style2 a .shape-bg {
-  /* background: url(/public/img/search-bg-2.png) no-repeat center right; */
+  /* background: url(/img/search-bg-2.png) no-repeat center right; */
   color: #eec304;
 }
 .testi-blk .title-blk {
@@ -9166,7 +9232,7 @@ textarea.form-control {
 .testi-widget .testi-info-blk:before {
   position: absolute;
   content: "";
-  background: url(/public/img/quote-before.png) no-repeat left top;
+  background: url(/img/quote-before.png) no-repeat left top;
   width: 46px;
   height: 32px;
   top: 0;
@@ -9176,7 +9242,7 @@ textarea.form-control {
 .testi-widget .testi-info-blk:after {
   position: absolute;
   content: "";
-  background: url(/public/img/quote-after.png) no-repeat left top;
+  background: url(/img/quote-after.png) no-repeat left top;
   width: 46px;
   height: 32px;
   bottom: 0;
@@ -9251,7 +9317,7 @@ textarea.form-control {
 .faq-blk:before {
   position: absolute;
   content: "";
-  background: url(/public/img/balloon-img.png) no-repeat center left;
+  background: url(/img/balloon-img.png) no-repeat center left;
   width: 125px;
   height: 182px;
   top: 140px;
@@ -9284,7 +9350,7 @@ textarea.form-control {
 .subscribe-blk:before {
   position: absolute;
   content: "";
-  background: url(/public/img/services-bg.png) no-repeat center right;
+  background: url(/img/services-bg.png) no-repeat center right;
   width: 320px;
   height: 399px;
   top: -86px;
@@ -9369,7 +9435,7 @@ textarea.form-control {
   margin-bottom: 5px;
 }
 .promo-style {
-  background: url("/public/img/promo-banner-bg.jpg") no-repeat center center;
+  background: url("/img/promo-banner-bg.jpg") no-repeat center center;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -9481,7 +9547,7 @@ textarea.form-control {
   row-gap: 14px;
 }
 .price-section {
-  background: url("/public/img/bg/recom-bg-01.png"), url("/public/img/bg/recom-bg-02.png");
+  background: url("/img/bg/recom-bg-01.png"), url("/img/bg/recom-bg-02.png");
   background-repeat: no-repeat;
   background-position: left bottom, right bottom;
   background-size: contain, 125px;
@@ -9559,7 +9625,7 @@ textarea.form-control {
 .blog-block:before {
   position: absolute;
   content: "";
-  background: url(/public/img/balloon-img.png) no-repeat center left;
+  background: url(/img/balloon-img.png) no-repeat center left;
   width: 125px;
   height: 182px;
   top: 140px;
@@ -9657,7 +9723,7 @@ textarea.form-control {
 -----------------------*/
 
 .banner-four {
-  background: url("/public/img/bg/banner-bg-04.png"), #f5f8fd;
+  background: url("/img/bg/banner-bg-04.png"), #f5f8fd;
   background-position: left top;
   background-repeat: no-repeat;
   background-size: 60% 100%;
@@ -9731,7 +9797,7 @@ textarea.form-control {
   -ms-flex-pack: space-between;
 }
 .category-four-section {
-  background: url("/public/img/bg/category-bg.png"), #f5f8fd;
+  background: url("/img/bg/category-bg.png"), #f5f8fd;
   background-size: cover;
 }
 .category-sec {
@@ -9815,7 +9881,7 @@ textarea.form-control {
   color: #c10037;
 }
 .cate-section {
-  background: url("/public/img/bg/cate-bg.png"), #f5f8fd;
+  background: url("/img/bg/cate-bg.png"), #f5f8fd;
   background-size: cover;
 }
 .cate-sec {
@@ -10218,7 +10284,7 @@ textarea.form-control {
   transition: all 0.7s;
 }
 .city-section {
-  background: url(/public/img/bg/cate-bg.png), #f5f8fd;
+  background: url(/img/bg/cate-bg.png), #f5f8fd;
   background-size: cover;
 }
 .city-sec {
@@ -10323,7 +10389,7 @@ textarea.form-control {
   margin: 0;
 }
 .pricing-section {
-  background: url(/public/img/bg/cate-bg.png), #fff;
+  background: url(/img/bg/cate-bg.png), #fff;
   background-size: cover;
   padding: 80px 0;
 }
@@ -10467,7 +10533,7 @@ textarea.form-control {
 -----------------------*/
 
 .banner-five {
-  background: url("/public/img/banner/banner-05.png");
+  background: url("/img/banner/banner-05.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center bottom;
@@ -10527,7 +10593,7 @@ textarea.form-control {
 }
 .category-five-section {
   padding: 80px 0px;
-  background: url(/public/img/bg/bg-01.png), #fff;
+  background: url(/img/bg/bg-01.png), #fff;
   background-size: cover;
 }
 .category-items li {
@@ -10700,7 +10766,7 @@ textarea.form-control {
 }
 .business-section {
   padding: 80px 0 ;
-  background: url("/public/img/bg/business-bg.png"), #f3f3f3;
+  background: url("/img/bg/business-bg.png"), #f3f3f3;
   background-size: cover;
 }
 .feature-section {
@@ -10895,7 +10961,7 @@ textarea.form-control {
 }
 .testimonial-five-section {
   padding: 80px 0;
-  background: url(/public/img/bg/business-bg.png), #f3f3f3;
+  background: url(/img/bg/business-bg.png), #f3f3f3;
   background-size: cover;
 }
 .testi-four.testi-five .testimonialslider-content span {
@@ -10908,7 +10974,7 @@ textarea.form-control {
   padding: 50px 0;
   position: relative;
   overflow: hidden;
-  background: url(/public/img/footer-bg.png), #c10037;
+  background: url(/img/footer-bg.png), #c10037;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -12225,7 +12291,7 @@ button.btn.car-search-icon:hover {
 }
 .banner-section.banner-nine {
   position: relative;
-  background-image: url(/public/img/bg/banner-bg.png);
+  background-image: url(/img/bg/banner-bg.png);
   background-repeat: no-repeat;
   background-size: cover;
   height: 590.76px;
@@ -12960,7 +13026,7 @@ button.btn.car-search-icon:hover {
   margin-bottom: 50px;
 }
 .make-it-easy {
-  background: url("/public/img/bg/make-it-easy.jpg");
+  background: url("/img/bg/make-it-easy.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -13145,7 +13211,7 @@ button.btn.car-search-icon:hover {
   color: #c10037;
 }
 .buy-property-content {
-  background: url('/public/img/bg/join-us.jpg');
+  background: url('/img/bg/join-us.jpg');
   border-radius: 10px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -13555,7 +13621,7 @@ button.btn.car-search-icon:hover {
 }
 .restaurant-section.restaurant-section-seven {
   padding: 80px 0px 55px;
-  background: url(/public/img/bg/honeycomb-texture-bg-1.png), rgba(193, 0, 55, 0.04);
+  background: url(/img/bg/honeycomb-texture-bg-1.png), rgba(193, 0, 55, 0.04);
   background-size: cover;
 }
 .restaurant-section.restaurant-section-seven .dishes-box {
@@ -14062,7 +14128,7 @@ button.btn.car-search-icon:hover {
 }
 .pricing-plan.pricing-plan-seven {
   padding: 80px 0px 55px;
-  background: url(/public/img/bg/honeycomb-texture-bg-1.png), rgba(193, 0, 55, 0.04);
+  background: url(/img/bg/honeycomb-texture-bg-1.png), rgba(193, 0, 55, 0.04);
   background-size: cover;
 }
 .pricing-plan-seven .price-wrap {
@@ -14113,7 +14179,7 @@ button.btn.car-search-icon:hover {
   margin: 0 0 15px;
 }
 .pricing-plan-seven .price-seven.active {
-  background: url(/public/img/bg/active-img.png), #C10037;
+  background: url(/img/bg/active-img.png), #C10037;
 }
 .pricing-plan-seven .price-seven.active .viewdetails-btn {
   background: #fff;
@@ -14136,7 +14202,7 @@ button.btn.car-search-icon:hover {
   color: #0D233E;
 }
 .pricing-plan-seven .price-card.active {
-  background: url(/public/img/bg/active-img.png), #C10037;
+  background: url(/img/bg/active-img.png), #C10037;
   color: #ffffff;
   transition: all 0.5s ease-in-out;
   -webkit-transition: ease all 0.5s;
@@ -14178,7 +14244,7 @@ button.btn.car-search-icon:hover {
 .pricing-plan-seven .price-seven .price-body ul li:before {
   position: absolute;
   content: "";
-  background-image: url(/public/img/icons/check-circle-1.png);
+  background-image: url(/img/icons/check-circle-1.png);
   top: 10px;
   left: 0;
   width: 100%;
@@ -14186,7 +14252,7 @@ button.btn.car-search-icon:hover {
   background-repeat: no-repeat;
 }
 .pricing-plan-seven .price-seven.price-card:hover .price-body ul li:before {
-  background-image: url(/public/img/icons/check-circle-2.png);
+  background-image: url(/img/icons/check-circle-2.png);
 }
 .pricing-plan-seven .price-card.active:hover{
   background: #C10037;
@@ -14213,7 +14279,7 @@ button.btn.car-search-icon:hover {
 }
 .pricing-plan-seven .price-seven.active .price-body ul li:before {
   color: #333;
-  background-image: url(/public/img/icons/check-circle-2.png);
+  background-image: url(/img/icons/check-circle-2.png);
 }
 .pricing-plan-seven .price-seven.price-card:hover .price-body ul li:before {
   color: #333;
@@ -14238,7 +14304,7 @@ button.btn.car-search-icon:hover {
   padding: 80px 0;
 }
 .testimonial-section-seven .testi-widget-seven {
-  background: url(/public/img/bg/test-bg.png);
+  background: url(/img/bg/test-bg.png);
   background-repeat: no-repeat;
   background-position: top 25px left 25px;
   margin: 0;
@@ -14282,7 +14348,7 @@ button.btn.car-search-icon:hover {
 .testimonial-section-seven .testi-widget .test-details:after {
   position: absolute;
   content: "";
-  background: url(/public/img/bg/test-bg.png) no-repeat left top;
+  background: url(/img/bg/test-bg.png) no-repeat left top;
   width: 80px;
   height: 80px;
   top: 34px;
@@ -14334,7 +14400,7 @@ button.btn.car-search-icon:hover {
 }
 .blog-seven-section {
   padding: 80px 0 160px;
-  background: url(/public/img/bg/honeycomb-texture-bg-1.png), rgba(193, 0, 55, 0.04);
+  background: url(/img/bg/honeycomb-texture-bg-1.png), rgba(193, 0, 55, 0.04);
   background-size: cover;
 }
 .blog-seven-section .grid-blog-seven:hover {
@@ -15272,12 +15338,12 @@ button.btn.car-search-icon:hover {
   border-radius: 10px;
 }
 .adv-bg-one {
-  background: url(/public/img/ads-bg-1.png) #0D233E;
+  background: url(/img/ads-bg-1.png) #0D233E;
   background-repeat: no-repeat;
   background-position: left top;
 }
 .adv-bg-two {
-  background: url(/public/img/ads-bg-2.png) #C10037;
+  background: url(/img/ads-bg-2.png) #C10037;
   background-repeat: no-repeat;
   background-position: left top;
 }
@@ -15316,7 +15382,7 @@ section.advertisement {
   z-index: 9;
 }
 .pricingplan-section.pricing-eight {
-  background: url(/public/img/pricing-main-bg.png) #F5F8FD;
+  background: url(/img/pricing-main-bg.png) #F5F8FD;
   padding: 200px 0 80px;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -15483,7 +15549,7 @@ section.advertisement {
 .testimonial-section-eight .testi-widget .test-details:after {
   position: absolute;
   content: "";
-  /* background: url(/public/img/home-7/test-bg.png) no-repeat left top; */
+  /* background: url(/img/home-7/test-bg.png) no-repeat left top; */
   width: 80px;
   height: 80px;
   top: 34px;
@@ -15720,7 +15786,7 @@ section.advertisement {
   color: #ffffff;
 }
 .blog-eight-section {
-  background: url(/public/img/news-article-bg.png);
+  background: url(/img/news-article-bg.png);
   background-repeat: no-repeat;
   background-position: right top 50px;
   background-size: auto;
@@ -15732,7 +15798,7 @@ section.advertisement {
 }
 .advertisement-section::before{
   content: '';
-  background: url(/public/img/bg-left-1.png), url(/public/img/bg-right-1.png) ;
+  background: url(/img/bg-left-1.png), url(/img/bg-right-1.png) ;
   background-repeat: no-repeat;
   background-position: left bottom, right bottom;
   background-size: contain, contain;
@@ -15743,7 +15809,7 @@ section.advertisement {
   position: absolute;
 }
 .ads-img {
-  background: url(/public/img/ads-left-banner.png);
+  background: url(/img/ads-left-banner.png);
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: contain;
@@ -15784,7 +15850,7 @@ section.advertisement {
   border-top: none;
 }
 .footer.footer-eight {
-  background: url(/public/img/footer-bg-1.png) #FFFFFF;
+  background: url(/img/footer-bg-1.png) #FFFFFF;
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: contain;
@@ -16125,7 +16191,7 @@ section.advertisement {
   padding: 50px 0;
   position: relative;
   overflow: hidden;
-  background: url(/public/img/footer-bg.png), #c10037;
+  background: url(/img/footer-bg.png), #c10037;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -16269,7 +16335,7 @@ section.advertisement {
 }
 .footer-three:before {
   position: absolute;
-  background: url(/public/img/footer-bg-01.jpg) no-repeat center top;
+  background: url(/img/footer-bg-01.jpg) no-repeat center top;
   content: "";
   width: 100%;
   height: 100%;
@@ -16457,7 +16523,7 @@ section.advertisement {
   left: 20px;
 }
 .footer-four {
-  background: url(/public/img/bg/cate-bg.png), #fff;
+  background: url(/img/bg/cate-bg.png), #fff;
   background-size: cover;
   margin: 0;
 }
@@ -20852,7 +20918,7 @@ margin: 0 12px 0 0 !important;
 .galleryimg a:hover::after {
   content: "";
   position: absolute;
-  background: url("/public/img/eye-icon.png");
+  background: url("/img/eye-icon.png");
   top: 45%;
   left: 45%;
   color: #fff;
