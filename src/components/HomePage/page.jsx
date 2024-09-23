@@ -58,45 +58,70 @@ import {
 } from "../imagepath";
 import Carousel from "./slider/Carousel";
 import Footer from "./footer/page";
-
+import Image from "next/image";
 import Header from "./header/page";
 import Testimonial from "./slider/Testimonial";
 import Sponsors from "./slider/Sponsors";
 import Select from "./select/page";
 import Link from "next/link";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 const HomePage = () => {
+  const [isLight, setIsLight] = useState();
+  const [businessData, setBusinessData] = useState(null);
+  const [categories, setCategories] = useState();
+  const dispatch = useDispatch();
 
-   const [isLight, setIsLight] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchText.trim()) {
+      router.push(`/search-results?query=${encodeURIComponent(searchText)}`);
+    }
+  };
+  const [latestBusiness, setLatestBusiness] = useState();
+
+  const websiteData = useSelector((state) => state.websiteSetup.data);
+  console.log("website data in the homepage ", websiteData);
+  useEffect(() => {
+    const test = () => {
+      setCategories(websiteData?.businessCategories);
+    };
+
+    test();
+  }, []);
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
 
     const handleSwitchClick = () => {
-      setIsLight(prevState => !prevState);
+      setIsLight((prevState) => !prevState);
     };
 
     const handleScroll = () => {
-      const progressWrap = document.querySelector('.progress-wrap');
-      const progressPath = document.querySelector('.progress-wrap path');
-      
+      const progressWrap = document.querySelector(".progress-wrap");
+      const progressPath = document.querySelector(".progress-wrap path");
+
       if (progressPath) {
         const pathLength = progressPath.getTotalLength();
         const scrollTop = window.scrollY;
         const docHeight = document.body.clientHeight - window.innerHeight;
         const pctScrolled = scrollTop / docHeight;
-        const drawLength = pathLength - (pctScrolled * pathLength);
+        const drawLength = pathLength - pctScrolled * pathLength;
         progressPath.style.strokeDashoffset = drawLength;
       }
 
       if (progressWrap) {
         if (window.scrollY > 50) {
-          progressWrap.classList.add('active-progress');
+          progressWrap.classList.add("active-progress");
         } else {
-          progressWrap.classList.remove('active-progress');
+          progressWrap.classList.remove("active-progress");
         }
       }
     };
@@ -105,1052 +130,335 @@ const HomePage = () => {
       e.preventDefault();
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     };
 
-    const switchElem = document.querySelector('.switch');
-    const progressWrap = document.querySelector('.progress-wrap');
+    const switchElem = document.querySelector(".switch");
+    const progressWrap = document.querySelector(".progress-wrap");
 
     if (switchElem) {
-      switchElem.addEventListener('click', handleSwitchClick);
+      switchElem.addEventListener("click", handleSwitchClick);
     }
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     if (progressWrap) {
-      progressWrap.addEventListener('click', handleProgressClick);
+      progressWrap.addEventListener("click", handleProgressClick);
     }
 
     return () => {
       if (switchElem) {
-        switchElem.removeEventListener('click', handleSwitchClick);
+        switchElem.removeEventListener("click", handleSwitchClick);
       }
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       if (progressWrap) {
-        progressWrap.removeEventListener('click', handleProgressClick);
+        progressWrap.removeEventListener("click", handleProgressClick);
       }
     };
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle('light', isLight);
-    document.querySelector('.switch')?.classList.toggle('switched', isLight);
+    document.body.classList.toggle("light", isLight);
+    document.querySelector(".switch")?.classList.toggle("switched", isLight);
   }, [isLight]);
-  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/latest-business`
+        );
+        if (response) {
+          setLatestBusiness(response.data);
+        }
+      } catch (err) {
+        console.log(
+          "An error occurred while fetching the data of the latest business"
+        );
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/business`
+        );
+        if (response) {
+          setBusinessData(response.data);
+          setBusinessLength(setBusinessData.length);
+        }
+      } catch (err) {
+        console.log("An error occurred while fetching the data");
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
-      <div className="main-wrapper">
-        <Header />
-
-        {/* Banner Section */}
-        <section className="banner-section">
-          <div className="banner-circle">
-            <img
-              src="./img/banner.png"
-              className="img-fluid"
-              alt="bannercircle"
-            />
-          </div>
-          <div className="container">
-            <div className="home-banner">
-              <div className="row align-items-center">
-                <div className="col-lg-7">
-                  <div className="section-search aos" data-aos="fade-up">
-                    <p className="explore-text">
-                      {" "}
-                      <span>Explore top-rated attractions</span>
-                    </p>
-                    <img
-                      src="./img/arrow-banner.png"
-                      className="arrow-img"
-                      alt="arrow"
-                    />
-                    <h1>
-                      Let us help you <br />
-                      <span>Find, Buy</span> & Own Dreams
-                    </h1>
-                    <p>
-                      Countrys most loved and trusted classNameified ad listing
-                      website classNameified ad.randomised words which don't
-                      look even slightly Browse thousand of items near you.
-                    </p>
-                    <div className="search-box">
-                      <form action="listing-grid-sidebar" className="d-flex">
-                        <div className="search-input line">
-                          <div className="form-group">
-                            <Select />
-                          </div>
-                        </div>
-                        <div className="search-input">
-                          <div className="form-group">
-                            <div className="group-img">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Choose Location"
-                              />
-                              <i className="feather-map-pin"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="search-btn">
-                          <button className="btn btn-primary" type="submit">
-                            {" "}
-                            <i
-                              className="fa fa-search"
-                              aria-hidden="true"
-                            ></i>{" "}
-                            Search
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-5">
-                  <div className="banner-imgs">
-                    <img
-                      src="./img/Right-img.png"
-                      className="img-fluid"
-                      alt="bannerimage"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Banner Section */}
+      <section className="banner-section">
+        <div className="banner-circle">
           <img
-            src="./img/bannerellipse.png"
-            className="img-fluid banner-elipse"
-            alt="arrow"
+            src="./img/bannerbg.png"
+            className="img-fluid"
+            alt="bannercircle"
           />
-          <img
-            src="./img/banner-arrow.png"
-            className="img-fluid bannerleftarrow"
-            alt="arrow"
-          />
-        </section>
-        {/* Banner Section */}
-
-        {/* Category Section */}
-        <section className="category-section">
-          <div className="container">
-            <div className="section-heading">
-              <div className="row align-items-center">
-                <div
-                  className="col-md-6 aos aos-init aos-animate"
-                  data-aos="fade-up"
-                >
-                  <h2>
-                    Our <span className="title-left magentaCircle">Cat</span>
-                    egory
-                  </h2>
-                  <p>Buy and Sell Everything from Used Our Top Category</p>
-                </div>
-                <div
-                  className="col-md-6 text-md-end aos aos-init aos-animate"
-                  data-aos="fade-up"
-                >
-                  <Link href="/categories" className="btn  btn-view">
-                    View All
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="categories" className="category-links">
-                  <h5>Automotive</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-1.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Electronics</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-2.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Fashion Style</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-3.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Health Care</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-4.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Job Board</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-5.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Education</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-6.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Real Estate</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-7.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Travel</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-8.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Sports & Game</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-9.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Magazines</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-10.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>Pet & Animal</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-11.svg" alt="icons" />
-                </Link>
-              </div>
-              <div className="col-lg-2 col-md-3 col-sm-6">
-                <Link href="/categories" className="category-links">
-                  <h5>House Hold</h5>
-                  <span>09 Ads</span>
-                  <img src="./img/icons/category-12.svg" alt="icons" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Category Section */}
-
-        {/* Featured Ads Section */}
-        <Carousel />
-        {/* Featured Ads Section */}
-
-        {/* Popular Location Section */}
-        <section className="popular-locations">
-          <div className="popular-circleimg">
-            <img
-              className="img-fluid"
-              src={PopularImg}
-              alt="Popular-sections"
-            />
-          </div>
-          <div className="container">
-            <div className="section-heading">
-              <h2>
-                Popular <span className="whiteCircle">Loc</span>ations
-              </h2>
-              <p>
-                Start by selecting your favuorite location and explore the goods
-              </p>
-            </div>
-            <div className="location-details d-flex">
-              <div className="row">
-                <div className="location-info col-lg-4 col-md-6">
-                  <div className="location-info-details d-flex align-items-center">
-                    <div className="location-img">
-                      <Link href="listing-grid-sidebar">
-                        <img
-                          className="img-fluid"
-                          src={LocationsUsa}
-                          alt="locations"
-                        />
-                      </Link>
-                    </div>
-                    <div className="location-content">
-                      <Link href="/listing-grid-sidebar">USA</Link>
-                      <p>20+ Ads Posted</p>
-                      <Link
-                        href="/listing-grid-sidebar"
-                        className="view-detailsbtn"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="location-info col-lg-4 col-md-6">
-                  <div className="location-info-details d-flex align-items-center">
-                    <div className="location-img">
-                      <Link href="/listing-grid-sidebar">
-                        <img
-                          className="img-fluid"
-                          src={LocationsCanada}
-                          alt="locations"
-                        />
-                      </Link>
-                    </div>
-                    <div className="location-content">
-                      <Link href="/listing-grid-sidebar">Canada</Link>
-                      <p>20+ Ads Posted</p>
-                      <Link
-                        href="/listing-grid-sidebar"
-                        className="view-detailsbtn"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="location-info col-lg-4 col-md-6">
-                  <div className="location-info-details d-flex align-items-center">
-                    <div className="location-img">
-                      <Link href="/listing-grid-sidebar">
-                        <img
-                          className="img-fluid"
-                          src={LocationsChina}
-                          alt="locations"
-                        />
-                      </Link>
-                    </div>
-                    <div className="location-content">
-                      <Link href="/listing-grid-sidebar">China</Link>
-                      <p>20+ Ads Posted</p>
-                      <Link
-                        href="/listing-grid-sidebar"
-                        className="view-detailsbtn"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="location-info col-lg-4 col-md-6">
-                  <div className="location-info-details d-flex align-items-center">
-                    <div className="location-img">
-                      <Link href="/listing-grid-sidebar">
-                        <img
-                          className="img-fluid"
-                          src={LocationsUk}
-                          alt="locations"
-                        />
-                      </Link>
-                    </div>
-                    <div className="location-content">
-                      <Link href="listing-grid-sidebar">United Kingdom</Link>
-                      <p>20+ Ads Posted</p>
-                      <Link
-                        href="/listing-grid-sidebar"
-                        className="view-detailsbtn"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="location-info col-lg-4 col-md-6">
-                  <div className="location-info-details d-flex align-items-center">
-                    <div className="location-img">
-                      <Link href="/listing-grid-sidebar">
-                        <img
-                          className="img-fluid"
-                          src={LocationsAustralia}
-                          alt="locations"
-                        />
-                      </Link>
-                    </div>
-                    <div className="location-content">
-                      <Link href="/listing-grid-sidebar">Australia</Link>
-                      <p>20+ Ads Posted</p>
-                      <Link
-                        href="/listing-grid-sidebar"
-                        className="view-detailsbtn"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="location-info col-lg-4 col-md-6">
-                  <div className="location-info-details d-flex align-items-center">
-                    <div className="location-img">
-                      <Link href="/listing-grid-sidebar">
-                        <img
-                          className="img-fluid"
-                          src={LocationsFrance}
-                          alt="locations"
-                        />
-                      </Link>
-                    </div>
-                    <div className="location-content">
-                      <Link href="/listing-grid-sidebar">France</Link>
-                      <p>20+ Ads Posted</p>
-                      <Link
-                        href="/listing-grid-sidebar"
-                        className="view-detailsbtn"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="align-items-center">
-              <Link href="/listing-grid-sidebar" className="browse-btn">
-                Browse Ads
-              </Link>
-            </div>
-          </div>
-        </section>
-        {/* Popular Location Section */}
-
-        {/* Latest ads Section */}
-        <section className="latestad-section grid-view featured-slider">
-          <div className="container">
-            <div className="section-heading">
-              <div className="row align-items-center">
-                <div
-                  className="col-md-6 aos aos-init aos-animate"
-                  data-aos="fade-up"
-                >
-                  <h2>
-                    Lat<span className="title-right magentaCircle">est</span>{" "}
-                    Ads
-                  </h2>
-                  <p>checkout these latest cool ads from our members</p>
-                </div>
-                <div
-                  className="col-md-6 text-md-end aos aos-init aos-animate"
-                  data-aos="fade-up"
-                >
-                  <Link href="/service-details" className="btn  btn-view">
-                    View All
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="lateestads-content">
-              <div className="row">
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature9}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar02} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Education
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                {" "}
-                                <i className="feather-eye"></i> 4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              2017 Gulfsteam Ameri-lite
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 06
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$350</span>
-                              <span>$450</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.7</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature2}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar03} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Electronics
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                {" "}
-                                <i className="feather-eye"></i> 4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              Fashion luxury Men date
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 08
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$250</span>
-                              <span>$350</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.6</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature3}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar04} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Electronics
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                {" "}
-                                <i className="feather-eye"></i> 4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              Apple Iphone 6 16GB 4G LTE
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 09
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$550</span>
-                              <span>$400</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.7</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="service-details">
-                          <img
-                            src={Feature4}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar05} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Gadgets
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                <i className="feather-eye"></i> 4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              Customized Apple Imac{" "}
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 10
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$450</span>
-                              <span>$300</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.5</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature5}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar06} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Construction
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                {" "}
-                                <i className="feather-eye"></i>4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              Villa 457 sq.m. In Benidorm Fully
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 11
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$650</span>
-                              <span>$600</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.5</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature6}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar03} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Jobs
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                {" "}
-                                <i className="feather-eye"></i>4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              CDL A OTR Compnay Driver Job-N
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 12
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$550</span>
-                              <span>$450</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.7</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature7}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar06} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Electronics
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                <i className="feather-eye"></i> 4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              HP Gaming 15.6 Touchscren 12G
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 02
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$450</span>
-                              <span>$350</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.7</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
-                  <div className="card aos flex-fill" data-aos="fade-up">
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <Link href="/service-details">
-                          <img
-                            src={Feature8}
-                            className="img-fluid"
-                            alt="blog-img"
-                          />
-                        </Link>
-                        <div className="fav-item">
-                          <span className="Featured-text">Featured</span>
-                          <Link href="#" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <div className="blogfeaturelink">
-                            <div className="grid-author">
-                              <img src={ProfileAvatar07} alt="author" />
-                            </div>
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>
-                                  {" "}
-                                  <i className="fa-regular fa-circle-stop"></i>{" "}
-                                  Vehicle
-                                </span>
-                              </Link>
-                            </div>
-                            <div className="blog-author text-end">
-                              <span>
-                                {" "}
-                                <i className="feather-eye"></i>4000{" "}
-                              </span>
-                            </div>
-                          </div>
-                          <h6>
-                            <Link href="/service-details">
-                              2012 AudiR8 GT Spider Convrtibile
-                            </Link>
-                          </h6>
-                          <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin"></i> Los Angeles
-                            </div>
-                            <div className="location-info">
-                              <i className="fa-solid fa-calendar-days"></i> 02
-                              Oct, 2022
-                            </div>
-                          </div>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$450</span>
-                              <span>$350</span>
-                            </div>
-                            <div className="ratings">
-                              <span>4.7</span> (50)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Latest ads Section */}
-
-        {/* CTA Section */}
-        <section className="cta-section">
-          <div className="container">
+        </div>
+        <div className="container">
+          <div className="home-banner">
             <div className="row align-items-center">
               <div className="col-lg-7">
-                <div className="cta-content">
-                  <h3>
-                    Earn Cash by <span>Selling</span> <br />
-                    or Find Anything you desire
-                  </h3>
-                  <p>
-                    There are many variations of passages of Lorem Ipsum
-                    available, but the majority have suffered alteration in some
-                    form, by injected humo or randomised words which don't look
-                    even slightlys
+                <div className="section-search aos" data-aos="fade-up">
+                  <p className="explore-text">
+                    {" "}
+                    <span>Explore top-rated attractions</span>
                   </p>
-                  <div className="cta-btn">
-                    <Link
-                      href="/add-listing"
-                      className="btn-primary postad-btn"
-                    >
-                      Post Your Ads
-                    </Link>
-                    <Link href="/listing-grid-sidebar" className="browse-btn">
-                      Browse Ads
-                    </Link>
+                  <img
+                    src="./img/arrow-banner.png"
+                    className="arrow-img"
+                    alt="arrow"
+                  />
+                  <h1>
+                    Let us help you <br />
+                    <span>Find, Buy</span> & Own Dreams
+                  </h1>
+                  <p>
+                    Countrys most loved and trusted classNameified ad listing
+                    website classNameified ad.randomised words which don't look
+                    even slightly Browse thousand of items near you.
+                  </p>
+                  <div className="search-box">
+                    <form onSubmit={handleSearch} className="d-flex">
+                      <div className="search-input">
+                        <div className="form-group">
+                          <div className="group-img">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Search"
+                              value={searchText}
+                              onChange={(e) => setSearchText(e.target.value)}
+                            />
+                            <i className="feather-search"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="search-btn">
+                        <button className="btn btn-primary" type="submit">
+                          <i className="fa fa-search" aria-hidden="true"></i>{" "}
+                          Search
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
               <div className="col-lg-5">
-                <div className="cta-img">
-                  <img src={CtaImg} className="img-fluid" alt="CTA" />
+                <div className="banner-imgs">
+                  <img
+                    src="./img/Right-img.png"
+                    className="img-fluid"
+                    alt="bannerimage"
+                  />
                 </div>
               </div>
             </div>
           </div>
-        </section>
-        {/* CTA Section */}
+        </div>
+        <img
+          src="./img/bannerellipse.png"
+          className="img-fluid banner-elipse"
+          alt="arrow"
+        />
+        <img
+          src="./img/banner-arrow.png"
+          className="img-fluid bannerleftarrow"
+          alt="arrow"
+        />
+      </section>
+      {/* Banner Section */}
 
-        {/* Client Testimonial Section */}
-        <Testimonial />
-        {/* Client Testimonial Section */}
+      {/* Category Section */}
+      <section className="category-section">
+        <div className="container">
+          <div className="section-heading">
+            <div className="row align-items-center">
+              <div
+                className="col-md-6 aos aos-init aos-animate"
+                data-aos="fade-up"
+              >
+                <h2>
+                  Our <span className="title-left magentaCircle">Cat</span>
+                  egory
+                </h2>
+                <p>Buy and Sell Everything from Used Our Top Category</p>
+              </div>
+              <div
+                className="col-md-6 text-md-end aos aos-init aos-animate"
+                data-aos="fade-up"
+              >
+                <Link href="/categories" className="btn  btn-view">
+                  View All
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            {websiteData?.businessCategories &&
+              websiteData?.businessCategories.map((item, i) => (
+                <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
+                  <Link
+                    href={`/categories/${item.id}`}
+                    className="category-links"
+                  >
+                    <h5>{item.name}</h5>
 
-        {/* Partners Section */}
-        <div className="partners-section">
-          <div className="container">
-            <p className="partners-heading">
-              Over 5,26,000+ Sponsers being contact with us
-            </p>
-            <Sponsors />
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
+                      alt="icons"
+                    />
+                  </Link>
+                </div>
+              ))}
           </div>
         </div>
-        {/* Partners Section */}
+      </section>
+      {/* Category Section */}
 
-        {/* Pricing Plan Section */}
-        <section className="pricingplan-section">
+      {/* Featured Ads Section */}
+      <Carousel businessData={businessData} />
+      {/* Featured Ads Section */}
+
+      {/* Popular Location Section */}
+      <section className="popular-locations grid-view featured-slider">
+        <div className="popular-circleimg">
+          <img
+            className="img-fluid"
+            src="./img/popular-img.png"
+            alt="Popular-sections"
+          />
+        </div>
+        <div className="container">
+          <div className="section-heading">
+            <h2>
+              Latest <span className="whiteCircle">Bus</span>inesses
+            </h2>
+            <p>
+              Start by selecting your favuorite location and explore the goods
+            </p>
+          </div>
+          <div className="lateestads-content">
+            <div className="row">
+              {latestBusiness &&
+                latestBusiness.map((item, i) => (
+                  <div className="col-lg-3 col-md-4 col-sm-6 d-flex" key={i}>
+                    <div className="card aos flex-fill" data-aos="fade-up">
+                      <div className="blog-widget">
+                        <div className="blog-img">
+                          <Link href="/service-details">
+                            <Image
+                              src={`${
+                                process.env.NEXT_PUBLIC_BASE_URL + item.image
+                              }`}
+                              width={312}
+                              height={252}
+                              className="img-fluid"
+                              alt="blog-img"
+                            />
+                          </Link>
+                          <div className="fav-item">
+                            {/* <span className="Featured-text">Featured</span> */}
+                            <Link href="#" className="fav-icon">
+                              <i className="feather-heart"></i>
+                            </Link>
+                          </div>
+                        </div>
+                        <div className="bloglist-content">
+                          <div className="card-body">
+                            <div className="blogfeaturelink">
+                              {/* <div className="grid-author">
+                                  <img src={ProfileAvatar02} alt="author" /> 
+                                </div> */}
+                              <div className="blog-features text-black">
+                                <Link href="#">
+                                  <span>
+                                    {" "}
+                                    <i className="fa-regular fa-circle-stop"></i>{" "}
+                                    {item.name}
+                                  </span>
+                                </Link>
+                              </div>
+                              <div className="blog-author text-end text-black">
+                                <span>
+                                  {" "}
+                                  <i className="feather-eye"></i> 4000{" "}
+                                </span>
+                              </div>
+                            </div>
+                            {/* <h6 className="text-black">
+                                <Link href="/service-details">
+                                  2017 Gulfsteam Ameri-lite
+                                </Link>
+                              </h6> */}
+                            <div className="blog-location-details text-black">
+                              <div className="location-info">
+                                <i className="feather-map-pin"></i>{" "}
+                                {item.address}
+                              </div>
+                              <div className="location-info">
+                                <i className="fa-solid fa-calendar-days"></i> 06
+                                Oct, 2022
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+          <div className="align-items-center">
+            <Link href="/listing-grid-sidebar" className="browse-btn">
+              Browse Ads
+            </Link>
+          </div>
+        </div>
+      </section>
+      {/* Popular Location Section */}
+
+      {/* Latest ads Section */}
+
+      {/* Latest ads Section */}
+
+      {/* CTA Section */}
+
+      {/* CTA Section */}
+
+      {/* Client Testimonial Section */}
+
+      {/* Client Testimonial Section */}
+
+      {/* Partners Section */}
+      <div className="partners-section">
+        <div className="container">
+          {/* <p className="partners-heading">
+              Over 5,26,000+ Sponsers being contact with us
+            </p> */}
+          {/* <Sponsors /> */}
+        </div>
+      </div>
+      {/* Partners Section */}
+
+      {/* Pricing Plan Section */}
+      {/* <section className="pricingplan-section">
           <div className="section-heading">
             <div className="container">
               <div className="row text-center">
@@ -1273,199 +581,17 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-        </section>
-        {/* Pricing Plan Section */}
+        </section> */}
+      {/* Pricing Plan Section */}
 
-        {/* Blog Section */}
-        <section className="blog-section">
-          <div className="section-heading">
-            <div className="container">
-              <div className="row align-items-center">
-                <div
-                  className="col-md-6 aos aos-init aos-animate"
-                  data-aos="fade-up"
-                >
-                  <h2>
-                    Lat<span className="title-right">est</span> Blog
-                  </h2>
-                  <p>
-                    people are giving these goods for free so check them out
-                  </p>
-                </div>
-                <div
-                  className="col-md-6 text-md-end aos aos-init aos-animate"
-                  data-aos="fade-up"
-                >
-                  <Link href="/blog-grid" className="btn  btn-view">
-                    View All
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-4 col-md-4 d-flex">
-                <div className="blog grid-blog">
-                  <div className="blog-image">
-                    <Link href="blog-details">
-                      <img className="img-fluid" src={Blog1} alt="Post Image" />
-                    </Link>
-                  </div>
-                  <div className="blog-content">
-                    <p className="blog-category">
-                      <Link href="#">
-                        <span>Health</span>
-                      </Link>
-                      <Link href="#">
-                        <span>Care</span>
-                      </Link>
-                    </p>
-                    <ul className="entry-meta meta-item">
-                      <li>
-                        <div className="post-author">
-                          <div className="post-author-img">
-                            <img src={ProfileAvatar14} alt="Post Author" />
-                          </div>
-                          <Link href="#" className="mb-0">
-                            {" "}
-                            <span> Amara </span>
-                          </Link>
-                        </div>
-                      </li>
-                      <li className="date-icon">
-                        <i className="fa-solid fa-calendar-days"></i> October 4,
-                        2023
-                      </li>
-                    </ul>
-                    <h3 className="blog-title">
-                      <Link href="/blog-details">
-                        The Best Spa Saloons for your relaxations?
-                      </Link>
-                    </h3>
-                    <p className="blog-description">
-                      Lorem ipsum dolor sit amet, consectetur em adipiscing
-                      elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet,
-                      consectetur em adipiscing elit,
-                    </p>
-                    <p className="viewlink">
-                      <Link href="/blog-details">
-                        View Details <i className="feather-arrow-right"></i>
-                      </Link>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-4 d-flex">
-                <div className="blog grid-blog">
-                  <div className="blog-image">
-                    <Link href="/blog-details">
-                      <img className="img-fluid" src={Blog2} alt="Post Image" />
-                    </Link>
-                  </div>
-                  <div className="blog-content">
-                    <p className="blog-category">
-                      <Link href="#">
-                        <span>Health</span>
-                      </Link>
-                      <Link href="#">
-                        <span>Care</span>
-                      </Link>
-                    </p>
-                    <ul className="entry-meta meta-item">
-                      <li>
-                        <div className="post-author">
-                          <div className="post-author-img">
-                            <img src={ProfileAvatar12} alt="Post Author" />
-                          </div>
-                          <Link href="#" className="mb-0">
-                            <span> Darryl </span>
-                          </Link>
-                        </div>
-                      </li>
-                      <li className="date-icon">
-                        <i className="fa-solid fa-calendar-days"></i> October 6,
-                        2023
-                      </li>
-                    </ul>
-                    <h3 className="blog-title">
-                      <Link href="/blog-details">
-                        Three Powerful Tricks For Online Advertising
-                      </Link>
-                    </h3>
-                    <p className="blog-description">
-                      Lorem ipsum dolor sit amet, consectetur em adipiscing
-                      elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet,
-                      consectetur em adipiscing elit,
-                    </p>
-                    <p className="viewlink">
-                      <Link href="/blog-details">
-                        View Details <i className="feather-arrow-right"></i>
-                      </Link>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 col-md-4 d-flex">
-                <div className="blog grid-blog">
-                  <div className="blog-image">
-                    <Link href="/blog-details">
-                      <img className="img-fluid" src={Blog3} alt="Post Image" />
-                    </Link>
-                  </div>
-                  <div className="blog-content">
-                    <p className="blog-category">
-                      <Link href="#">
-                        <span>Health</span>
-                      </Link>
-                      <Link href="#">
-                        <span>Care</span>
-                      </Link>
-                    </p>
-                    <ul className="entry-meta meta-item">
-                      <li>
-                        <div className="post-author">
-                          <div className="post-author-img">
-                            <img src={ProfileAvatar13} alt="Post Author" />
-                          </div>
-                          <Link href="#" className="mb-0">
-                            {" "}
-                            <span> Mary </span>
-                          </Link>
-                        </div>
-                      </li>
-                      <li className="date-icon">
-                        <i className="fa-solid fa-calendar-days"></i> October
-                        10, 2023
-                      </li>
-                    </ul>
-                    <h3 className="blog-title">
-                      <Link href="/blog-details">
-                        Competitive Analysis for Enterprerneurs in 20222
-                      </Link>
-                    </h3>
-                    <p className="blog-description">
-                      Lorem ipsum dolor sit amet, consectetur em adipiscing
-                      elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet,
-                      consectetur em adipiscing elit,
-                    </p>
-                    <p className="viewlink">
-                      <Link href="/blog-details">
-                        View Details <i className="feather-arrow-right"></i>
-                      </Link>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Blog Section */}
+      {/* Blog Section */}
 
-        {/* Footer */}
-        <Footer />
-        {/* Footer */}
-      </div>
+      {/* Blog Section */}
+
+      {/* Footer */}
+
+      {/* Footer */}
+
       {/* scrollToTop start */}
       <div className="progress-wrap active-progress">
         <svg

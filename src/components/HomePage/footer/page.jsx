@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Amexpay,
@@ -15,16 +15,71 @@ import {
 } from "../../imagepath";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { useSelector } from "react-redux";
+import settings from "../../../../utils/settings";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+import Image from "next/image";
+import { toast } from "react-toastify";
+library.add(fab);
 
 const Footer = () => {
+  const [firstCol, setFirstCol] = useState(null);
+  const [secondCol, setSecondCol] = useState(null);
+  const [thirdCol, setThirdCol] = useState(null);
+  const [footerContent, setFooterContent] = useState(null);
+  const [email, setEmail] = useState("");
+
+  const setting = settings();
+
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
+
+  const websiteData = useSelector((state) => state.websiteSetup.data);
+
+  useEffect(() => {
+    if (!footerContent) {
+      setFooterContent(websiteData?.footer);
+    }
+  });
+
+  useEffect(() => {
+    if (!firstCol) {
+      setFirstCol(websiteData?.footer_first_col);
+    }
+  });
+  useEffect(() => {
+    if (!secondCol) {
+      setSecondCol(websiteData?.footer_second_col);
+    }
+  });
+  useEffect(() => {
+    if (!thirdCol) {
+      setThirdCol(websiteData?.footer_third_col);
+    }
+  });
+
+  const subscribehandler = () => {
+    const response = axios
+      .post(`${process.env.NEXT_PUBLIC_BASE_URL}api/subscribe-request`, {
+        email: email,
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error(err.response && err.response.data.message);
+      });
+  };
+
   return (
     <footer className="footer">
       <div className="container">
-        <div className="stay-tuned">
+        {/* <div className="stay-tuned">
           <h3>Stay Tuned With Us</h3>
           <p>
             Subcribe to our newletter and never miss our latest news and
@@ -35,18 +90,24 @@ const Footer = () => {
               <div className="group-img">
                 <i className="feather-mail"></i>
                 <input
+                  onChange={(e) => setEmail(e.target.value.trim())}
+                  value={email}
                   type="text"
                   className="form-control"
                   placeholder="Enter Email Address"
                 />
               </div>
             </div>
-            <button className="btn btn-primary" type="submit">
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={subscribehandler}
+            >
               {" "}
               Subscribe
             </button>
           </form>
-        </div>
+        </div> */}
       </div>
 
       <div className="footer-top aos" data-aos="fade-up">
@@ -55,122 +116,102 @@ const Footer = () => {
             <div className="col-lg-3 col-md-6">
               <div className="footer-widget">
                 <div className="footer-logo">
-                  <Link href ="#">
-                    <img src={FooterLogo} alt="logo" />
+                  <Link href="/">
+                    <Image
+                      src={`${
+                        process.env.NEXT_PUBLIC_BASE_URL +
+                        websiteData?.setting?.logo
+                      }`}
+                      alt="logo"
+                      width={200}
+                      height={100}
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        objectFit: "contain",
+                      }}
+                      unoptimized={true}
+                    />
                   </Link>
                 </div>
                 <div className="footer-content">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt et magna aliqua.{" "}
-                  </p>
+                  <p>{websiteData?.footer?.about_us}</p>
                 </div>
                 <div className="social-icon">
                   <ul>
-                    <li>
-                      <Link href ="#" target="_blank">
-                        <i className="fab fa-facebook-f"></i>{" "}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href ="#" target="_blank">
-                        <i className="fab fa-twitter"></i>{" "}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href ="#" target="_blank">
-                        <i className="fab fa-instagram"></i>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href ="#" target="_blank">
-                        <i className="fab fa-linkedin-in"></i>
-                      </Link>
-                    </li>
+                    {websiteData?.social_links?.map((socialLink) => (
+                      <li key={socialLink.id}>
+                        <Link href={socialLink.link} target="_blank">
+                          <FontAwesomeIcon icon={socialLink.icon} />
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
             </div>
-            <div className="col-lg-2 col-md-6">
-              <div className="footer-widget footer-menu">
-                <h2 className="footer-title">About us</h2>
-                <ul>
-                  <li>
-                    <Link href ="/about">Our product</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Documentation</Link>
-                  </li>
-                  <li>
-                    <Link href ="/service-details">Our Services</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Get Started Us</Link>
-                  </li>
-                  <li>
-                    <Link href ="/contact">Contact Us</Link>
-                  </li>
-                </ul>
+            {firstCol && firstCol.col_links.length !== 0 && (
+              <>
+                <div className="col-lg-2 col-md-6">
+                  <div className="footer-widget footer-menu">
+                    <h2 className="footer-title"> {firstCol.columnTitle}</h2>
+                    <ul>
+                      {firstCol.col_links.length > 0 &&
+                        firstCol.col_links.map((item, i) => (
+                          <li key={i}>
+                            <Link href={item.link}>{item.title}</Link>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+              </>
+            )}
+            {secondCol && secondCol.col_links.length !== 0 && (
+              <div className="col-lg-2 col-md-6">
+                <div className="footer-widget footer-menu">
+                  <h2 className="footer-title"> {secondCol.columnTitle}</h2>
+                  <ul>
+                    {secondCol.col_links.length > 0 &&
+                      secondCol.col_links.map((item, i) => (
+                        <li key={i}>
+                          <Link href={item.link}> {item.title}</Link>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div className="col-lg-2 col-md-6">
-              <div className="footer-widget footer-menu">
-                <h2 className="footer-title">Quick links</h2>
-                <ul>
-                  <li>
-                    <Link href ="#">Market Place</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Documentation</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Customers</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Carriers</Link>
-                  </li>
-                  <li>
-                    <Link href ="/blog-list">Our Blog</Link>
-                  </li>
-                </ul>
+            )}
+            {thirdCol && thirdCol.col_links.length !== 0 && (
+              <div className="col-lg-2 col-md-6">
+                <div className="footer-widget footer-menu">
+                  <h2 className="footer-title"> {thirdCol.columnTitle}</h2>
+                  <ul>
+                    {thirdCol.col_links.length > 0 &&
+                      thirdCol.col_links.map((item, i) => (
+                        <li key={i}>
+                          <Link href={item.link}> {item.title}</Link>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div className="col-lg-2 col-md-6">
-              <div className="footer-widget footer-menu">
-                <h2 className="footer-title">Top Cities</h2>
-                <ul>
-                  <li>
-                    <Link href ="#">Manhatten</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Los Angeles</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Houston</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Chicago</Link>
-                  </li>
-                  <li>
-                    <Link href ="#">Alabama</Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            )}
             <div className="col-lg-3 col-md-6">
               <div className="footer-widget">
                 <h2 className="footer-title">Communication</h2>
                 <div className="footer-contact-info">
                   <div className="footer-address">
-                    <img src={CallCallingSvg} alt="Callus" />
+                    <img src="img/call-calling.svg" alt="Callus" />
                     <p>
-                      <span>Call Us</span> <br /> +017 123 456 78{" "}
+                      <span>Call Us</span> <br /> {websiteData?.footer?.phone}{" "}
                     </p>
                   </div>
                   <div className="footer-address">
-                    <img src={SmsTracking} alt="Callus" />
+                    <img src="/img/sms-tracking.svg" alt="Callus" />
                     <p>
-                      <span>Send Message</span> <br /> listee@example.com{" "}
+                      <span>Send Message</span> <br />{" "}
+                      {websiteData?.footer?.email}
                     </p>
                   </div>
                 </div>
@@ -203,33 +244,57 @@ const Footer = () => {
                   <p>We Accept</p>
                   <ul className="d-flex">
                     <li>
-                      <Link href ="#">
-                        <img className="img-fluid" src={Amexpay} alt="amex" />
+                      <Link href="#">
+                        <img
+                          className="img-fluid"
+                          src="/img/amex-pay.svg"
+                          alt="amex"
+                        />
                       </Link>
                     </li>
                     <li>
-                      <Link href ="#">
-                        <img className="img-fluid" src={Applepay} alt="pay" />
+                      <Link href="#">
+                        <img
+                          className="img-fluid"
+                          src="/img/apple-pay.svg"
+                          alt="pay"
+                        />
                       </Link>
                     </li>
                     <li>
-                      <Link href ="#">
-                        <img className="img-fluid" src={Gpay} alt="gpay" />
+                      <Link href="#">
+                        <img
+                          className="img-fluid"
+                          src="/img/gpay.svg"
+                          alt="gpay"
+                        />
                       </Link>
                     </li>
                     <li>
-                      <Link href ="#">
-                        <img className="img-fluid" src={Master} alt="paycard" />
+                      <Link href="#">
+                        <img
+                          className="img-fluid"
+                          src="/img/master.svg"
+                          alt="paycard"
+                        />
                       </Link>
                     </li>
                     <li>
-                      <Link href ="#">
-                        <img className="img-fluid" src={Phone} alt="spay" />
+                      <Link href="#">
+                        <img
+                          className="img-fluid"
+                          src="/img/phone.svg"
+                          alt="spay"
+                        />
                       </Link>
                     </li>
                     <li>
-                      <Link href ="#">
-                        <img className="img-fluid" src={Visa} alt="visa" />
+                      <Link href="#">
+                        <img
+                          className="img-fluid"
+                          src="/img/visa.svg"
+                          alt="visa"
+                        />
                       </Link>
                     </li>
                   </ul>
@@ -246,22 +311,20 @@ const Footer = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="copyright-text">
-                  <p className="mb-0">
-                    All Copyrights Reserved &copy; 2023 - Listee.
-                  </p>
+                  <p className="mb-0">{websiteData?.footer?.copyright}</p>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="copyright-menu">
                   <ul className="policy-menu">
                     <li>
-                      <Link href ="/privacy-policy">Privacy </Link>
+                      <Link href="/privacy-policy">Privacy </Link>
                     </li>
                     <li>
-                      <Link href ="/faq">Faq </Link>
+                      <Link href="/faq">Faq </Link>
                     </li>
                     <li>
-                      <Link href ="/terms-condition">Terms</Link>
+                      <Link href="/terms-condition">Terms</Link>
                     </li>
                   </ul>
                 </div>

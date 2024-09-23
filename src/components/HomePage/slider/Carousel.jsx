@@ -14,8 +14,11 @@ import {
 } from "../../imagepath";
 import Slider from "react-slick";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
-export default function Carousel() {
+export default function Carousel({ businessData }) {
+  const [error, setError] = useState(null);
+
   const settings = {
     dots: false,
     arrows: false,
@@ -25,6 +28,8 @@ export default function Carousel() {
     slidesToShow: 4,
     slidesToScroll: 1,
   };
+
+  console.log("carousel page", businessData);
   const slider = useRef();
   return (
     <section className="featured-section">
@@ -44,8 +49,10 @@ export default function Carousel() {
                 type="button"
                 role="presentation"
                 className="owl-prev"
-                onClick={() => {console.log(slider?.current); slider?.current?.slickPrev()}}
-                
+                onClick={() => {
+                  console.log(slider?.current);
+                  slider?.current?.slickPrev();
+                }}
               >
                 <i className="fa-solid fa-angle-left"></i>
               </button>
@@ -62,403 +69,75 @@ export default function Carousel() {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <div >
-              <Slider ref={slider} {...settings} className=" featured-slider grid-view">
-                <div className="card aos" data-aos="fade-up">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <Link href ="/service-details">
-                        <img
-                          src={Feature9}
-                          className="img-fluid"
-                          alt="blog-img"
-                        />
-                      </Link>
-                      <div className="fav-item">
-                        <span className="Featured-text">Featured</span>
-                        <Link href ="#" className="fav-icon">
-                          <i className="feather-heart"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <div className="blogfeaturelink">
-                          <div className="grid-author">
-                            <img src={ProfileAvatar02} alt="author" />
-                          </div>
-                          <div className="blog-features">
-                            <Link href ="#">
-                              <span>
-                                {" "}
-                                <i className="fa-regular fa-circle-stop"></i>{" "}
-                                Education
-                              </span>
+            <div>
+              <Slider
+                ref={slider}
+                {...settings}
+                className=" featured-slider grid-view"
+              >
+                {businessData &&
+                  businessData.map((item, index) => (
+                    <div className="card aos" data-aos="fade-up " key={index}>
+                      <div className="blog-widget">
+                        <div className="blog-img">
+                          <Link href={`business-details/${item.id}`}>
+                            <img
+                              src={`${
+                                process.env.NEXT_PUBLIC_BASE_URL + item.image
+                              }`}
+                              className="img-fluid"
+                              alt="blog-img"
+                            />
+                          </Link>
+                          <div className="fav-item">
+                            <span className="Featured-text">Featured</span>
+                            <Link href="#" className="fav-icon">
+                              <i className="feather-heart"></i>
                             </Link>
                           </div>
-                          <div className="blog-author text-end">
-                            <span>
-                              {" "}
-                              <i className="feather-eye"></i>4000{" "}
-                            </span>
-                          </div>
                         </div>
-                        <h6>
-                          <Link href ="/service-details">
-                            2017 Gulfsteam Ameri-lite
-                          </Link>
-                        </h6>
-                        <div className="blog-location-details">
-                          <div className="location-info">
-                            <i className="feather-map-pin"></i> Los Angeles
-                          </div>
-                          <div className="location-info">
-                            <i className="fa-regular fa-calendar-days"></i> 06
-                            Oct, 2022
-                          </div>
-                        </div>
-                        <div className="amount-details">
-                          <div className="amount">
-                            <span className="validrate">$350</span>
-                            <span>$450</span>
-                          </div>
-                          <div className="ratings">
-                            <span>4.7</span> (50)
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card aos" data-aos="fade-up">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <Link href ="/service-details">
-                        <img
-                          src={Feature2}
-                          className="img-fluid"
-                          alt="blog-img"
-                        />
-                      </Link>
-                      <div className="fav-item">
-                        <span className="Featured-text">Featured</span>
-                        <Link href ="#" className="fav-icon">
-                          <i className="feather-heart"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <div className="blogfeaturelink">
-                          <div className="grid-author">
-                            <img src={ProfileAvatar05} alt="author" />
-                          </div>
-                          <div className="blog-features">
-                            <Link href ="#">
-                              <span>
-                                {" "}
-                                <i className="fa-regular fa-circle-stop"></i>{" "}
-                                Electronics
-                              </span>
-                            </Link>
-                          </div>
-                          <div className="blog-author text-end">
-                            <span>
-                              {" "}
-                              <i className="feather-eye"></i>4000{" "}
-                            </span>
-                          </div>
-                        </div>
-                        <h6>
-                          <Link href ="/service-details">
-                            Fashion luxury Men date
-                          </Link>
-                        </h6>
-                        <div className="blog-location-details">
-                          <div className="location-info">
-                            <i className="feather-map-pin"></i> Los Angeles
-                          </div>
-                          <div className="location-info">
-                            <i className="fa-solid fa-calendar-days"></i> 08
-                            Oct, 2022
-                          </div>
-                        </div>
-                        <div className="amount-details">
-                          <div className="amount">
-                            <span className="validrate">$250</span>
-                            <span>$350</span>
-                          </div>
-                          <div className="ratings">
-                            <span>4.6</span> (50)
+                        <div className="bloglist-content">
+                          <div className="card-body">
+                            <div className="blogfeaturelink">
+                              <div className="grid-author">
+                                {/* <img src={ProfileAvatar02} alt="author" /> */}
+                              </div>
+                              <div className="blog-features">
+                                <Link href={`business-details/${item.id}`}>
+                                  <span>
+                                    {" "}
+                                    <i className="fa-regular fa-circle-stop"></i>{" "}
+                                    {item.business_category.name}
+                                  </span>
+                                </Link>
+                              </div>
+                              <div className="blog-author text-end">
+                                <span>
+                                  {" "}
+                                  <i className="feather-eye"></i>4000{" "}
+                                </span>
+                              </div>
+                            </div>
+                            <h6>
+                              <Link href={`business-details/${item.id}`}>
+                                {item.name}
+                              </Link>
+                            </h6>
+                            <div className="blog-location-details">
+                              <div className="location-info">
+                                <i className="feather-map-pin"></i>{" "}
+                                {item.address}
+                              </div>
+                              <div className="location-info">
+                                <i className="fa-regular fa-calendar-days"></i>{" "}
+                                06 Oct, 2022
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="card aos" data-aos="fade-up">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <Link href ="/service-details">
-                        <img
-                          src={Feature3}
-                          className="img-fluid"
-                          alt="blog-img"
-                        />
-                      </Link>
-                      <div className="fav-item">
-                        <span className="Featured-text">Featured</span>
-                        <Link href ="#" className="fav-icon">
-                          <i className="feather-heart"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <div className="blogfeaturelink">
-                          <div className="grid-author">
-                            <img src={ProfileAvatar04} alt="author" />
-                          </div>
-                          <div className="blog-features">
-                            <Link href ="#">
-                              <span>
-                                {" "}
-                                <i className="fa-regular fa-circle-stop"></i>{" "}
-                                Electronics
-                              </span>
-                            </Link>
-                          </div>
-                          <div className="blog-author text-end">
-                            <span>
-                              {" "}
-                              <i className="feather-eye"></i>4000{" "}
-                            </span>
-                          </div>
-                        </div>
-                        <h6>
-                          <Link href ="/service-details">
-                            Apple Iphone 6 16GB 4G LTE
-                          </Link>
-                        </h6>
-                        <div className="blog-location-details">
-                          <div className="location-info">
-                            <i className="feather-map-pin"></i> Los Angeles
-                          </div>
-                          <div className="location-info">
-                            <i className="fa-solid fa-calendar-days"></i> 09
-                            Oct, 2022
-                          </div>
-                        </div>
-                        <div className="amount-details">
-                          <div className="amount">
-                            <span className="validrate">$550</span>
-                            <span>$400</span>
-                          </div>
-                          <div className="ratings">
-                            <span>4.7</span> (50)
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card aos" data-aos="fade-up">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <Link href ="/service-details">
-                        <img
-                          src={Feature4}
-                          className="img-fluid"
-                          alt="blog-img"
-                        />
-                      </Link>
-                      <div className="fav-item">
-                        <span className="Featured-text">Featured</span>
-                        <Link href ="#" className="fav-icon">
-                          <i className="feather-heart"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <div className="blogfeaturelink">
-                          <div className="grid-author">
-                            <img src={ProfileAvatar05} alt="author" />
-                          </div>
-                          <div className="blog-features">
-                            <Link href ="#">
-                              <span>
-                                {" "}
-                                <i className="fa-regular fa-circle-stop"></i>{" "}
-                                Gadgets
-                              </span>
-                            </Link>
-                          </div>
-                          <div className="blog-author text-end">
-                            <span>
-                              {" "}
-                              <i className="feather-eye"></i>4000{" "}
-                            </span>
-                          </div>
-                        </div>
-                        <h6>
-                          <Link href ="/service-details">
-                            Customized Apple Imac{" "}
-                          </Link>
-                        </h6>
-                        <div className="blog-location-details">
-                          <div className="location-info">
-                            <i className="feather-map-pin"></i> Los Angeles
-                          </div>
-                          <div className="location-info">
-                            <i className="fa-solid fa-calendar-days"></i> 10
-                            Oct, 2022
-                          </div>
-                        </div>
-                        <div className="amount-details">
-                          <div className="amount">
-                            <span className="validrate">$450</span>
-                            <span>$300</span>
-                          </div>
-                          <div className="ratings">
-                            <span>4.5</span> (50)
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card aos" data-aos="fade-up">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <Link href ="/service-details">
-                        <img
-                          src={Feature9}
-                          className="img-fluid"
-                          alt="blog-img"
-                        />
-                      </Link>
-                      <div className="fav-item">
-                        <span className="Featured-text">Featured</span>
-                        <Link href ="#" className="fav-icon">
-                          <i className="feather-heart"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <div className="blogfeaturelink">
-                          <div className="grid-author">
-                            <img src={ProfileAvatar02} alt="author" />
-                          </div>
-                          <div className="blog-features">
-                            <Link href ="#">
-                              <span>
-                                {" "}
-                                <i className="fa-regular fa-circle-stop"></i>{" "}
-                                Education
-                              </span>
-                            </Link>
-                          </div>
-                          <div className="blog-author text-end">
-                            <span>
-                              {" "}
-                              <i className="feather-eye"></i>4000{" "}
-                            </span>
-                          </div>
-                        </div>
-                        <h6>
-                          <Link href ="/service-details">
-                            2017 Gulfsteam Ameri-lite
-                          </Link>
-                        </h6>
-                        <div className="blog-location-details">
-                          <div className="location-info">
-                            <i className="feather-map-pin"></i> Los Angeles
-                          </div>
-                          <div className="location-info">
-                            <i className="fa-solid fa-calendar-days"></i> 06
-                            Oct, 2022
-                          </div>
-                        </div>
-                        <div className="amount-details">
-                          <div className="amount">
-                            <span className="validrate">$350</span>
-                            <span>$450</span>
-                          </div>
-                          <div className="ratings">
-                            <span>4.7</span> (50)
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card aos" data-aos="fade-up">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <Link href ="/service-details">
-                        <img
-                          src={Feature5}
-                          className="img-fluid"
-                          alt="blog-img"
-                        />
-                      </Link>
-                      <div className="fav-item">
-                        <span className="Featured-text">Featured</span>
-                        <Link href ="#" className="fav-icon">
-                          <i className="feather-heart"></i>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <div className="blogfeaturelink">
-                          <div className="grid-author">
-                            <img src={ProfileAvatar06} alt="author" />
-                          </div>
-                          <div className="blog-features">
-                            <Link href ="#">
-                              <span>
-                                {" "}
-                                <i className="fa-regular fa-circle-stop"></i>{" "}
-                                Construction
-                              </span>
-                            </Link>
-                          </div>
-                          <div className="blog-author text-end">
-                            <span>
-                              <i className="feather-eye"></i> 4000{" "}
-                            </span>
-                          </div>
-                        </div>
-                        <h6>
-                          <Link href ="/service-details">
-                            Villa 457 sq.m. In Benidorm Fully
-                          </Link>
-                        </h6>
-                        <div className="blog-location-details">
-                          <div className="location-info">
-                            <i className="feather-map-pin"></i> Los Angeles
-                          </div>
-                          <div className="location-info">
-                            <i className="fa-solid fa-calendar-days"></i> 11
-                            Oct, 2022
-                          </div>
-                        </div>
-                        <div className="amount-details">
-                          <div className="amount">
-                            <span className="validrate">$650</span>
-                            <span>$600</span>
-                          </div>
-                          <div className="ratings">
-                            <span>4.5</span> (50)
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  ))}
               </Slider>
             </div>
           </div>
