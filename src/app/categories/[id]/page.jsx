@@ -1,0 +1,181 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import axios from "axios";
+
+const CategoryPage = ({ params }) => {
+  const { id } = params;
+  const [categoryData, setCategoryData] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      fetchCategoryData(id);
+    }
+  }, [id]);
+
+  const fetchCategoryData = (categoryId) => {
+    axios
+      .get(`https://s1.shopico.in/atlantic/api/category-list/${categoryId}`)
+      .then((response) => {
+        setCategoryData(response.data);
+        console.log("API response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching category data:", error);
+      });
+  };
+
+  if (!categoryData) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <>
+      <div className="breadcrumb-bar">
+        <div className="container">
+          <div className="row align-items-center text-center">
+            <div className="col-md-12 col-12">
+              <h2 className="breadcrumb-title">Listings-Categories</h2>
+              <nav aria-label="breadcrumb" className="page-breadcrumb">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <Link href="/">Home</Link>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Categories
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section className="category-section">
+        <div className="container">
+          {categoryData.children && categoryData.children.length > 0 && (
+            <>
+              <div className="section-heading text-center">
+                <div className="row align-items-center">
+                  <div
+                    className="col-md-12 aos aos-init aos-animate"
+                    data-aos="fade-up"
+                  >
+                    <h2>
+                      <span className="title-left magentaCircle">Cat</span>egory
+                    </h2>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                {categoryData.children.map((item, i) => (
+                  <div className="col-lg-3 col-md-4" key={i}>
+                    <Link
+                      href={`/categories/${item.id}`}
+                      className="category-links"
+                    >
+                      <h5>{item.name}</h5>
+                      <span>09 Ads</span>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
+                        alt="icons"
+                        className="img-fluid"
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          maxHeight: "200px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {categoryData.business && categoryData.business.length > 0 && (
+            <>
+              <div className="section-heading text-center mt-5">
+                <div className="row align-items-center">
+                  <div
+                    className="col-md-12 aos aos-init aos-animate"
+                    data-aos="fade-up"
+                  >
+                    <h2>
+                      <span className="title-left magentaCircle">Bus</span>iness
+                    </h2>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lateestads-content mt-4">
+                <div className="row">
+                  {categoryData.business.map((item, i) => (
+                    <div className="col-lg-3 col-md-4 col-sm-6 d-flex" key={i}>
+                      <div className="card aos flex-fill" data-aos="fade-up">
+                        <div className="blog-widget">
+                          <div className="blog-img">
+                            <Link
+                              href={`/business-details/${item.id}`}
+                              legacyBehavior
+                            >
+                              <a>
+                                <Image
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_BASE_URL +
+                                    item.image
+                                  }`}
+                                  width={312}
+                                  height={252}
+                                  className="img-fluid"
+                                  alt="blog-img"
+                                />
+                              </a>
+                            </Link>
+                            <div className="fav-item">
+                              {/* Favorite icon code removed */}
+                            </div>
+                          </div>
+                          <div className="bloglist-content">
+                            <div className="card-body">
+                              <div className="blogfeaturelink">
+                                <div className="blog-features text-black">
+                                  <Link href={`/business-details/${item.id}`}>
+                                    <span>
+                                      <i className="fa-regular fa-circle-stop"></i>{" "}
+                                      {item?.display_name}
+                                    </span>
+                                  </Link>
+                                </div>
+                              </div>
+                              <div className="blog-location-details text-black">
+                                <div className="location-info">
+                                  <i className="feather-map-pin"></i>{" "}
+                                  {item.address}
+                                </div>
+                                {/* <div className="location-info">
+                                  <i className="fa-solid fa-calendar-days"></i>{" "}
+                                  06 Oct, 2022
+                                </div> */}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default CategoryPage;
