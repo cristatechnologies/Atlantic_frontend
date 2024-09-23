@@ -141,6 +141,9 @@ const Header = ({ parms }) => {
                 <Link href="/about-us">About Us</Link>
               </li>
               <li>
+                <Link href="/daily-deals">Daily Deals</Link>
+              </li>
+              <li>
                 <Link href="/faq">FAQs</Link>
               </li>
               {!isLoggedIn && (
@@ -214,9 +217,8 @@ const Header = ({ parms }) => {
                     <Link className="dropdown-item" href="/user/profile">
                       Profile Settings
                     </Link>
-                    {/* <Link className="dropdown-item" href="/login">
-                      Logout
-                    </Link> */}
+                     <Link className="dropdown-item" href="/your-deals">
+Your Deals                    </Link> 
                   </div>
                 </li>
               </>
