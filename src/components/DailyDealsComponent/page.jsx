@@ -6,18 +6,28 @@ import axios from "axios";
 
 const DailyDealsComponent = () => {
   const [dailyOffers, setDailyOffers] = useState([]);
-const auth = JSON.parse(localStorage.getItem("auth"));
-const token = auth?.access_token;
   useEffect(() => {
+    // Fetch token from local storage on the client side
+    const auth =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("auth"))
+        : null;
+    const token = auth?.access_token;
+
+    if (!token) {
+      setError("Token not available. Please log in.");
+      return;
+    }
+
     const fetchDailyOffers = async () => {
       try {
-               const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`,
-         
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`
         );
         setDailyOffers(response.data);
       } catch (error) {
         console.error("Error fetching daily offers:", error);
+        setError("Failed to fetch daily offers.");
       }
     };
 

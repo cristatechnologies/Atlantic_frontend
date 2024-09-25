@@ -17,13 +17,16 @@ const EditOfferPage = ({ params }) => {
   });
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
+ 
 
+ 
   useEffect(() => {
     const fetchOffer = async () => {
       if (id) {
         try {
           const auth = JSON.parse(localStorage.getItem("auth"));
           const token = auth?.access_token;
+          
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers/${id}?token=${token}`
           );

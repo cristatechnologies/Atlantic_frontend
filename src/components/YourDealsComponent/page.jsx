@@ -9,15 +9,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Modal from "react-modal";
 
-
-
-
 const YourDealsComponent = () => {
-
-
-
-
-    const router = useRouter();
+  const router = useRouter();
   const [offers, setOffers] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newOffer, setNewOffer] = useState({
@@ -25,8 +18,8 @@ const YourDealsComponent = () => {
     description: "",
     image: null,
   });
-  const auth = JSON.parse(localStorage.getItem("auth"));
-  const token = auth?.access_token;
+  
+
   const customModalStyles = {
     content: {
       top: "50%",
@@ -46,6 +39,22 @@ const YourDealsComponent = () => {
       zIndex: 999,
     },
   };
+
+  // useEffect(() => {
+  //   // Fetch token from local storage on the client side
+  //   const auth =
+  //     typeof window !== "undefined"
+  //       ? JSON.parse(localStorage.getItem("auth"))
+  //       : null;
+  //   const fetchedToken = auth?.access_token;
+
+  //   if (!fetchedToken) {
+  //     toast.error("Token not available. Please log in.");
+  //     router.push("/login");
+  //     return;
+  //   }
+  //   setToken(fetchedToken); // Set the token in the state
+  // }, [router]);
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -67,6 +76,8 @@ const YourDealsComponent = () => {
 
   const handleStatusToggle = async (id, currentStatus) => {
     try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      const token = auth?.access_token;
       // API call to update status
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offer-status/${id}?token=${token}`,
@@ -96,6 +107,8 @@ const YourDealsComponent = () => {
   };
   const handleDelete = async (id) => {
     try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      const token = auth?.access_token;
       // API call to delete offer
       await axios.delete(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/delete-daily-offer/${id}?token=${token}`
@@ -129,13 +142,15 @@ const YourDealsComponent = () => {
     formData.append("image", newOffer.image);
 
     try {
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      const token = auth?.access_token;
       await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/store-daily-offer?token=${token}`,
         formData
       );
       toast.success("New offer added successfully");
       setModalIsOpen(false);
-      fetchOffers();
+router.reload("/your-deals")
     } catch (error) {
       console.error("Error adding new offer:", error);
       toast.error("Failed to add new offer");
@@ -217,19 +232,15 @@ const YourDealsComponent = () => {
                           checked={offer.status === 1}
                           onChange={() =>
                             handleStatusToggle(offer.id, offer.status)
-                          
-                        }
+                          }
                         />
                       </div>
                       <div className="col-md-3 d-flex justify-content-center">
-                          <Link href={`/your-deals/${offer.id}`}>
-                        <button
-                         
-                          className="btn btn-sm btn-primary action-button  ml-2"
-                        >
+                        <Link href={`/your-deals/${offer.id}`}>
+                          <button className="btn btn-sm btn-primary action-button  ml-2">
                             <i className="feather-edit" />
-                        </button>
-                          </Link>
+                          </button>
+                        </Link>
                         <button
                           onClick={() => handleDelete(offer.id)}
                           className="btn btn-sm btn-danger action-button ml-2"
@@ -250,6 +261,7 @@ const YourDealsComponent = () => {
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         style={customModalStyles}
+        ariaHideApp={false}
         contentLabel="Add New Offer"
       >
         <h2 className="mb-4">Add New Offer</h2>
