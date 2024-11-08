@@ -11,6 +11,7 @@ const LoginComponent = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const[region,setRegion ] = useState("");
   const router = useRouter();
 
   const handlePasswordChange = (evnt) => {
@@ -201,17 +202,7 @@ const LoginComponent = () => {
                     </div>
                   </div>
                   <div className="row">
-                    {/* <div className="col-md-6 col-sm-6">
-                      <label className="custom_check">
-                        <input
-                          type="checkbox"
-                          name="rememberme"
-                          className="rememberme"
-                        />
-                        <span className="checkmark" />
-                        Remember Me
-                      </label>
-                    </div> */}
+                   
                     <div className="col-md-6 col-sm-6">
                       <div className="text-md-end">
                         <Link className="forgot-link" href="/forgot-password">
@@ -234,30 +225,7 @@ const LoginComponent = () => {
                       </Link>
                     </p>
                   </div>
-                  {/* <div className="login-or">
-                    <span className="or-line" />
-                    <span className="span-or">
-                      Sign in with Social Media Accounts
-                    </span>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-apple w-100">
-                      <img src={apple} className="me-1" alt="img" />
-                      Sign in with Apple
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-google w-100">
-                      <img src={google} className="me-1" alt="img" />
-                      Sign in with Google
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-facebook w-100 mb-0">
-                      <img src={facebook} className="me-2" alt="img" />
-                      Continue with Facebook
-                    </Link>
-                  </div> */}
+                
                 </form>
                 {/* /Login Form */}
               </div>

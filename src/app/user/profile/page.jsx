@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import ProfileComponent from "@/components/ProfileComponent/ProfileComponent";
-import BusinessProfileComponent from "@/components/ProfileComponent/BusinessProfileComponent/page";
+import ProfileComponent from "@/components/ProfileComponent/page";
+import BusinessProfileComponent from "@/components/BusinessProfileComponent/page";
 
-const ProfilePage = () => {
+const Profile = () => {
   const [userType, setUserType] = useState(null);
 
   useEffect(() => {
@@ -27,6 +27,7 @@ const ProfilePage = () => {
   // }
 
   if (userType === "invalid") {
+    {console.log("invalid user")}
     // Handle invalid case (e.g., redirect or error message)
     return <div>Invalid User Type</div>;
   }
@@ -34,7 +35,9 @@ const ProfilePage = () => {
   return (
     <>
       {userType === 2 ? (
-        <ProfileComponent /> // Show ProfileComponent for user_type 2
+      
+        <ProfileComponent /> 
+        // Show ProfileComponent for user_type 2
       ) : (
         <>
           <BusinessProfileComponent />
@@ -44,4 +47,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default Profile;

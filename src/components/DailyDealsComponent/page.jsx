@@ -3,9 +3,14 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import useAuth from "@/hooks/useAuth";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 const DailyDealsComponent = () => {
+  useAuth();
+  const router = useRouter();
   const [dailyOffers, setDailyOffers] = useState([]);
+  const [Error,setError]=useState(null)
   useEffect(() => {
     // Fetch token from local storage on the client side
     const auth =
@@ -15,19 +20,20 @@ const DailyDealsComponent = () => {
     const token = auth?.access_token;
 
     if (!token) {
-      setError("Token not available. Please log in.");
+      toast.error("Please log in.");
+    router.push("/login")
       return;
     }
 
     const fetchDailyOffers = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/daily-offers`
         );
         setDailyOffers(response.data);
       } catch (error) {
         console.error("Error fetching daily offers:", error);
-        setError("Failed to fetch daily offers.");
+        
       }
     };
 

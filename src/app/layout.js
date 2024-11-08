@@ -7,11 +7,14 @@ import "../styles/style.css";
 import Header from "@/components/HomePage/header/page";
 import Footer from "@/components/HomePage/footer/page";
 import ClientWrapper from "./ClientWrapper";
-
+import "../styles/crista.css"
 import { Providers } from "@/components/providers";
 import "@yaireo/tagify/dist/tagify.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+library.add(fab);
 export default function RootLayout({ children }) {
   // To dispatch your actions
 

@@ -26,23 +26,21 @@ const ContactUsComponent = () => {
   return (
     <>
       {/*Inner Banner*/}
-      <div className="contactbanner innerbanner">
-        <div className="inner-breadcrumb">
-          <div className="container">
-            <div className="row align-items-center text-center">
-              <div className="col-md-12 col-12 ">
-                <h2 className="breadcrumb-title">Contact Us</h2>
-                <nav aria-label="breadcrumb" className="page-breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <Link href="/index">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      Contact us
-                    </li>
-                  </ol>
-                </nav>
-              </div>
+      <div className="breadcrumb-bar">
+        <div className="container">
+          <div className="row align-items-center text-center">
+            <div className="col-md-12 col-12">
+              <h2 className="breadcrumb-title">Contact - Us</h2>
+              <nav aria-label="breadcrumb" className="page-breadcrumb">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <Link href="/">Home</Link>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    contact-us{" "}
+                  </li>
+                </ol>
+              </nav>
             </div>
           </div>
         </div>
@@ -100,7 +98,7 @@ const ContactUsComponent = () => {
       </div>
       {/*/contact Information*/}
       {/*contact Form*/}
-      <section className="contactusform-section">
+      {/* <section className="contactusform-section">
         <div className="container">
           <div className="contact-info">
             <h2>
@@ -163,7 +161,7 @@ const ContactUsComponent = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/*/contact Form*/}
     </>
   );

@@ -9,7 +9,7 @@ import PageHead from "@/components/helper/PageHead/page";
 
 const CustomSlugComponent = ({ pathName }) => {
   const dispatch = useDispatch();
-  const websiteSetupData = useSelector((state) => state.websiteSetup.data);
+    const websiteData = useSelector((state) => state.websiteSetup.data);
   const loading = useSelector((state) => state.websiteSetup.loading);
   const error = useSelector((state) => state.websiteSetup.error);
   const [metaDetails, setMetaDetails] = useState({
@@ -21,7 +21,7 @@ const CustomSlugComponent = ({ pathName }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!websiteSetupData) {
+    if (!websiteData) {
       const fetchWebsiteSetup = async () => {
         try {
           const response = await fetch("/api/websiteSetup"); // Adjust the API endpoint
@@ -33,10 +33,10 @@ const CustomSlugComponent = ({ pathName }) => {
       };
       fetchWebsiteSetup();
     }
-  }, [dispatch, websiteSetupData]);
+  }, [dispatch, websiteData]);
 
   useEffect(() => {
-    if (websiteSetupData) {
+    if (websiteData) {
       const slug = pathName.split("/")[1];
       const findPage = (pages) => {
         for (let page of pages) {
@@ -50,7 +50,7 @@ const CustomSlugComponent = ({ pathName }) => {
         }
         return null;
       };
-      const customPage = findPage(websiteSetupData.customPages);
+      const customPage = findPage(websiteData.customPages);
       if (customPage) {
         const { description, page_name, slug } = customPage;
         setMetaDetails({
@@ -63,7 +63,7 @@ const CustomSlugComponent = ({ pathName }) => {
         router.push("/404");
       }
     }
-  }, [websiteSetupData, pathName, router]);
+  }, [websiteData, pathName, router]);
 
   if (loading) {
     return <div>Loading...</div>;

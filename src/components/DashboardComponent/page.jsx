@@ -312,10 +312,10 @@ const DashboardComponent = () => {
                               <i className="fas fa-star filled" />
                               <i className="fas fa-star filled" />
                             </div>
-                            <div>
+                            {/* <div>
                               <i className="fa-sharp fa-solid fa-calendar-days" />{" "}
                               4 months ago
-                            </div>
+                            </div> */}
                             <div>by: Demo Test</div>
                           </div>
                           <p>
@@ -345,10 +345,10 @@ const DashboardComponent = () => {
                               <i className="fas fa-star filled" />
                               <i className="fas fa-star filled" />
                             </div>
-                            <div>
+                            {/* <div>
                               <i className="fa-sharp fa-solid fa-calendar-days" />{" "}
                               4 months ago
-                            </div>
+                            </div> */}
                             <div>by: Demo Test</div>
                           </div>
                           <p>
