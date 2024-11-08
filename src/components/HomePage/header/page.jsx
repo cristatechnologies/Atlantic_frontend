@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import BlogMenu from "../../common/BlogMenu";
 import HomeMenu from "../../common/HomeMenu";
-import ListingMenu from "../../common/ListingMenu";
+import ListingMenu from "../../common/Categories";
 import PagesMenu from "../../common/PagesMenu";
 import UserPagesMenu from "../../common/UserPagesMenu";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 import Image from "next/image";
+import Categories from "../../common/Categories";
 const Header = ({ parms }) => {
   const [authData, setAuthData] = useState(null);
   const [drops, setDrops] = useState(false);
@@ -130,7 +131,9 @@ const Header = ({ parms }) => {
               <li>
                 <Link href="/">Home</Link>
               </li>
-              {/* <ListingMenu activeMenu={parms} />
+
+              <Categories activeMenu={parms} />
+              {/*
               <PagesMenu activeMenus={parms} />
               <UserPagesMenu />
               <BlogMenu activesMenus={parms} /> */}
@@ -139,6 +142,9 @@ const Header = ({ parms }) => {
               </li>
               <li>
                 <Link href="/about-us">About Us</Link>
+              </li>
+              <li>
+                <Link href="/active-deals">Active Deals </Link>
               </li>
               <li>
                 <Link href="/faq">FAQs</Link>
@@ -160,6 +166,35 @@ const Header = ({ parms }) => {
               )}
             </ul>
           </div>
+          {/* <div class="btn-group">
+            <button type="button" class="btn btn-danger">
+              Action
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger dropdown-toggle dropdown-toggle-split"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">
+                Action
+              </a>
+              <a class="dropdown-item" href="#">
+                Another action
+              </a>
+              <a class="dropdown-item" href="#">
+                Something else here
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">
+                Separated link
+              </a>
+            </div>
+          </div> */}
           <ul className="nav header-navbar-rht">
             {!isLoggedIn ? (
               <>
@@ -201,11 +236,14 @@ const Header = ({ parms }) => {
                     // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                   >
                     <img
-                      src={authData?.user?.image || "/img/pngegg.png"}
+                      src={
+                        `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
+                        "/img/pngegg.png"
+                      }
                       alt="User profile"
                     />
 
-                    <span>{authData.user?.name}</span>
+                    <span>{authData.user?.business?.name}</span>
                   </Link>
                   <div className="dropdown-menu dropdown-menu-end">
                     <Link className="dropdown-item" href="/user/dashboard">
@@ -214,9 +252,9 @@ const Header = ({ parms }) => {
                     <Link className="dropdown-item" href="/user/profile">
                       Profile Settings
                     </Link>
-                    {/* <Link className="dropdown-item" href="/login">
-                      Logout
-                    </Link> */}
+                    <Link className="dropdown-item" href="/your-deals">
+                      Your Deals{" "}
+                    </Link>
                   </div>
                 </li>
               </>
@@ -224,14 +262,7 @@ const Header = ({ parms }) => {
 
             {isLoggedIn && userType === 2 && (
               <>
-                <li className="nav-item">
-                  <Link
-                    className="nav-link header-login add-listing"
-                    href="/add-listing"
-                  >
-                    <i className="fa-solid fa-plus"></i> Add Listing
-                  </Link>
-                </li>
+                
                 <li className="nav-item dropdown has-arrow logged-item">
                   <Link
                     href="#"

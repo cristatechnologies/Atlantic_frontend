@@ -1,68 +1,8 @@
 "use client";
 import React from "react";
-import {
-  ArrowBanner,
-  BannerArrow,
-  Bannerbg,
-  BannerEllipse,
-  Blog1,
-  Blog2,
-  Blog3,
-  Category10Svg,
-  Category11Svg,
-  Category12Svg,
-  Category2Svg,
-  Category3Svg,
-  Category4Svg,
-  Category5Svg,
-  Category6Svg,
-  Category7Svg,
-  Category8Svg,
-  Category9Svg,
-  Category1Svg,
-  CtaImg,
-  Feature2,
-  Feature3,
-  Feature4,
-  Feature5,
-  Feature6,
-  Feature7,
-  Feature8,
-  Feature9,
-  LocationsAustralia,
-  LocationsCanada,
-  LocationsChina,
-  LocationsFrance,
-  LocationsUk,
-  LocationsUsa,
-  Partners1,
-  Partners2,
-  Partners3,
-  Partners4,
-  Partners5,
-  Partners6,
-  PopularImg,
-  ProfileAvatar02,
-  ProfileAvatar03,
-  ProfileAvatar04,
-  ProfileAvatar05,
-  ProfileAvatar06,
-  ProfileAvatar07,
-  ProfileAvatar12,
-  ProfileAvatar13,
-  ProfileAvatar14,
-  Quotes,
-  RightImg,
-  Testimonial1,
-  Testimonial2,
-} from "../imagepath";
+
 import Carousel from "./slider/Carousel";
-import Footer from "./footer/page";
 import Image from "next/image";
-import Header from "./header/page";
-import Testimonial from "./slider/Testimonial";
-import Sponsors from "./slider/Sponsors";
-import Select from "./select/page";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AOS from "aos";
@@ -70,22 +10,37 @@ import "aos/dist/aos.css";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Select from "./select/page";
+import Banner from "../common/Banner";
+import { Flex } from "antd";
+
+
 const HomePage = () => {
   const [isLight, setIsLight] = useState();
   const [businessData, setBusinessData] = useState(null);
   const [categories, setCategories] = useState();
   const dispatch = useDispatch();
-
-  const [searchText, setSearchText] = useState("");
-  const router = useRouter();
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchText.trim()) {
-      router.push(`/search-results?query=${encodeURIComponent(searchText)}`);
-    }
-  };
   const [latestBusiness, setLatestBusiness] = useState();
+const [searchText, setSearchText] = useState("");
+const [selectedLocation, setSelectedLocation] = useState("");
+const [apiData,setApiData] = useState("");
+const router = useRouter();
+  const [bgImageUrl, setBgImageUrl] = useState("");
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL 
+const handleSearch = (e) => {
+  e.preventDefault();
+  if (searchText.trim() || selectedLocation)  {
+    const searchQuery = encodeURIComponent(searchText);
+    const locationQuery = encodeURIComponent(selectedLocation);
+    router.push(
+      `/search-results?query=${searchQuery}&location=${locationQuery}`
+    );
+  }
+};
+
+
+ 
 
   const websiteData = useSelector((state) => state.websiteSetup.data);
   console.log("website data in the homepage ", websiteData);
@@ -182,6 +137,25 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api`
+          );
+          if (response) {
+            setApiData(response.data);
+          }
+        } catch (err) {
+          console.log(
+            "An error occurred while fetching the data from the api/"
+          );
+        }
+      };
+
+      fetchData();
+    }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -200,79 +174,81 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Check if apiData and sliders array exist and have at least one item
+    if (apiData && apiData.sliders && apiData.sliders.length > 0) {
+      setBgImageUrl(`${baseUrl}${apiData.sliders[0].image}`); // Assuming 'imageUrl' is the key for the image path
+    }
+  }, [apiData]);
+
   return (
     <>
       {/* Banner Section */}
-      <section className="banner-section">
-        <div className="banner-circle">
-          <img
-            src="./img/bannerbg.png"
-            className="img-fluid"
-            alt="bannercircle"
-          />
-        </div>
+      <section
+        className=""
+        style={{
+          marginTop: "90px",
+          height: "70vh",
+          backgroundImage: `url(${bgImageUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+       
         <div className="container">
-          <div className="home-banner">
-            <div className="row align-items-center">
-              <div className="col-lg-7">
-                <div className="section-search aos" data-aos="fade-up">
-                  <p className="explore-text">
-                    {" "}
-                    <span>Explore top-rated attractions</span>
-                  </p>
-                  <img
-                    src="./img/arrow-banner.png"
-                    className="arrow-img"
-                    alt="arrow"
-                  />
-                  <h1>
-                    Let us help you <br />
-                    <span>Find, Buy</span> & Own Dreams
-                  </h1>
-                  <p>
-                    Countrys most loved and trusted classNameified ad listing
-                    website classNameified ad.randomised words which don't look
-                    even slightly Browse thousand of items near you.
-                  </p>
-                  <div className="search-box">
-                    <form onSubmit={handleSearch} className="d-flex">
-                      <div className="search-input">
-                        <div className="form-group">
-                          <div className="group-img">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Search"
-                              value={searchText}
-                              onChange={(e) => setSearchText(e.target.value)}
-                            />
-                            <i className="feather-search"></i>
-                          </div>
-                        </div>
+          <div
+            className="row align-items-end"
+            style={{
+              height: "63vh", // This will make the row take the full height of the viewport
+            }}
+          >
+            <div className="col-lg-7 d-flex justify-content-center align-items-end">
+              <div className="search-box">
+                <form
+                  action="listing-grid-sidebar"
+                  className="d-flex"
+                  onSubmit={handleSearch}
+                >
+                  <div className="search-input">
+                    <div className="form-group">
+                      <div className="group-img">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search"
+                          value={searchText}
+                          onChange={(e) => setSearchText(e.target.value)}
+                        />
+                        <i className="feather-search"></i>
                       </div>
-                      <div className="search-btn">
-                        <button className="btn btn-primary" type="submit">
-                          <i className="fa fa-search" aria-hidden="true"></i>{" "}
-                          Search
-                        </button>
-                      </div>
-                    </form>
+                    </div>
                   </div>
-                </div>
+                  <div className="search-input">
+                    <div className="form-group">
+                      <div className="group-img">
+                        <Select
+                          value={selectedLocation}
+                          onChange={setSelectedLocation}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="search-btn">
+                    <button className="btn btn-primary" type="submit">
+                      <i className="fa fa-search" aria-hidden="true"></i> Search
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div className="col-lg-5">
-                <div className="banner-imgs">
-                  <img
-                    src="./img/Right-img.png"
-                    className="img-fluid"
-                    alt="bannerimage"
-                  />
-                </div>
-              </div>
+            </div>
+            <div className="col-lg-5">
+              {/* Right side image or other content here */}
             </div>
           </div>
         </div>
-        <img
+
+        {/* <img
           src="./img/bannerellipse.png"
           className="img-fluid banner-elipse"
           alt="arrow"
@@ -281,12 +257,12 @@ const HomePage = () => {
           src="./img/banner-arrow.png"
           className="img-fluid bannerleftarrow"
           alt="arrow"
-        />
+        /> */}
       </section>
       {/* Banner Section */}
 
       {/* Category Section */}
-      <section className="category-section">
+      {/* <section className="category-section">
         <div className="container">
           <div className="section-heading">
             <div className="row align-items-center">
@@ -329,7 +305,7 @@ const HomePage = () => {
               ))}
           </div>
         </div>
-      </section>
+      </section> */}
       {/* Category Section */}
 
       {/* Featured Ads Section */}
@@ -362,7 +338,7 @@ const HomePage = () => {
                     <div className="card aos flex-fill" data-aos="fade-up">
                       <div className="blog-widget">
                         <div className="blog-img">
-                          <Link href="/service-details">
+                          <Link href={`business-details/${item.id}`}>
                             <Image
                               src={`${
                                 process.env.NEXT_PUBLIC_BASE_URL + item.image
@@ -375,19 +351,25 @@ const HomePage = () => {
                           </Link>
                           <div className="fav-item">
                             {/* <span className="Featured-text">Featured</span> */}
-                            <Link href="#" className="fav-icon">
+                            {/* <Link href="#" className="fav-icon">
                               <i className="feather-heart"></i>
-                            </Link>
+                            </Link> */}
                           </div>
                         </div>
                         <div className="bloglist-content">
                           <div className="card-body">
                             <div className="blogfeaturelink">
-                              {/* <div className="grid-author">
-                                  <img src={ProfileAvatar02} alt="author" /> 
-                                </div> */}
+                              <div className="grid-author">
+                                <img
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_BASE_URL +
+                                    item.image
+                                  }`}
+                                  alt="author"
+                                />
+                              </div>
                               <div className="blog-features text-black">
-                                <Link href="#">
+                                <Link href={`business-details/${item.id}`}>
                                   <span>
                                     {" "}
                                     <i className="fa-regular fa-circle-stop"></i>{" "}
@@ -396,10 +378,10 @@ const HomePage = () => {
                                 </Link>
                               </div>
                               <div className="blog-author text-end text-black">
-                                <span>
+                                {/* <span>
                                   {" "}
                                   <i className="feather-eye"></i> 4000{" "}
-                                </span>
+                                </span> */}
                               </div>
                             </div>
                             {/* <h6 className="text-black">
@@ -413,8 +395,8 @@ const HomePage = () => {
                                 {item.address}
                               </div>
                               <div className="location-info">
-                                <i className="fa-solid fa-calendar-days"></i> 06
-                                Oct, 2022
+                                {/* <FontAwesomeIcon icon="fa-solid fa-calendar-days" /> */}
+                                {item.business_category.name}
                               </div>
                             </div>
                           </div>
@@ -425,11 +407,11 @@ const HomePage = () => {
                 ))}
             </div>
           </div>
-          <div className="align-items-center">
+          {/* <div className="align-items-center">
             <Link href="/listing-grid-sidebar" className="browse-btn">
               Browse Ads
             </Link>
-          </div>
+          </div> */}
         </div>
       </section>
       {/* Popular Location Section */}
@@ -447,14 +429,7 @@ const HomePage = () => {
       {/* Client Testimonial Section */}
 
       {/* Partners Section */}
-      <div className="partners-section">
-        <div className="container">
-          {/* <p className="partners-heading">
-              Over 5,26,000+ Sponsers being contact with us
-            </p> */}
-          {/* <Sponsors /> */}
-        </div>
-      </div>
+      
       {/* Partners Section */}
 
       {/* Pricing Plan Section */}

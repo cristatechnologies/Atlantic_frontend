@@ -13,7 +13,7 @@ const user = () => {
    const [email, setEmail] = useState("");
    const [phone, setPhone] = useState("");
     const [selectedLanguage, setSelectedLanguage] = useState("");
-   
+   const [region,setRegion] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
    const [checked, setCheck] = useState(false);
     const [errors, setErrors] = useState(null);
@@ -52,6 +52,7 @@ const router = useRouter();
       setPasswordInput("");
       setConfirmPassword("");
       setCheck(false);
+      setRegion("");
       setSelectedLanguage("");
       router.push("/VerificationPage");
     } catch (err) {
@@ -98,7 +99,7 @@ const router = useRouter();
   return (
     <>
       {/* Breadscrumb Section */}
-      
+
       <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
@@ -308,7 +309,7 @@ const router = useRouter();
                         value={selectedLanguage}
                         onChange={(e) => setSelectedLanguage(e.target.value)}
                       >
-                        <option value="">Select Language</option>
+                        <option value="">Select Language (optional)</option>
                         {languagesInAsia.map((language, index) => (
                           <option key={index} value={language.name}>
                             {language.name}
@@ -321,6 +322,26 @@ const router = useRouter();
                         {errors.language[0]}
                       </span>
                     )}
+                  </div>
+                  <div className="form-group group-img">
+                    <div className="group-img">
+                      <i className="feather-mail" />
+                      <input
+                        label="region"
+                        className="form-control"
+                        placeholder="Region (optional)"
+                        name="region"
+                        mandatory={false}
+                        type="text"
+                        value={region}
+                     onChange={(e)=>
+                     {
+                      setRegion(e.target.value)
+                     }
+                     }
+                      />
+                    
+                    </div>
                   </div>
                   <button
                     className="btn btn-primary w-100 login-btn"

@@ -1,0 +1,21 @@
+/* For mobile and tablet sizes */
+@media (max-width: 768px) {
+  .banner-section {
+    background-size: cover; /* Make sure the image covers the entire area */
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; /* Full viewport height */
+  }
+
+  .search-box {
+    position: absolute;
+    bottom: 20px; /* Position search bar at the bottom */
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .row.align-items-end {
+    height: 100vh; /* Full viewport height for alignment */
+    align-items: flex-end; /* Align content to the bottom */
+  }
+}

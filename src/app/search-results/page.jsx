@@ -8,6 +8,7 @@ import { Suspense } from "react";
 const Search = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
+  const location = searchParams.get("location")
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +21,9 @@ const Search = () => {
           const response = await axios.get(
             `${
               process.env.NEXT_PUBLIC_BASE_URL
-            }api/business?search=${encodeURIComponent(query)}`
+            }api/business?search=${encodeURIComponent(
+              query
+            )}?city=${encodeURIComponent(location)}`
           );
           setSearchResults(response.data || []);
           setLoading(false);
@@ -68,6 +71,10 @@ const Search = () => {
               <h3 className="mb-4">
                 Search Results for:{" "}
                 <span className="text-primary">"{query}"</span>
+            in 
+             
+                <span className="text-primary">"{location}"</span>
+              
               </h3>
               {searchResults.length === 0 ? (
                 <div>
@@ -115,9 +122,7 @@ const Search = () => {
                                 </div> */}
                               </div>
                               <h6 className="text-black">
-                                <Link
-                                  href={`/business-details/${business.id}`}
-                                >
+                                <Link href={`/business-details/${business.id}`}>
                                   {business.name}
                                 </Link>
                               </h6>
