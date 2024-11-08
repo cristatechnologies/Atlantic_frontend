@@ -16,7 +16,7 @@ import {
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useSelector } from "react-redux";
-import settings from "../../../../utils/settings";
+// import settings from "../../../../utils/settings";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -32,7 +32,7 @@ const Footer = () => {
   const [footerContent, setFooterContent] = useState(null);
   const [email, setEmail] = useState("");
 
-  const setting = settings();
+  // const setting = settings();
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
