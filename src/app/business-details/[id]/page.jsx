@@ -1,11 +1,16 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import ServiceDetails from "@/components/serviceDetails/page";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-async function getBusinessData(id) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}`,
-    { next: { revalidate: 60 } }
-  );
+async function getBusinessData(id, token = null) {
+  const url = token
+    ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}?token=${token}`
+    : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}`;
+
+  const res = await fetch(url);
 
   if (!res.ok) {
     throw new Error("Failed to fetch business");
@@ -14,28 +19,43 @@ async function getBusinessData(id) {
   return res.json();
 }
 
-export async function generateStaticParams() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/business`);
-  const businesses = await res.json();
+export default function BusinessDetails() {
+  const params = useParams();
+  const id = params?.id;
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
-  return businesses.map((business) => ({
-    id: business.id.toString(),
-  }));
-}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const auth = JSON.parse(localStorage.getItem("auth") || "null");
+        const token = auth?.access_token;
 
-export default async function BusinessDetails({ params }) {
-  const { id } = params;
+        const businessData = await getBusinessData(id, token);
 
-  try {
-    const data = await getBusinessData(id);
+        if (!businessData) {
+          notFound();
+        }
 
-    if (!data) {
-      notFound();
+        setData(businessData);
+      } catch (error) {
+        console.error("Error fetching business:", error);
+        setError(error);
+      }
+    };
+
+    if (id) {
+      fetchData();
     }
+  }, [id]);
 
-    return <ServiceDetails data={data} />;
-  } catch (error) {
-    console.error("Error fetching business:", error);
-    notFound();
+  if (error) {
+    return notFound();
   }
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  return <ServiceDetails data={data} />;
 }

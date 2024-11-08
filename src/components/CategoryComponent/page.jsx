@@ -22,7 +22,7 @@ const CategoryComponent = () => {
                 <nav aria-label="breadcrumb" className="page-breadcrumb">
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <Link href="/index">Home</Link>
+                      <Link href="/">Home</Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
                       Categories
@@ -35,11 +35,11 @@ const CategoryComponent = () => {
         </div>
         {/* /Breadscrumb Section */}
         {/* Categories Section */}
-        <div className="categorieslist-section">
+        <div className="category-section">
           <div className="container">
             <div className="row">
               {websiteSetup?.businessCategories &&
-                websiteData?.businessCategories.map((item, i) => (
+                websiteSetup?.businessCategories.map((item, i) => (
                   <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
                     <Link href="categories" className="category-links">
                       <h5>{item.name}</h5>

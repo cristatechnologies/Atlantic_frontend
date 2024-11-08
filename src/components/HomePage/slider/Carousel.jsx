@@ -1,20 +1,14 @@
 import React, { useRef } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import {
-  Feature2,
-  Feature3,
-  Feature4,
-  Feature5,
-  Feature9,
-  ProfileAvatar02,
-  ProfileAvatar04,
-  ProfileAvatar05,
-  ProfileAvatar06,
-} from "../../imagepath";
 import Slider from "react-slick";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { MdAppRegistration } from "react-icons/md";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+
 
 export default function Carousel({ businessData }) {
   const [error, setError] = useState(null);
@@ -27,6 +21,26 @@ export default function Carousel({ businessData }) {
     speed: 1000,
     slidesToShow: 4,
     slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1200, // At screen width of 1200px and below
+        settings: {
+          slidesToShow: 3, // Show 3 slides
+        },
+      },
+      {
+        breakpoint: 992, // At screen width of 992px and below
+        settings: {
+          slidesToShow: 2, // Show 2 slides
+        },
+      },
+      {
+        breakpoint: 768, // At screen width of 768px and below
+        settings: {
+          slidesToShow: 1, // Show 1 slide
+        },
+      },
+    ],
   };
 
   console.log("carousel page", businessData);
@@ -54,7 +68,7 @@ export default function Carousel({ businessData }) {
                   slider?.current?.slickPrev();
                 }}
               >
-                <i className="fa-solid fa-angle-left"></i>
+                <FontAwesomeIcon icon={faAngleRight} rotation={180} />
               </button>
               <button
                 type="button"
@@ -62,7 +76,7 @@ export default function Carousel({ businessData }) {
                 className="owl-next"
                 onClick={() => slider?.current?.slickNext()}
               >
-                <i className="fa-solid fa-angle-right"></i>
+                <FontAwesomeIcon icon={faAngleRight} />
               </button>
             </div>
           </div>
@@ -89,18 +103,24 @@ export default function Carousel({ businessData }) {
                               alt="blog-img"
                             />
                           </Link>
-                          <div className="fav-item">
+                          {/* <div className="fav-item">
                             <span className="Featured-text">Featured</span>
                             <Link href="#" className="fav-icon">
                               <i className="feather-heart"></i>
                             </Link>
-                          </div>
+                          </div> */}
                         </div>
                         <div className="bloglist-content">
                           <div className="card-body">
                             <div className="blogfeaturelink">
                               <div className="grid-author">
-                                {/* <img src={ProfileAvatar02} alt="author" /> */}
+                                <img
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_BASE_URL +
+                                    item.image
+                                  }`}
+                                  alt="author"
+                                />
                               </div>
                               <div className="blog-features">
                                 <Link href={`business-details/${item.id}`}>
@@ -114,7 +134,8 @@ export default function Carousel({ businessData }) {
                               <div className="blog-author text-end">
                                 <span>
                                   {" "}
-                                  <i className="feather-eye"></i>4000{" "}
+                                  <MdAppRegistration />
+                                  {item.reg_no}
                                 </span>
                               </div>
                             </div>
@@ -129,7 +150,7 @@ export default function Carousel({ businessData }) {
                                 {item.address}
                               </div>
                               <div className="location-info">
-                                <i className="fa-regular fa-calendar-days"></i>{" "}
+                                {/* <i className="fa-regular fa-calendar-days"></i>{" "} */}
                                 06 Oct, 2022
                               </div>
                             </div>

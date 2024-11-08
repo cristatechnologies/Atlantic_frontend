@@ -9,7 +9,7 @@ import Rooms from "./myComponent2";
 import Roomspics from "./Roomspics";
 import RoomsProfile from "./myComponent4";
 import PhotoAlbum from "react-photo-album";
-
+import StarRatings from "react-star-ratings";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,11 +19,63 @@ import {
   faLinkedinIn,
 } from "@fortawesome/free-brands-svg-icons";
 import business from "@/app/signup/business/page";
+import axios from "axios";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import AnimatedHeart from "./AnimatedHeart";
 
 const ServiceDetails = ({ data }) => {
   const pathname = usePathname;
   console.log(data);
+  const [isFavorite, setIsFavorite] = useState(data.like === 1);
+  const [totalLikes, setTotalLikes] = useState(data.total_likes);
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
 
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
+
+    try {
+      const payload = {
+        business_id: data.id,
+        rating: rating,
+        review: review,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/post-review?token=${token}`,
+        payload
+      );
+
+      // Clear form after successful submission
+      setReview("");
+      setRating(0);
+
+      // You might want to refresh the reviews list here
+      // or show a success message
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      // Handle error - maybe show an error message to user
+    }
+  };
+  const toggleFavorite = async () => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
+    try {
+      const payload = {
+        business_id: data.id,
+      };
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/post-like?token=${token}`,
+        payload
+      );
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
   return (
     <>
       {/* <Header /> */}
@@ -73,12 +125,74 @@ const ServiceDetails = ({ data }) => {
               <div className="authordetails">
                 <h5>{data.name}</h5>
                 <p>{data.description}</p>
+                <div className="rating">
+                  <StarRatings
+                    rating={data.rating || 0}
+                    starRatedColor="#FFD700"
+                    starDimension="20px"
+                    starSpacing="0.2px"
+                    numberOfStars={5}
+                    name="rating"
+                  />
+                  <span className="d-inline-block average-rating">
+                    {data.rating || 0}
+                  </span>
+                </div>
               </div>
             </div>
             {/* <div className="rate-details">
               <h2>$350</h2>
               <p>Fixed</p>
             </div> */}
+          </div>
+          <div className="descriptionlinks">
+            <div className="row">
+              <div className="col-lg-9">
+                <ul style={{ display: "flex", alignItems: "center" }}>
+                  <li>
+                    <Link href="#">
+                      <i className="feather-map" /> Get Directions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#">
+                      <i className="feather-link" />
+                      Website
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#">
+                      <i className="feather-share-2" /> share
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#review-sec">
+                      <i className="feather-message-circle" />  review
+                    </Link>
+                  </li>
+                  {/* <li>
+                    <Link href="#">
+                      <i className="feather-flag" /> report
+                    </Link>
+                  </li> */}
+                  <div className="cursor-pointer">
+                    <AnimatedHeart
+                      isActive={isFavorite}
+                      onClick={toggleFavorite}
+                      totalLikes={totalLikes}
+                    />
+                  </div>
+                </ul>
+              </div>
+              {/* <div className="col-lg-3">
+                <div className="callnow">
+                  <Link href="contact.html">
+                    {" "}
+                    <i className="feather-phone-call" /> Call Now
+                  </Link>
+                </div>
+              </div> */}
+            </div>
           </div>
         </div>
       </section>
@@ -114,6 +228,106 @@ const ServiceDetails = ({ data }) => {
                 </div>
               </div>
 
+              <div className="card review-sec  mb-0" id="review-sec">
+                <div className="card-header  align-items-center">
+                  <i className="feather-message-circle" />
+                  <h4>Review</h4>
+                </div>
+                <div className="card-body">
+                  <div className="review-list">
+                    <ul className="">
+                      {data.business_review &&
+                        data.business_review.map((review) => (
+                          <li key={review.id} className="review-box">
+                            <div className="review-profile">
+                              <div className="review-img">
+                                <img
+                                  src={review.user.image || "/img/pngegg.png"} // Add a default avatar image
+                                  className="img-fluid"
+                                  alt="Profile"
+                                />
+                              </div>
+                            </div>
+                            <div className="review-details">
+                              <h6>{review.user.name}</h6>
+                              <div className="rating">
+                                <div className="star-rating">
+                                  <StarRatings
+                                    rating={review.rating}
+                                    starRatedColor="#FFD700"
+                                    starDimension="18px"
+                                    starSpacing="0px"
+                                    numberOfStars={5}
+                                  />
+                                </div>
+
+                                {/* <div>
+                                  <i className="fa-sharp fa-solid fa-calendar-days" />{" "}
+                                  {new Date(
+                                    review.created_at
+                                  ).toLocaleDateString()}
+                                </div> */}
+                                {/* <div>by: {review.user.name}</div> */}
+                              </div>
+                              <p>{review.reviews}</p>
+                            </div>
+                          </li>
+                        ))}
+
+                      {/* form   */}
+                      <li className="review-box feedbackbox mb-0">
+                        <div className="review-details">
+                          <h6>
+                            {" "}
+                            <i class="feather-message-circle" /> Write a Review
+                          </h6>
+                        </div>
+                        <div className="card-body">
+                          <form onSubmit={handleReviewSubmit}>
+                            <div className="form-group">
+                              <textarea
+                                rows={4}
+                                className="form-control"
+                                placeholder="Write a Review*"
+                                required
+                                value={review}
+                                onChange={(e) => setReview(e.target.value)}
+                              />
+                            </div>
+                            <div className="reviewbox-rating">
+                              <p>
+                                <span>Rating</span>
+                                <div className="star-rating">
+                                  <StarRatings
+                                    rating={rating}
+                                    starRatedColor="#FFD700"
+                                    changeRating={(newRating) =>
+                                      setRating(newRating)
+                                    }
+                                    numberOfStars={5}
+                                    name="rating"
+                                    starDimension="20px"
+                                    starSpacing="2px"
+                                  />
+                                </div>
+                              </p>
+                            </div>
+                            <div className="submit-section">
+                              <button
+                                className="btn btn-primary submit-btn"
+                                type="submit"
+                                disabled={!rating || !review}
+                              >
+                                Submit Review
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
               {/*/Review Section*/}
             </div>
             <div className="col-lg-3 theiaStickySidebar">
@@ -168,7 +382,8 @@ const ServiceDetails = ({ data }) => {
                         <li>
                           <Link href={`${data?.website}`}>
                             <img src="/img/website.svg" alt="website" />{" "}
-                            www.listee.com
+                            {data.contact_person_email}
+                            {/* www.listee.com */}
                           </Link>
                         </li>
                         <li className="socialicons pb-0">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HomeMenu from "../common/HomeMenu";
-import ListingMenu from "../common/ListingMenu";
+import ListingMenu from "../common/Categories";
 import PagesMenu from "../common/PagesMenu";
 import UserPagesMenu from "../common/UserPagesMenu";
 import BlogMenu from "../common/BlogMenu";
