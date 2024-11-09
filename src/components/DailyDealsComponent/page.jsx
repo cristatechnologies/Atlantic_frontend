@@ -6,6 +6,7 @@ import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { RWebShare } from "react-web-share";
 const DailyDealsComponent = () => {
   useAuth();
   const router = useRouter();
@@ -67,7 +68,10 @@ const DailyDealsComponent = () => {
             <div className="col-lg-6 col-md-6 col-12">
               <div className="blog-listview">
                 {dailyOffers.map((offer) => (
-                  <div className="card border hover-overlay hover-zoom hover-shadow ripple" key={offer.id}>
+                  <div
+                    className="card border hover-overlay hover-zoom hover-shadow ripple"
+                    key={offer.id}
+                  >
                     <div className="blog-widget">
                       <div className="blog-img">
                         <img
@@ -90,6 +94,20 @@ const DailyDealsComponent = () => {
                               </Link>
                             </div>
                           </div>
+                          <a className="pe-auto">
+                            <RWebShare
+                              data={{
+                                text: "Web Share - GfG",
+                                url: "http://localhost:3000",
+                                title: "indoatlantic",
+                              }}
+                              onClick={() =>
+                                console.log("shared successfully!")
+                              }
+                            >
+                              <i className="feather-share-2" />
+                            </RWebShare>
+                          </a>
 
                           {/* <div className="blog-location-details">
                             <div className="location-info">
@@ -139,7 +157,6 @@ const DailyDealsComponent = () => {
         .offer-card:hover {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
-         
       `}</style>
     </>
   );
