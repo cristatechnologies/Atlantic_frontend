@@ -33,17 +33,15 @@ const CategoryComponent = () => {
             </div>
           </div>
         </div>
-        {/* /Breadscrumb Section */}
-        {/* Categories Section */}
+      
         <div className="category-section">
           <div className="container">
             <div className="row">
               {websiteSetup?.businessCategories &&
                 websiteSetup?.businessCategories.map((item, i) => (
                   <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
-                    <Link href="categories" className="category-links">
+                    <Link href={`/categories/${item.id}`} className="category-links">
                       <h5>{item.name}</h5>
-                      <span>09 Ads</span>
                       <img
                         src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
                         alt="icons"
@@ -54,7 +52,7 @@ const CategoryComponent = () => {
             </div>
           </div>
         </div>
-        {/* /Categories Section */}
+       
       </>
     );
 }
