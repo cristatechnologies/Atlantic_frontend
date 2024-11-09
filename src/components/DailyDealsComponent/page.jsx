@@ -46,14 +46,14 @@ const DailyDealsComponent = () => {
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Daily Deals</h2>
+              <h2 className="breadcrumb-title">Active Deals</h2>
               <nav aria-label="breadcrumb" className="page-breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link href="/">Home</Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    daily-deals
+                    Active-deals
                   </li>
                 </ol>
               </nav>
@@ -64,11 +64,10 @@ const DailyDealsComponent = () => {
       <div className="list-content">
         <div className="container">
           <div className="row">
-            <div className="col-lg-8">
-          
+            <div className="col-lg-6 col-md-6 col-12">
               <div className="blog-listview">
                 {dailyOffers.map((offer) => (
-                  <div className="card" key={offer.id}>
+                  <div className="card border hover-overlay hover-zoom hover-shadow ripple" key={offer.id}>
                     <div className="blog-widget">
                       <div className="blog-img">
                         <img
@@ -82,7 +81,7 @@ const DailyDealsComponent = () => {
                       <div className="bloglist-content">
                         <div className="card-body">
                           <h6>
-                            <Link href="/service-details">{offer.title}</Link>
+                            <Link href="#">{offer.title}</Link>
                           </h6>
                           <div className="blogfeaturelink">
                             <div className="blog-features">
@@ -140,6 +139,7 @@ const DailyDealsComponent = () => {
         .offer-card:hover {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
+         
       `}</style>
     </>
   );

@@ -110,7 +110,7 @@ export default function Carousel({ businessData }) {
                             </Link>
                           </div> */}
                         </div>
-                        <div className="bloglist-content">
+                        <div className="bloglist-content pe-auto">
                           <div className="card-body">
                             <div className="blogfeaturelink">
                               <div className="grid-author">
@@ -149,10 +149,10 @@ export default function Carousel({ businessData }) {
                                 <i className="feather-map-pin"></i>{" "}
                                 {item.address}
                               </div>
-                              <div className="location-info">
-                                {/* <i className="fa-regular fa-calendar-days"></i>{" "} */}
-                                06 Oct, 2022
-                              </div>
+                              {/* <div className="location-info"> */}
+                              {/* <i className="fa-regular fa-calendar-days"></i>{" "} */}
+                              {/* 06 Oct, 2022
+                              </div> */}
                             </div>
                           </div>
                         </div>

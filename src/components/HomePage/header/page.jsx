@@ -262,7 +262,6 @@ const Header = ({ parms }) => {
 
             {isLoggedIn && userType === 2 && (
               <>
-                
                 <li className="nav-item dropdown has-arrow logged-item">
                   <Link
                     href="#"
@@ -277,7 +276,11 @@ const Header = ({ parms }) => {
                     // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                   >
                     <img
-                      src={authData?.user?.image || "/img/pngegg.png"}
+                      src={
+                        authData.user.image ? 
+                        `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}` :
+                        "/img/pngegg.png"
+                      }
                       alt="User profile"
                     />
 
