@@ -25,9 +25,8 @@ const ProfileComponent = () => {
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [zipCode, setZipCode] = useState("");
-
   const [imagePreview, setImagePreview] = useState("/img/profile.jpg");
-
+  const [isLoading, setIsLoading] = useState(true);
   // Function to handle password input change
 
   const formRef = useRef(null);
@@ -35,100 +34,156 @@ const ProfileComponent = () => {
   {console.log("test")}
 
 
-  useEffect(() => {
-    const authData = JSON.parse(localStorage.getItem("auth"));
+   useEffect(() => {
+     const fetchProfileData = async () => {
+       try {
+         const authData = JSON.parse(localStorage.getItem("auth"));
+         const token = authData?.access_token;
 
-    
-      const token = authData?.access_token;
-       if (!authData?.access_token) {
-         router.push("/login"); // Redirect to a login page, not the home page
+         if (!token) {
+           router.push("/login");
+           return;
+         }
+
+         const response = await axios.get(
+           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/my-profile?token=${token}`
+         );
+
+         const profile = response.data.personInfo;
+         setProfileData(profile);
+       setImagePreview(
+         profile?.image
+           ? `${process.env.NEXT_PUBLIC_BASE_URL}${profile.image}`
+           : "/img/profile.jpg"
+       );
+
+         // Set initial values
+         if (profile) {
+           setCountry(profile.country_id || "");
+           setState(profile.state_id || "");
+           setCity(profile.city_id || "");
+           setAddress(profile.address || "");
+           setZipCode(profile.zip_code || "");
+         }
+
+         // Initialize dropdowns
+         await initializeDropdowns(profile);
+       } catch (error) {
+         console.error("Error fetching profile data:", error);
        }
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/my-profile?token=${token}`
-        )
-        .then((response) => {
-          setProfileData(response.data.personInfo);
-          setImagePreview(
-            response.data.personInfo?.image || "/img/profile.jpg"
-          );
-        })
-        .catch((error) => {
-          console.error("Error fetching profile data:", error);
-        });
-    
-  }, []);
+     };
 
-  {
-    console.log("test1");
-  }
+     fetchProfileData();
+   }, []);
 
-  const handleProfileUpdate = (e) => {
-    e.preventDefault();
 
-    const authData = JSON.parse(localStorage.getItem("auth"));
-    const token = authData?.access_token;
+   const initializeDropdowns = async (profile) => {
+     try {
+       // Fetch countries
+       const countriesResponse = await axios.get(
+         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/address/create`
+       );
+       setCountryDropdown(countriesResponse.data.countries);
 
-    console.log("country",country)
+       // If country_id exists, fetch states
+       if (profile?.country_id) {
+         const statesResponse = await axios.get(
+           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${profile.country_id}`
+         );
+         setStateDropdown(statesResponse.data.states || []);
+       }
 
-    // Get form data
-    const formData = new FormData(formRef.current);
-    const updatedProfileData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      country_id: country,
-      state_id: state,
-      city_id: city,
-      address: address,
-      zip_code: zipCode,
+       // If state_id exists, fetch cities
+       if (profile?.state_id) {
+         const citiesResponse = await axios.get(
+           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${profile.state_id}`
+         );
+         setCityDropdown(citiesResponse.data.cities || []);
+       }
+
+       setIsLoading(false);
+     } catch (error) {
+       console.error("Error initializing dropdowns:", error);
+       setIsLoading(false);
+     }
+   };
+
+const handleProfileUpdate = (e) => {
+  e.preventDefault();
+
+  const authData = JSON.parse(localStorage.getItem("auth"));
+  const token = authData?.access_token;
+
+  // Create FormData object
+  const formData = new FormData(formRef.current);
+
+  // Add additional form fields to FormData
+  formData.append("country_id", country);
+  formData.append("state_id", state);
+  formData.append("city_id", city);
+  formData.append("address", address);
+  formData.append("zip_code", zipCode);
+
+  // Note: The image file will automatically be included in formData
+  // because it's part of the form with name="image"
+
+  axios
+    .post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/user/update-profile?token=${token}`,
+      formData, // Send formData instead of JSON
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // Important for file upload
+        },
+      }
+    )
+    .then((response) => {
+      toast.success(response.data.notification);
+
+      console.log(response.data?.data.image);
+      // Update the user data in localStorage
+ const updatedUser = {
+   ...authData.user,
+   name: formData.get("name"),
+   email: formData.get("email"),
+   phone: formData.get("phone"),
+   image: response.data?.data.image ? `${response.data?.data.image}` : null,
+   // Preserve other user properties that shouldn't change
+   id: authData.user.id,
+   status: authData.user.status,
+   user_type: authData.user.user_type,
+   business: null,
+ };
+      if (response.data?.data.image) {
+        setImagePreview(
+          `${process.env.NEXT_PUBLIC_BASE_URL}${response.data?.data.image}`
+        );
+      }
+
+      
+
+    const updatedAuthData = {
+      access_token: authData.access_token,
+      token_type: authData.token_type,
+      expires_in: authData.expires_in,
+      is_vendor: authData.is_vendor,
+      user: updatedUser,
     };
+      localStorage.setItem("auth", JSON.stringify(updatedAuthData));
 
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/update-profile?token=${token}`,
-        updatedProfileData
-      )
-      .then((response) => {
-        // Show success toast notification
-        toast.success(response.data.notification);
-
-        // Update the user data in localStorage
-        const updatedUser = {
-          ...authData.user,
-          name: updatedProfileData.name,
-          email: updatedProfileData.email,
-          phone: updatedProfileData.phone,
-        };
-
-        // Update the auth data with the updated user info
-        const updatedAuthData = {
-          ...authData,
-          user: updatedUser,
-        };
-
-        // Save the updated auth data back to localStorage
-        localStorage.setItem("auth", JSON.stringify(updatedAuthData));
-
-        // Update the profileData state
-        setProfileData((prevData) => ({
-          ...prevData,
-          ...updatedProfileData,
-        }));
-
-        // Optionally refresh or redirect
-       
-        console.log("Profile updated successfully:", response.data);
-      })
-      .catch((err) => {
-        console.error("Error in ProfileUpdate", err);
-        // ... (error handling remains the same)
-      });
-  };
-  {
-    console.log("test2");
-  }
-
+      // Update the profileData state
+      setProfileData((prevData) => ({
+        ...prevData,
+        ...updatedUser,
+      }));
+      router.refresh()
+    })
+    .catch((err) => {
+      console.error("Error in ProfileUpdate", err);
+      toast.error("Failed to update profile");
+    });
+};
+ 
   // Fetch country list
   useEffect(() => {
     axios
@@ -143,78 +198,60 @@ const ProfileComponent = () => {
       });
   }, []);
 
-{
-  console.log("test3");
-}
 
 
-  const handleCountryChange = (e) => {
-    const selectedCountryId = e.target.value;
-    
-    setCountry(selectedCountryId);
-    getState(selectedCountryId);
-  };
+const handleCountryChange = async (e) => {
+  const selectedCountryId = e.target.value;
+  setCountry(selectedCountryId);
+  setState(""); // Reset state
+  setCity(""); // Reset city
+  setCityDropdown([]); // Reset city options
+  await getState(selectedCountryId);
+};
 
 
-{
-  console.log("test4");
-}
 
-
-  const getState = (countryId) => {
-    setStateDropdown([]); // Reset states when changing country
-    setCityDropdown([]); // Reset cities when changing country
-    if (countryId) {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
-        )
-        .then((res) => {
-          setStateDropdown(res.data?.states || []);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+const getState = async (countryId) => {
+  if (countryId) {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
+      );
+      setStateDropdown(response.data?.states || []);
+    } catch (error) {
+      console.error("Error fetching states:", error);
     }
-  };
+  } else {
+    setStateDropdown([]);
+  }
+};
 
   
-{
-  console.log("test5");
-}
 
-  const handleStateChange = (e) => {
-    const selectedStateId = e.target.value;
-    setState(selectedStateId);
-    getCity(selectedStateId);
-  };
-
+const handleStateChange = async (e) => {
+  const selectedStateId = e.target.value;
+  setState(selectedStateId);
+  setCity(""); // Reset city
+  await getCity(selectedStateId);
+};
 
   
-{
-  console.log("test6");
-}
 
-  const getCity = (stateId) => {
-    setCityDropdown([]); // Reset cities when changing state
-    if (stateId) {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
-        )
-        .then((res) => {
-          setCityDropdown(res.data?.cities || []);
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
-    }
-  };
 
-    
-{
-  console.log("test7");
-}
+ const getCity = async (stateId) => {
+   if (stateId) {
+     try {
+       const response = await axios.get(
+         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+       );
+       setCityDropdown(response.data?.cities || []);
+     } catch (error) {
+       console.error("Error fetching cities:", error);
+     }
+   } else {
+     setCityDropdown([]);
+   }
+ };
 
 
   const selectCity = (value) => {
@@ -224,9 +261,6 @@ const ProfileComponent = () => {
   };
 
   
-{
-  console.log("test8");
-}
 
 
   // Toggle password visibility
@@ -238,12 +272,7 @@ const ProfileComponent = () => {
 
   // Fetch profile data if user_type is 2
 
-    
-{
-  console.log("test9");
-}
 
-  
   
   
   const handleImageChange = (event) => {
@@ -251,17 +280,17 @@ const ProfileComponent = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result); // Set the preview to the selected image
+        setImagePreview(reader.result);
       };
-      reader.readAsDataURL(file); // Read the file as a data URL
+      reader.readAsDataURL(file);
     }
   };
-
   
-    
-{
-  console.log("test");
-}
+
+    const handleCityChange = (e) => {
+      setCity(e.target.value);
+    }; 
+
 
   
 
@@ -397,16 +426,16 @@ const ProfileComponent = () => {
                                 onChange={handleCountryChange}
                               >
                                 <option value="">Select Country</option>
-                                {countryDropdown.map((country) => (
-                                  <option key={country.id} value={country.id}>
-                                    {country.name}
+                                {countryDropdown.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.name}
                                   </option>
                                 ))}
                               </select>
                             </div>
                           </div>
 
-                          {/* State */}
+                          {/* Update the State dropdown */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">State</label>
                             <div className="pass-group group-img">
@@ -420,16 +449,16 @@ const ProfileComponent = () => {
                                 disabled={!country}
                               >
                                 <option value="">Select State</option>
-                                {stateDropdown.map((state) => (
-                                  <option key={state.id} value={state.id}>
-                                    {state.name}
+                                {stateDropdown.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.name}
                                   </option>
                                 ))}
                               </select>
                             </div>
                           </div>
 
-                          {/* City */}
+                          {/* Update the City dropdown */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">City</label>
                             <div className="pass-group group-img">
@@ -439,13 +468,13 @@ const ProfileComponent = () => {
                               <select
                                 className="form-control"
                                 value={city}
-                                onChange={(e) => selectCity(e.target.value)}
+                                onChange={handleCityChange}
                                 disabled={!state}
                               >
                                 <option value="">Select City</option>
-                                {cityDropdown.map((city) => (
-                                  <option key={city.id} value={city.id}>
-                                    {city.name}
+                                {cityDropdown.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.name}
                                   </option>
                                 ))}
                               </select>

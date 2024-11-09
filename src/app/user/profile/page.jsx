@@ -9,41 +9,34 @@ const Profile = () => {
   useEffect(() => {
     const authData = JSON.parse(localStorage.getItem("auth"));
 
+console.log(typeof(authData?.user?.user_type )) 
+console.log(typeof(1)); 
+
+
     if (authData?.user?.user_type === 2) {
-      setUserType(2);
+      setUserType("individual");
     } else if (authData?.user?.user_type === 1) {
-      setUserType(1);
+      setUserType("business");
     } else {
-      // Handle cases where user_type is missing or invalid
+    
       setUserType("invalid");
     }
   }, []);
-  console.log("usertypoe is ", userType);
 
-  // if (userType === null) {
-  //   // Loading state
-  //   console.log("user tyope is ", userType);
-  //   return <div className="mt-lg-5 pt-5">Loading...</div>;
-  // }
 
-  if (userType === "invalid") {
-    {console.log("invalid user")}
-    // Handle invalid case (e.g., redirect or error message)
+  console.log(typeof (userType));
+
+  if (userType === null) {
+    // Loading state
+    return <div className="mt-lg-5 pt-5">Loading...</div>;
+  }
+  if (userType === "invalid") {F
     return <div>Invalid User Type</div>;
   }
-
-  return (
-    <>
-      {userType === 2 ? (
-      
-        <ProfileComponent /> 
-        // Show ProfileComponent for user_type 2
-      ) : (
-        <>
-          <BusinessProfileComponent />
-        </> // Show BusinessProfileComponent for user_type 1
-      )}
-    </>
+  return userType === "individual" ? (
+    <ProfileComponent />
+  ) : (
+    <BusinessProfileComponent />
   );
 };
 
