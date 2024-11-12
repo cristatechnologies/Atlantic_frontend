@@ -20,6 +20,7 @@ const Header = ({ parms }) => {
   const [userType, setUserType] = useState(null);
   const router = useRouter();
   const [logo, setLogo] = useState("");
+  const [mobileDropdown, setMobileDropdown] = useState(false);
   // useEffect(() => {
   //   const settings = localStorage.getItem("settings");
   //   setLogo(JSON.parse(settings?.logo));
@@ -35,6 +36,11 @@ const Header = ({ parms }) => {
   }, []);
   console.log("the log of the logo is ", logo);
 
+  const handleDropdownClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+    setDropdownOpen(!dropdownOpen);
+  };
   useEffect(() => {
     const authJson = localStorage.getItem("auth");
     if (authJson) {
@@ -86,6 +92,19 @@ const Header = ({ parms }) => {
       }
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileDropdown && !event.target.closest(".has-submenu")) {
+        setMobileDropdown(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [mobileDropdown]);
   return (
     <header className="header " onClick={(value) => toggleMobileMenu()}>
       <div className="container">
@@ -115,7 +134,11 @@ const Header = ({ parms }) => {
           <div className="main-menu-wrapper">
             <div className="menu-header">
               <Link href="/" className="menu-logo">
-                <img src={`${logo}`} className="img-fluid" alt="Logo" />
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
+                  className="img-fluid"
+                  alt="Logo"
+                />
               </Link>
               <Link
                 id="menu_close"
@@ -124,7 +147,7 @@ const Header = ({ parms }) => {
                 onClick={() => onhandleCloseMenu()}
               >
                 {" "}
-                <i className="fas fa-times"></i>
+                <i className="feather-x" />
               </Link>
             </div>
             <ul className="main-nav">
@@ -146,9 +169,113 @@ const Header = ({ parms }) => {
               <li>
                 <Link href="/active-deals">Active Deals </Link>
               </li>
+
               <li>
                 <Link href="/faq">FAQs</Link>
               </li>
+              {isLoggedIn && userType === 1 && (
+                <>
+                  <li className="d-lg-none has-submenu">
+                    <a
+                      href="#"
+                      className="mobile-user-menu profile-userlink"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // Stop event bubbling
+                        setMobileDropdown(!mobileDropdown);
+                      }}
+                    >
+                      <div className="user-info">
+                        <img
+                          src={
+                            `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
+                            "/img/pngegg.png"
+                          }
+                          alt="User profile"
+                        />
+                        <span className="user-name">
+                          {authData.user?.business?.name}
+                        </span>
+                        <i
+                          className={`feather-arrow-${
+                            mobileDropdown ? "up" : "down"
+                          }`}
+                        ></i>
+                      </div>
+                    </a>
+                    <ul
+                      className={`submenu ${mobileDropdown ? "show" : ""}`}
+                      onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                    >
+                      <li>
+                        <Link href="/user/dashboard">
+                          <i className="fas fa-columns"></i> Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/user/profile">
+                          <i className="fas fa-user-cog"></i> Profile Settings
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/your-deals">
+                          <i className="fas fa-handshake"></i> Your Deals
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                </>
+              )}
+              {isLoggedIn && userType === 2 && (
+                <>
+                  <li className="d-lg-none has-submenu">
+                    <a
+                      href="#"
+                      className="mobile-user-menu profile-userlink"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setMobileDropdown(!mobileDropdown);
+                      }}
+                    >
+                      <div className="user-info">
+                        <div className="user-info-left">
+                          <img
+                            src={
+                              `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}` ||
+                              "/img/pngegg.png"
+                            }
+                            alt="User profile"
+                          />
+                          <span className="user-name">
+                            {authData.user?.name}
+                          </span>
+                        </div>
+                        <i
+                          className={`feather-arrow-${
+                            mobileDropdown ? "up" : "down"
+                          }`}
+                        ></i>
+                      </div>
+                    </a>
+                    <ul
+                      className={`submenu ${mobileDropdown ? "show" : ""}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <li>
+                        <Link href="/user/dashboard">
+                          <i className="fas fa-columns"></i> Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/user/profile">
+                          <i className="fas fa-user-cog"></i> Profile Settings
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                </>
+              )}
               {!isLoggedIn && (
                 <>
                   <li className="login-link">
@@ -161,7 +288,7 @@ const Header = ({ parms }) => {
               )}
               {isLoggedIn && (
                 <li className="login-link">
-                  <button onClick={handleLogout}>Logout</button>
+                  <Link onClick={handleLogout} href="#">Logout</Link>
                 </li>
               )}
             </ul>
@@ -277,9 +404,9 @@ const Header = ({ parms }) => {
                   >
                     <img
                       src={
-                        authData.user.image ? 
-                        `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}` :
-                        "/img/pngegg.png"
+                        authData.user.image
+                          ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
+                          : "/img/pngegg.png"
                       }
                       alt="User profile"
                     />

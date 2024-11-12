@@ -1960,6 +1960,78 @@ html.menu-opened body {
   width: 30px;
 }
 
+.has-submenu {
+  position: relative;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.submenu.show {
+  display: block;
+}
+
+/* For mobile view */
+@media (max-width: 991px) {
+  .submenu {
+    position: static;
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.submenu.show {
+  max-height: 500px; /* Adjust based on content */
+  transition: max-height 0.3s ease-in;
+}
+
+
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.user-info-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between image and name */
+}
+
+.user-info img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 14px;
+}
+
+.feather-arrow-up,
+.feather-arrow-down {
+  font-size: 16px;
+  margin-left: auto; /* Pushes icon to the right */
+}
 /*-----------------
 	9. Home
 -----------------------*/

@@ -105,8 +105,8 @@ const BusinessDashboardComponent = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/user/profile">
-                  <i className="feather-user" /> <span>Profile</span>
+                <Link href="/business-gallery">
+                  <i className="feather-user" /> <span>Your Gallery</span>
                 </Link>
               </li>
               <li>
@@ -117,8 +117,8 @@ const BusinessDashboardComponent = () => {
 
               <li>
                 <Link href="/login">
-                  <i className="feather-power" />{" "}
-                  <a onClick={handleLogout}>Logout</a>
+                  <i className="feather-power" />
+  <span onClick={handleLogout}>Logout</span>
                 </Link>
               </li>
             </ul>

@@ -24,7 +24,7 @@ const CustomSlugComponent = ({ pathName }) => {
     if (!websiteData) {
       const fetchWebsiteSetup = async () => {
         try {
-          const response = await fetch("/api/websiteSetup"); // Adjust the API endpoint
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/websiteSetup`); // Adjust the API endpoint
           const data = await response.json();
           dispatch(setupAction(data));
         } catch (error) {

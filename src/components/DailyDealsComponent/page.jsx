@@ -7,8 +7,12 @@ import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { RWebShare } from "react-web-share";
+import { usePathname } from "next/navigation";
+
 const DailyDealsComponent = () => {
   useAuth();
+
+  const pathName = usePathname()
   const router = useRouter();
   const [dailyOffers, setDailyOffers] = useState([]);
   const [Error,setError]=useState(null)
@@ -64,99 +68,32 @@ const DailyDealsComponent = () => {
       </div>
       <div className="list-content">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-6 col-md-6 col-12">
-              <div className="blog-listview">
-                {dailyOffers.map((offer) => (
-                  <div
-                    className="card border hover-overlay hover-zoom hover-shadow ripple"
-                    key={offer.id}
-                  >
-                    <div className="blog-widget">
-                      <div className="blog-img">
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
-                          className="img-fluid offer-image"
-                          alt={offer.title}
-                          width={225}
-                          height={225}
-                        />
-                      </div>
-                      <div className="bloglist-content">
-                        <div className="card-body">
-                          <h6>
-                            <Link href="#">{offer.title}</Link>
-                          </h6>
-                          <div className="blogfeaturelink">
-                            <div className="blog-features">
-                              <Link href="#">
-                                <span>{offer.description}</span>
-                              </Link>
-                            </div>
-                          </div>
-                          <a className="pe-auto">
-                            <RWebShare
-                              data={{
-                                text: "Web Share - GfG",
-                                url: "http://localhost:3000",
-                                title: "indoatlantic",
-                              }}
-                              onClick={() =>
-                                console.log("shared successfully!")
-                              }
-                            >
-                              <i className="feather-share-2" />
-                            </RWebShare>
-                          </a>
-
-                          {/* <div className="blog-location-details">
-                            <div className="location-info">
-                              <i className="feather-map-pin" /> Location
-                            </div>
-                            <div className="location-info">
-                              <i className="feather-phone-call" /> Contact
-                            </div>
-                            <div className="location-info">
-                              <i className="feather-eye" /> Views
-                            </div>
-                          </div>
-                          <p className="ratings">
-                            <span>4.0</span> ( 50 Reviews )
-                          </p>
-                          <div className="amount-details">
-                            <div className="amount">
-                              <span className="validrate">$350</span>
-                              <span>$450</span>
-                            </div>
-                            <Link href="/service-details">View details</Link>
-                          </div> */}
-                        </div>
-                      </div>
-                    </div>
+          <div className="row row-cols-1 row-cols-md-3 g-4">
+            {dailyOffers.map((offer) => (
+              <div className="col" key={offer.id}>
+                <Link href={`/active-deals/${offer.slug}`}>
+                <div className="card h-100 offer-card">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
+                    className="card-img-top offer-image"
+                    alt={offer.title}
+                    />
+                  <div className="card-body">
+                    <h6 className="card-title">
+                      {offer.title}
+                    </h6>
+                    <p className="card-text">{offer.description}</p>
+                  
                   </div>
-                ))}
+                </div>
+                    </Link>
               </div>
-              <div className="blog-pagination">{/* Pagination content */}</div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
       <style jsx>{`
-        .offer-image {
-          width: 225px;
-          height: 225px;
-          object-fit: cover;
-          object-position: center;
-        }
-        .offer-card {
-          border: 1px solid #e0e0e0;
-          border-radius: 8px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          transition: box-shadow 0.3s ease;
-        }
-        .offer-card:hover {
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
+        
       `}</style>
     </>
   );

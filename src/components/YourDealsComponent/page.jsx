@@ -18,7 +18,6 @@ const YourDealsComponent = () => {
     description: "",
     image: null,
   });
-  
 
   const customModalStyles = {
     content: {
@@ -28,8 +27,8 @@ const YourDealsComponent = () => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      width: "400px",
-      maxWidth: "90%",
+      width: "90%",
+      maxWidth: "400px",
       padding: "20px",
       borderRadius: "8px",
       zIndex: 1000,
@@ -39,22 +38,6 @@ const YourDealsComponent = () => {
       zIndex: 999,
     },
   };
-
-  // useEffect(() => {
-  //   // Fetch token from local storage on the client side
-  //   const auth =
-  //     typeof window !== "undefined"
-  //       ? JSON.parse(localStorage.getItem("auth"))
-  //       : null;
-  //   const fetchedToken = auth?.access_token;
-
-  //   if (!fetchedToken) {
-  //     toast.error("Token not available. Please log in.");
-  //     router.push("/login");
-  //     return;
-  //   }
-  //   setToken(fetchedToken); // Set the token in the state
-  // }, [router]);
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -78,7 +61,6 @@ const YourDealsComponent = () => {
     try {
       const auth = JSON.parse(localStorage.getItem("auth"));
       const token = auth?.access_token;
-      // API call to update status
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offer-status/${id}?token=${token}`,
         {
@@ -98,7 +80,6 @@ const YourDealsComponent = () => {
       toast.error("Failed to update offer status");
     }
   };
-
   const handleEdit = (id) => {
     router.push({
       pathname: "/your-deals/[id]",
@@ -109,7 +90,6 @@ const YourDealsComponent = () => {
     try {
       const auth = JSON.parse(localStorage.getItem("auth"));
       const token = auth?.access_token;
-      // API call to delete offer
       await axios.delete(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/delete-daily-offer/${id}?token=${token}`
       );
@@ -150,7 +130,7 @@ const YourDealsComponent = () => {
       );
       toast.success("New offer added successfully");
       setModalIsOpen(false);
-router.reload("/your-deals")
+      router.reload("/your-deals");
     } catch (error) {
       console.error("Error adding new offer:", error);
       toast.error("Failed to add new offer");
@@ -162,7 +142,7 @@ router.reload("/your-deals")
       <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
+            <div className="col-12">
               <h2 className="breadcrumb-title">Your Deals</h2>
               <nav aria-label="breadcrumb" className="page-breadcrumb">
                 <ol className="breadcrumb">
@@ -179,23 +159,23 @@ router.reload("/your-deals")
         </div>
       </div>
       <div className="dashboard-content">
-        <div className="search-btn">
+        <div className="search-btn px-4">
           <button
-            className="mx-lg-5 btn btn-primary"
+            className="btn btn-primary w-full sm:w-auto"
             onClick={() => setModalIsOpen(true)}
           >
             Add New
           </button>
         </div>
-        <div className="container">
+        <div className="container px-4">
           <div className="row">
-            <div className="col-lg-12">
+            <div className="col-12">
               <div className="card dash-cards">
                 <div className="card-header">
                   <h4>Your Daily Offers</h4>
                 </div>
                 <div className="card-body">
-                  <div className="offer-header d-flex align-items-center mb-3">
+                  <div className="offer-header d-none d-md-flex align-items-center mb-3">
                     <div className="col-md-1">
                       <strong>Image</strong>
                     </div>
@@ -213,40 +193,42 @@ router.reload("/your-deals")
                   {offers.map((offer) => (
                     <div
                       key={offer.id}
-                      className="offer-item d-flex align-items-center mb-4 p-3 border rounded"
+                      className="offer-item mb-4 p-3 border rounded"
                     >
-                      <div className="col-md-1">
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
-                          alt={offer.title}
-                          className="img-fluid rounded"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      </div>
-                      <div className="col-md-5">
-                        <h5 className="mb-0">{offer.title}</h5>
-                        <p>{offer.description}</p>
-                      </div>
-                      <div className="col-md-3 text-center">
-                        <Switch
-                          checked={offer.status === 1}
-                          onChange={() =>
-                            handleStatusToggle(offer.id, offer.status)
-                          }
-                        />
-                      </div>
-                      <div className="col-md-3 d-flex justify-content-center">
-                        <Link href={`/your-deals/${offer.id}`}>
-                          <button className="btn btn-sm btn-primary action-button  ml-2">
-                            <i className="feather-edit" />
+                      <div className="d-flex flex-column flex-md-row align-items-center">
+                        <div className="col-12 col-md-1 mb-3 mb-md-0">
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
+                            alt={offer.title}
+                            className="img-fluid rounded"
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        </div>
+                        <div className="col-12 col-md-5 mb-3 mb-md-0 text-center text-md-start">
+                          <h5 className="mb-1">{offer.title}</h5>
+                          <p className="mb-0 small">{offer.description}</p>
+                        </div>
+                        <div className="col-12 col-md-3 mb-3 mb-md-0 text-center">
+                          <Switch
+                            checked={offer.status === 1}
+                            onChange={() =>
+                              handleStatusToggle(offer.id, offer.status)
+                            }
+                          />
+                        </div>
+                        <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
+                          <Link href={`/your-deals/${offer.id}`}>
+                            <button className="btn btn-sm btn-primary action-button">
+                              <i className="feather-edit" />
+                            </button>
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(offer.id)}
+                            className="btn btn-sm btn-danger action-button"
+                          >
+                            <i className="feather-trash-2" />
                           </button>
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(offer.id)}
-                          className="btn btn-sm btn-danger action-button ml-2"
-                        >
-                          <i className="feather-trash-2"></i>
-                        </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -306,10 +288,10 @@ router.reload("/your-deals")
               required
             />
           </div>
-          <div className="d-flex justify-content-end">
+          <div className="d-flex justify-content-end gap-2">
             <button
               type="button"
-              className="btn btn-secondary me-2"
+              className="btn btn-secondary"
               onClick={() => setModalIsOpen(false)}
             >
               Cancel
@@ -330,21 +312,48 @@ router.reload("/your-deals")
           justify-content: center;
         }
 
-        .ml-2 {
-          margin-left: 0.5rem;
+        .offer-item {
+          background: #fff;
+          transition: all 0.3s ease;
         }
 
-        .offer-header {
-          font-weight: bold;
-          text-align: center;
+        .offer-item:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .offer-item h5 {
           font-size: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .offer-item p {
+          margin-bottom: 0;
         }
 
         img {
           object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+          .dashboard-content {
+            padding: 1rem 0;
+          }
+
+          .card-body {
+            padding: 1rem;
+          }
+
+          .offer-item {
+            padding: 1rem;
+          }
+
+          .breadcrumb-title {
+            font-size: 1.5rem;
+          }
+        }
+
+        .gap-2 {
+          gap: 0.5rem;
         }
       `}</style>
     </>

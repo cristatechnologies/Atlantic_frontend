@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import StickyBox from "react-sticky-box";
 import { useState } from "react";
@@ -22,6 +22,7 @@ import business from "@/app/signup/business/page";
 import axios from "axios";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import AnimatedHeart from "./AnimatedHeart";
+import { toast } from "react-toastify";
 
 const ServiceDetails = ({ data }) => {
   const pathname = usePathname;
@@ -30,12 +31,41 @@ const ServiceDetails = ({ data }) => {
   const [totalLikes, setTotalLikes] = useState(data.total_likes);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
+    const [formData, setFormData] = useState({
+      name: "",
+      email: "",
+      message: "",
+    });
+    const [authToken,setAuthToken] = useState(null)
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      console.log("Input changed:", name, value); // Debug log
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+
+    useEffect(()=>
+    {
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        const token = auth?.access_token;
+    setAuthToken(token)
+      })
+
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
     const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.access_token;
+
 
     try {
       const payload = {
@@ -60,6 +90,44 @@ const ServiceDetails = ({ data }) => {
       // Handle error - maybe show an error message to user
     }
   };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    setFormData
+
+    
+    console.log(formData)
+// const payload = JSON.stringify(formData)
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/send-contact-message?name=${formData.name}&email=${formData.email}&message=${formData.message}`,
+        
+      );
+
+      if (response.data && response.status === 200) {
+        // throw new Error(`HTTP error! status: ${response.status}`);
+        console.log("Response:", data);
+        setSuccess(true);
+        setFormData({ name: "", email: "", message: "" }); // Reset form
+        toast.success("Form Submitted Successfully");
+        
+      }
+else{
+  toast.error(response.status);
+}
+      
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const toggleFavorite = async () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.access_token;
@@ -71,6 +139,8 @@ const ServiceDetails = ({ data }) => {
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/post-like?token=${token}`,
         payload
       );
+      console.log(res.data.total_likes);
+      setTotalLikes(res.data.total_likes);
       setIsFavorite(!isFavorite);
     } catch (error) {
       console.error("Error toggling favorite:", error);
@@ -148,18 +218,13 @@ const ServiceDetails = ({ data }) => {
           <div className="descriptionlinks">
             <div className="row">
               <div className="col-lg-9">
-                <ul style={{ display: "flex", alignItems: "center" }}>
-                  <li>
-                    <Link href="#">
-                      <i className="feather-map" /> Get Directions
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#">
+                <ul className="d-flex align-items-center gap-2 justify-content-center justify-content-lg-start">
+                  {/* <li>
+                    <Link href={data.website}>
                       <i className="feather-link" />
                       Website
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link href="#">
                       <i className="feather-share-2" /> share
@@ -167,7 +232,7 @@ const ServiceDetails = ({ data }) => {
                   </li>
                   <li>
                     <Link href="#review-sec">
-                      <i className="feather-message-circle" />  review
+                      <i className="feather-message-circle" /> review
                     </Link>
                   </li>
                   {/* <li>
@@ -222,7 +287,7 @@ const ServiceDetails = ({ data }) => {
                 </div>
                 <div className="card-body">
                   <div className="gallery-content">
-                    {console.log("business_gallery:", data.business_gallery)}
+                    {/* {console.log("business_gallery:", data.business_gallery)} */}
                     <Roomspics images={data.business_gallery} />
                   </div>
                 </div>
@@ -242,7 +307,10 @@ const ServiceDetails = ({ data }) => {
                             <div className="review-profile">
                               <div className="review-img">
                                 <img
-                                  src={review.user.image || "/img/pngegg.png"} // Add a default avatar image
+                                  src={
+                                    `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}` ||
+                                    "/img/pngegg.png"
+                                  } // Add a default avatar image
                                   className="img-fluid"
                                   alt="Profile"
                                 />
@@ -251,15 +319,13 @@ const ServiceDetails = ({ data }) => {
                             <div className="review-details">
                               <h6>{review.user.name}</h6>
                               <div className="rating">
-                                <div className="star-rating">
-                                  <StarRatings
-                                    rating={review.rating}
-                                    starRatedColor="#FFD700"
-                                    starDimension="18px"
-                                    starSpacing="0px"
-                                    numberOfStars={5}
-                                  />
-                                </div>
+                                <StarRatings
+                                  rating={review.rating}
+                                  starRatedColor="#FFD700"
+                                  starDimension="18px"
+                                  starSpacing="-28px"
+                                  numberOfStars={5}
+                                />
 
                                 {/* <div>
                                   <i className="fa-sharp fa-solid fa-calendar-days" />{" "}
@@ -275,55 +341,61 @@ const ServiceDetails = ({ data }) => {
                         ))}
 
                       {/* form   */}
-                      <li className="review-box feedbackbox mb-0">
-                        <div className="review-details">
-                          <h6>
-                            {" "}
-                            <i class="feather-message-circle" /> Write a Review
-                          </h6>
-                        </div>
-                        <div className="card-body">
-                          <form onSubmit={handleReviewSubmit}>
-                            <div className="form-group">
-                              <textarea
-                                rows={4}
-                                className="form-control"
-                                placeholder="Write a Review*"
-                                required
-                                value={review}
-                                onChange={(e) => setReview(e.target.value)}
-                              />
-                            </div>
-                            <div className="reviewbox-rating">
-                              <p>
-                                <span>Rating</span>
-                                <div className="star-rating">
-                                  <StarRatings
-                                    rating={rating}
-                                    starRatedColor="#FFD700"
-                                    changeRating={(newRating) =>
-                                      setRating(newRating)
-                                    }
-                                    numberOfStars={5}
-                                    name="rating"
-                                    starDimension="20px"
-                                    starSpacing="2px"
-                                  />
-                                </div>
-                              </p>
-                            </div>
-                            <div className="submit-section">
-                              <button
-                                className="btn btn-primary submit-btn"
-                                type="submit"
-                                disabled={!rating || !review}
-                              >
-                                Submit Review
-                              </button>
-                            </div>
-                          </form>
-                        </div>
-                      </li>
+
+                      {authToken ? (
+                        <li className="review-box feedbackbox mb-0">
+                          <div className="review-details">
+                            <h6>
+                              {" "}
+                              <i className="feather-message-circle" /> Write a
+                              Review
+                            </h6>
+                          </div>
+                          <div className="card-body">
+                            <form onSubmit={handleReviewSubmit}>
+                              <div className="form-group">
+                                <textarea
+                                  rows={4}
+                                  className="form-control"
+                                  placeholder="Write a Review*"
+                                  required
+                                  value={review}
+                                  onChange={(e) => setReview(e.target.value)}
+                                />
+                              </div>
+                              <div className="reviewbox-rating">
+                                <p>
+                                  <span>Rating</span>
+                                  <div className="star-rating">
+                                    <StarRatings
+                                      rating={rating}
+                                      starRatedColor="#FFD700"
+                                      changeRating={(newRating) =>
+                                        setRating(newRating)
+                                      }
+                                      numberOfStars={5}
+                                      name="rating"
+                                      starDimension="20px"
+                                      starSpacing="2px"
+                                    />
+                                  </div>
+                                </p>
+                              </div>
+                              <div className="submit-section">
+                                <button
+                                  className="btn btn-primary submit-btn"
+                                  type="submit"
+                                  disabled={!rating || !review}
+                                >
+                                  Submit Review
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </li>
+                      ) : (
+                        <h6>Login to Add Your Review</h6>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -382,7 +454,7 @@ const ServiceDetails = ({ data }) => {
                         <li>
                           <Link href={`${data?.website}`}>
                             <img src="/img/website.svg" alt="website" />{" "}
-                            {data.contact_person_email}
+                            {data?.website}
                             {/* www.listee.com */}
                           </Link>
                         </li>
@@ -423,15 +495,21 @@ const ServiceDetails = ({ data }) => {
 
                   <div className="card mb-0">
                     <h4>
-                      {" "}
                       <i className="feather-phone-call" /> Contact Business
                     </h4>
-                    <form className="contactbusinessform">
+                    <form
+                      className="contactbusinessform"
+                      onSubmit={handleSubmit}
+                    >
                       <div className="form-group">
                         <input
                           type="text"
                           className="form-control"
                           placeholder="Name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
                         />
                       </div>
                       <div className="form-group">
@@ -439,6 +517,10 @@ const ServiceDetails = ({ data }) => {
                           type="email"
                           className="form-control"
                           placeholder="Email Address"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
                         />
                       </div>
                       <div className="form-group">
@@ -446,15 +528,19 @@ const ServiceDetails = ({ data }) => {
                           rows={6}
                           className="form-control"
                           placeholder="Message"
-                          defaultValue={""}
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          required
                         />
                       </div>
                       <div className="submit-section">
                         <button
                           className="btn btn-primary submit-btn"
                           type="submit"
+                          disabled={isLoading}
                         >
-                          Send Message
+                          {isLoading ? "Sending..." : "Send Message"}
                         </button>
                       </div>
                     </form>
