@@ -1,22 +1,44 @@
+"use client";
 import "../styles/bootstrap-datetimepicker.min.css";
 import "../styles/feather.css";
 import "../styles/owl.theme.default.min.css";
 import "../styles/slick.css";
 import "../styles/bootstrap.min.css";
 import "../styles/style.css";
+import "nprogress/nprogress.css";
 import Header from "@/components/HomePage/header/page";
 import Footer from "@/components/HomePage/footer/page";
 import ClientWrapper from "./ClientWrapper";
-import "../styles/crista.css"
+import "../styles/crista.css";
 import { Providers } from "@/components/providers";
 import "@yaireo/tagify/dist/tagify.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import NProgress from "nprogress";
+import { usePathname } from "next/navigation";
 library.add(fab);
+
 export default function RootLayout({ children }) {
-  // To dispatch your actions
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleStart = () => NProgress.start();
+    const handleStop = () => NProgress.done();
+
+    
+  }, [router]);
+
+
+
+  NProgress.configure({
+    easing: "ease",
+    speed: 500,
+color:"red"
+  });
 
   return (
     <html lang="en">
@@ -30,7 +52,7 @@ export default function RootLayout({ children }) {
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
-                newestOnTop={true} // Enable stacking
+                newestOnTop={true}
                 closeOnClick
                 rtl={false}
                 pauseOnFocusLoss

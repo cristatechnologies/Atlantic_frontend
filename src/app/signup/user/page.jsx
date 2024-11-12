@@ -6,7 +6,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
 const user = () => {
    const [fname, setFname] = useState("");
    const [lname, setLname] = useState("")
@@ -14,12 +15,30 @@ const user = () => {
    const [phone, setPhone] = useState("");
     const [selectedLanguage, setSelectedLanguage] = useState("");
    const [region,setRegion] = useState("");
+   const [originState, setOriginState] = useState("")
+   const [originCountry,setOriginCountry] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
    const [checked, setCheck] = useState(false);
     const [errors, setErrors] = useState(null);
      const [isValidEmail, setIsValidEmail] = useState(true);
   const [passwordType, setPasswordType] = useState("password");
   const [passwordInput, setPasswordInput] = useState("");
+  const [languageTags, setLanguageTags] = useState([]);
+   const [showOptionalFields, setShowOptionalFields] = useState(false);
+
+
+
+
+
+
+
+     const handleLanguageTagChange = (tags) => {
+       setLanguageTags(tags);
+       console.log("Updated language tags (comma-separated):", tags.join(","));
+     };
+
+
+
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
   };
@@ -41,9 +60,12 @@ const router = useRouter();
           password: passwordInput,
           password_confirmation: confirmPassword,
           agree: 1,
+          language: languageTags.length > 0 ? languageTags.join(",") : null, // Convert language tags array to comma-separated string or set to null if empty
           phone: phone ? phone : "",
-          language: selectedLanguage,
           user_type: 2,
+          region: region,
+          origin_country: originCountry,
+          origin_state: originState,
         }
       );
 
@@ -53,7 +75,9 @@ const router = useRouter();
       setConfirmPassword("");
       setCheck(false);
       setRegion("");
-      setSelectedLanguage("");
+      setOriginCountry(""),
+      setOriginState("")
+  setLanguageTags([]);
       router.push("/VerificationPage");
     } catch (err) {
       if (
@@ -108,7 +132,7 @@ const router = useRouter();
               <nav aria-label="breadcrumb" className="page-breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
-                    <Link href="/index">Home</Link>
+                    <Link href="/">Home</Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
                     Register
@@ -301,48 +325,81 @@ const router = useRouter();
                       )}
                     </div>
                   </div>
-                  <div className="form-group group-img">
-                    <div className="select-wrapper d-flex align-items-center">
-                      <i className="feather-globe me-2"></i>
-                      <select
-                        className="form-control"
-                        value={selectedLanguage}
-                        onChange={(e) => setSelectedLanguage(e.target.value)}
-                      >
-                        <option value="">Select Language (optional)</option>
-                        {languagesInAsia.map((language, index) => (
-                          <option key={index} value={language.name}>
-                            {language.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors && errors.language && (
-                      <span className="text-sm mt-1 text-qred">
-                        {errors.language[0]}
-                      </span>
-                    )}
-                  </div>
-                  <div className="form-group group-img">
-                    <div className="group-img">
-                      <i className="feather-mail" />
-                      <input
-                        label="region"
-                        className="form-control"
-                        placeholder="Region (optional)"
-                        name="region"
-                        mandatory={false}
-                        type="text"
-                        value={region}
-                     onChange={(e)=>
-                     {
-                      setRegion(e.target.value)
-                     }
-                     }
+                  <div className="form-group">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                      onClick={() => setShowOptionalFields(!showOptionalFields)}
+                    >
+                      Additional Information (Optional)
+                      <i
+                        className={`feather-chevron-${
+                          showOptionalFields ? "up" : "down"
+                        }`}
                       />
-                    
-                    </div>
+                    </button>
                   </div>
+
+                  {/* Optional Fields Section */}
+                  {showOptionalFields && (
+                    <div className="optional-fields-container">
+                      {/* Language Selection with TagsInput */}
+                      <div className="form-group">
+                        {/* <label className="col-form-label">Languages</label> */}
+                        <div className="custom-tags-input">
+                          <TagsInput
+                            value={languageTags}
+                            onChange={handleLanguageTagChange}
+                            inputProps={{
+                              className: "react-tagsinput-input",
+                              placeholder: "Add the languages and press enter",
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Region Field */}
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                         
+                          <input
+                            className="form-control"
+                            placeholder="Region"
+                            name="region"
+                            type="text"
+                            value={region}
+                            onChange={(e) => setRegion(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                        
+                          <input
+                            className="form-control"
+                            placeholder="Origin State "
+                            name="originState"
+                            type="text"
+                            value={originState}
+                            onChange={(e) => setOriginState(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                        
+                          <input
+                            className="form-control"
+                            placeholder="Origin Country"
+                            name="originCountry"
+                            type="text"
+                            value={originCountry}
+                            onChange={(e) => setOriginCountry(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <button
                     className="btn btn-primary w-100 login-btn"
                     type="submit"
@@ -357,30 +414,6 @@ const router = useRouter();
                       </Link>
                     </p>
                   </div>
-                  {/* <div className="login-or">
-                    <span className="or-line" />
-                    <span className="span-or">
-                      Sign in with Social Media Accounts
-                    </span>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-apple w-100">
-                      <img src={apple} className="me-1" alt="img" />
-                      Sign in with Apple
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-google w-100">
-                      <img src={google} className="me-1" alt="img" />
-                      Sign in with Google
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-facebook w-100 mb-0">
-                      <img src={facebook} className="me-2" alt="img" />
-                      Continue with Facebook
-                    </Link>
-                  </div> */}
                 </form>
                 {/* /Login Form */}
               </div>
@@ -389,6 +422,71 @@ const router = useRouter();
         </div>
       </div>
       {/* /Login Section */}
+      <style jsx>{`
+        .optional-fields-container {
+          padding: 15px;
+          background: #f8f9fa;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .btn-outline-secondary {
+          background: transparent;
+          border: 1px solid #dee2e6;
+          color: #6c757d;
+          padding: 10px 15px;
+          transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+          background: #f8f9fa;
+        }
+
+        .select-wrapper {
+          background: white;
+          border-radius: 6px;
+        }
+
+        .custom-tags-input {
+          margin-top: 10px;
+        }
+
+        .custom-tags-input :global(.react-tagsinput) {
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          padding: 5px;
+          background-color: white;
+        }
+
+        .custom-tags-input :global(.react-tagsinput-tag) {
+          background-color: #e9ecef;
+          border-radius: 3px;
+          border: 1px solid #ced4da;
+          color: #495057;
+          padding: 5px 10px;
+          margin: 2px;
+        }
+
+        .custom-tags-input :global(.react-tagsinput-input) {
+          width: 100%;
+          padding: 5px;
+          margin: 2px;
+          border: none;
+          outline: none;
+        }
+      `}</style>
     </>
   );
 };

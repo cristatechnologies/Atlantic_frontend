@@ -23,7 +23,7 @@ const Search = () => {
               process.env.NEXT_PUBLIC_BASE_URL
             }api/business?search=${encodeURIComponent(
               query
-            )}?city=${encodeURIComponent(location)}`
+            )}&location=${encodeURIComponent(location)}`
           );
           setSearchResults(response.data || []);
           setLoading(false);
@@ -68,14 +68,13 @@ const Search = () => {
             <div className="alert alert-danger">{error}</div>
           ) : (
             <>
-              <h3 className="mb-4">
+              <p className="mb-4">
                 Search Results for:{" "}
-                <span className="text-primary">"{query}"</span>
-            in 
-             
-                <span className="text-primary">"{location}"</span>
+                <span className="">
+                  "{query} in  {location}"
+                </span>
               
-              </h3>
+              </p>
               {searchResults.length === 0 ? (
                 <div>
                   <div className="alert alert-info">No results found.</div>

@@ -91,7 +91,7 @@ const EditOfferPage = ({ params }) => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-3">
       <h1 className="mb-4">Edit Offer</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

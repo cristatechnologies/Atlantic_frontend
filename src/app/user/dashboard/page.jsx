@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 
 import UserDashboardComponent from "@/components/UserDashboardComponent/page";
 import BusinessDashboardComponent from "@/components/BusinessDashboardComponent/page";
-
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 const Dashboard = () => {
+  const router = useRouter();
   const [userType, setUserType] = useState(null);
 
   useEffect(() => {
@@ -29,7 +31,8 @@ const Dashboard = () => {
     return <div className="mt-lg-5 pt-5">Loading...</div>;
   }
   if (userType === "invalid") {
-    F;
+    toast.error("Invalid user! Please Login Again ");
+    router.push("/login");
     return <div>Invalid User Type</div>;
   }
   return userType === "individual" ? (

@@ -586,6 +586,111 @@ const BusinessProfileComponent = () => {
                             />
                           </div>
                         </div>
+                        {/*linkedin*/}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Linkedin</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-linkedin" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="linkedin "
+                              defaultValue={profileData?.linkedin || ""}
+                            />
+                          </div>
+                        </div>
+                        {/* twitter */}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Twitter</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-twitter" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="twitter"
+                              defaultValue={profileData?.twitter || ""}
+                            />
+                          </div>
+                        </div>
+                        {/* youtube */}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Youtube</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-youtube" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="youtube"
+                              defaultValue={profileData?.youtube || ""}
+                            />
+                          </div>
+                        </div>
+                        {/* facebook */}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">facebook</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-facebook" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="facebook"
+                              defaultValue={profileData?.facebook || ""}
+                            />
+                          </div>
+                        </div>
+                        {/* instagram */}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">instagram</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-instagram" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="instagram"
+                              defaultValue={profileData?.instagram || ""}
+                            />
+                          </div>
+                        </div>
+                        {/* youtube */}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Map Link</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-map-pin" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="map_link"
+                              defaultValue={profileData?.map_link || ""}
+                            />
+                          </div>
+                        </div>
+                        {/* youtube */}
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Website</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-link" />
+                            </span>
+                            <input
+                              type="url"
+                              className="form-control"
+                              name="website"
+                              defaultValue={profileData?.website || ""}
+                            />
+                          </div>
+                        </div>
 
                         {/* Add more fields as needed */}
                       </div>
