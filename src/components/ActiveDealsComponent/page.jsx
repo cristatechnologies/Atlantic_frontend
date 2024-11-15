@@ -4,46 +4,41 @@ import Link from "next/link";
 
 import { RWebShare } from "react-web-share";
 
-
-
 const AcitveDealsComponent = ({ pathName }) => {
   const slug = pathName.split("/")[2];
   console.log("slug in active-deals slug page is ", slug);
-  const [apiData,setApiData] = useState()
+  const [apiData, setApiData] = useState();
 
-   useEffect(() => {
-     const fetchDailyOffersBySlug = async () => {
-   
+  useEffect(() => {
+    const fetchDailyOffersBySlug = async () => {
+      try {
+        const auth = JSON.parse(localStorage.getItem("auth") || "null");
+        const token = auth?.access_token;
 
-       try {
-         const auth = JSON.parse(localStorage.getItem("auth") || "null");
-         const token = auth?.access_token;
+        if (!token) {
+          throw new Error("Authentication token not found");
+        }
 
-         if (!token) {
-           throw new Error("Authentication token not found");
-         }
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers-slug/${slug}?token=${token}`
+        );
 
-         const response = await fetch(
-           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers-slug/${slug}?token=${token}`
-         );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-         if (!response.ok) {
-           throw new Error(`HTTP error! status: ${response.status}`);
-         }
+        const data = await response.json();
+        console.log(data);
+        setApiData(data);
+      } catch (error) {
+        console.error("Error fetching daily offers:", error);
+      }
+    };
 
-         const data = await response.json();
-         console.log(data);
-         setApiData(data);
-       } catch (error) {
-         console.error("Error fetching daily offers:", error);
-        
-       }
-     };
-
-     if (slug) {
-       fetchDailyOffersBySlug();
-     }
-   }, [slug]);
+    if (slug) {
+      fetchDailyOffersBySlug();
+    }
+  }, [slug]);
 
   return (
     <>
@@ -69,55 +64,48 @@ const AcitveDealsComponent = ({ pathName }) => {
           </div>
         </div>
       </div>
-      <div className="bloglisting">
-        <div className="container">
+      <div className="my-3 sm:my-5">
+        <div className="container card">
           <div className="row">
-            <div className="col-lg-12 col-md-12 col-sm-12 col-12 blog-listview">
-              <div className="bloglistleft-widget blog-listview">
-                <div className="card">
-                  <div className="blog-widget">
-                    <div className="blog-img">
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL}${apiData?.image}`}
-                        className="img-fluid"
-                        alt="blog-img"   
-                      />
-                    </div>
-                    <div className="bloglist-content">
-                      <div className="card-body">
-                        <ul className="entry-meta meta-item">
-                          <li>
-                            <div className="post-author"></div>
-                          </li>
-                        </ul>
-                        <h3 className="blog-title">{apiData?.title}</h3>
-                        <p className="mb-0">{apiData?.description}</p>
-                        <a className="pe-auto">
-                          <RWebShare
-                            data={{
-                              // image: `${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`,
-                              text: "Look i got a Great Deal from IndoAtlantic !!",
-                              url: `https://indoatlantic.ca${pathName}`,
-                              title: "indoatlantic",
-                            }}
-                            sites={[
-                              "facebook",
-                              "twitter",
-                              "whatsapp",
-                              "linkedin",
-                              "reddit",
-                              "mail",
-                              "copy",
-                            ]}
-                            onClick={() => console.log("shared successfully!")}
-                          >
-                            <i className="feather-share-2" />
-                          </RWebShare>
-                        </a>
-                      </div>
-                    </div>
+            <div className="col-md-6 h-auto">
+              <div className="container">
+                <div className="row gx-4">
+                  <div className="col-12">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL}${apiData?.image}`}
+                      className="img-fluid w-100 h-100 d-md-block"
+                      style={{ maxHeight: "500px", maxWidth: "500px" }}
+                      alt="deal-img"
+                    />
                   </div>
                 </div>
+              </div>
+            </div>
+            <div className="col-md-6 h-auto">
+              <div>
+                <h3 className="deal-title">{apiData?.title}</h3>{" "}
+                <a className="pe-auto">
+                  <RWebShare
+                    data={{
+                      text: "Look i got a Great Deal from IndoAtlantic !!",
+                      url: `https://indoatlantic.ca${pathName}`,
+                      title: "indoatlantic",
+                    }}
+                    sites={[
+                      "facebook",
+                      "twitter",
+                      "whatsapp",
+                      "linkedin",
+                      "reddit",
+                      "mail",
+                      "copy",
+                    ]}
+                    onClick={() => console.log("shared successfully!")}
+                  >
+                    <i className="feather-share-2" />
+                  </RWebShare>
+                </a>
+                <p className="mb-0">{apiData?.description}</p>
               </div>
             </div>
           </div>
@@ -126,5 +114,7 @@ const AcitveDealsComponent = ({ pathName }) => {
     </>
   );
 };
+
+
 
 export default AcitveDealsComponent;

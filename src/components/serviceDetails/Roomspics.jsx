@@ -8,7 +8,7 @@ const Roomspics = ({ images }) => {
   if (!Array.isArray(images) || images.length === 0) {
     return <p>No gallery items available.</p>;
   }
-  // console.log("Received images prop:", images);
+  console.log("Received images prop:", images);
 
   return (
     <div className="row">
@@ -16,10 +16,9 @@ const Roomspics = ({ images }) => {
         <div className="col-lg-3 col-md-3 col-sm-3" key={index}>
           <div className="review-gallery">
             <SlideshowLightbox>
-              <Image
-                height="220px"
-                width="209px"
+              <img
                 className="img-fluid"
+                style={{ height: "220px", width: "209px" }}
                 alt={`Gallery item ${index + 1}`}
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${item.image}`}
               />

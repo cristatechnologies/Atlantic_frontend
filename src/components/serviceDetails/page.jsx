@@ -287,7 +287,7 @@ else{
                 </div>
                 <div className="card-body">
                   <div className="gallery-content">
-                    {/* {console.log("business_gallery:", data.business_gallery)} */}
+                  {console.log("business_gallery:", data.business_gallery)}
                     <Roomspics images={data.business_gallery} />
                   </div>
                 </div>
