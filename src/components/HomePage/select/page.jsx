@@ -10,10 +10,10 @@ export default function Select({ value, onChange }) {
       value: "useMyLocation",
       isCurrentLocation: true,
     },
-    { label: "Kerala", value: "Kerala", isPopular: true },
-    { label: "Tamil Nadu", value: "Tamil Nadu", isPopular: true },
-    { label: "Punjab", value: "Punjab", isPopular: true },
-    { label: "Maharashtra", value: "Maharashtra", isPopular: true },
+    // { label: "Kerala", value: "Kerala", isPopular: true },
+    // { label: "Tamil Nadu", value: "Tamil Nadu", isPopular: true },
+    // { label: "Punjab", value: "Punjab", isPopular: true },
+    // { label: "Maharashtra", value: "Maharashtra", isPopular: true },
   ]);
 
   const [isLocationBlocked, setIsLocationBlocked] = useState(false);

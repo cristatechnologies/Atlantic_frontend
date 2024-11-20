@@ -121,13 +121,18 @@ const Header = ({ parms }) => {
               <Image
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                 alt="logo"
-                width={200}
-                height={100}
+                width={500} // Base width for large screens
+                height={150} // Base height for large screens
                 style={{
-                  maxWidth: "100%",
+                  maxWidth: "90%",
                   height: "auto",
                   objectFit: "contain",
+                  width: "270px", // Default width for very small screens
                 }}
+                sizes="(max-width: 640px) 200px, 
+           (max-width: 768px) 300px, 
+           (max-width: 1024px) 350px, 
+           600px"
               />
             </Link>
           </div>
@@ -161,7 +166,7 @@ const Header = ({ parms }) => {
               <UserPagesMenu />
               <BlogMenu activesMenus={parms} /> */}
               <li>
-                <Link href="/contact">Contact</Link>
+                <Link href="/let-us-know">Let us know</Link>
               </li>
               <li>
                 <Link href="/about-us">About Us</Link>
@@ -288,7 +293,9 @@ const Header = ({ parms }) => {
               )}
               {isLoggedIn && (
                 <li className="login-link">
-                  <Link onClick={handleLogout} href="#">Logout</Link>
+                  <Link onClick={handleLogout} href="#">
+                    Logout
+                  </Link>
                 </li>
               )}
             </ul>

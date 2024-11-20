@@ -377,7 +377,7 @@ const router = useRouter();
                         
                           <input
                             className="form-control"
-                            placeholder="Origin State "
+                            placeholder="Origin Province "
                             name="originState"
                             type="text"
                             value={originState}

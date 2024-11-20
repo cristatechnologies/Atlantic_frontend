@@ -185,32 +185,34 @@ const handleSearch = (e) => {
     <>
       {/* Banner Section */}
       <section
-        className=""
+        className="banner-section position-relative banner-customMade"
         style={{
-          marginTop: "90px",
-          height: "70vh",
           backgroundImage: `url(${bgImageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundSize: "contain", // Default to cover for larger screens
+
           backgroundRepeat: "no-repeat",
+
+          height: "auto",
+          overflow: "hidden",
         }}
       >
-       
         <div className="container">
           <div
-            className="row align-items-end"
+            className="row align-items-center banner-container"
             style={{
-              height: "63vh", // This will make the row take the full height of the viewport
+     
+              height: "auto",
             }}
           >
-            <div className="col-lg-7 d-flex justify-content-center align-items-end">
-              <div className="search-box">
+            {/* Large screens: Search box inside banner */}
+            <div className="col-lg-7 d-none d-lg-flex justify-content-center align-items-center">
+              <div className="search-box w-100">
                 <form
                   action="listing-grid-sidebar"
                   className="d-flex"
                   onSubmit={handleSearch}
                 >
-                  <div className="search-input">
+                  <div className="search-input flex-grow-1 mb-2 mb-md-0 me-md-2">
                     <div className="form-group">
                       <div className="group-img">
                         <input
@@ -224,7 +226,7 @@ const handleSearch = (e) => {
                       </div>
                     </div>
                   </div>
-                  <div className="search-input">
+                  <div className="search-input flex-grow-1 mb-2 mb-md-0 me-md-2">
                     <div className="form-group">
                       <div className="group-img">
                         <Select
@@ -242,23 +244,59 @@ const handleSearch = (e) => {
                 </form>
               </div>
             </div>
-            <div className="col-lg-5">
-              {/* Right side image or other content here */}
-            </div>
           </div>
         </div>
-
-        {/* <img
-          src="./img/bannerellipse.png"
-          className="img-fluid banner-elipse"
-          alt="arrow"
-        />
-        <img
-          src="./img/banner-arrow.png"
-          className="img-fluid bannerleftarrow"
-          alt="arrow"
-        /> */}
       </section>
+
+      {/* Mobile Search Section - Rendered below the banner */}
+      <section
+        className="mobile-search-section d-lg-none"
+        style={{
+          backgroundColor: "#f8f9fa", // Optional: add a light background
+          padding: "20px 0",
+        }}
+      >
+        <div className="container">
+          <div className="search-box w-100">
+            <form
+              action="listing-grid-sidebar"
+              className="d-flex flex-column"
+              onSubmit={handleSearch}
+            >
+              <div className="search-input w-100 mb-2">
+                <div className="form-group">
+                  <div className="group-img">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search"
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                    />
+                    <i className="feather-search"></i>
+                  </div>
+                </div>
+              </div>
+              <div className="search-input w-100 mb-2">
+                <div className="form-group">
+                  <div className="group-img">
+                    <Select
+                      value={selectedLocation}
+                      onChange={setSelectedLocation}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="search-btn w-100">
+                <button className="btn btn-primary w-100" type="submit">
+                  <i className="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+      {/* Banner Section */}
       {/* Banner Section */}
 
       {/* Category Section */}
@@ -429,7 +467,7 @@ const handleSearch = (e) => {
       {/* Client Testimonial Section */}
 
       {/* Partners Section */}
-      
+
       {/* Partners Section */}
 
       {/* Pricing Plan Section */}

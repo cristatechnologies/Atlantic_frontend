@@ -50,6 +50,102 @@ Version      : 1.0
 ========================================*/
 
 /*-----------------
+     Custom Classes 
+-----------------------*/
+.banner-customMade {
+  margin-top: 90px;
+  background-size: cover;
+  background-image: center;
+  overflow-x:hidden;
+  /* Adjust as needed */
+  min-height: 100vh;
+  background-position: center;
+}
+
+@media (max-width: 768px) {
+  .banner-customMade {
+    margin-top: 10px !important;
+    background-size: contain !important;
+    min-height:58vh !important;
+    background-position:bottom !important;
+width:100vw;
+  }
+
+  .banner-container{
+    min-height: 10vh !important;
+  }
+  .bg-sm-hidder {
+    display: none !important; /* Hides the container class on smaller screens */
+  }
+}
+
+
+
+@media (max-width: 425px) {
+  .banner-customMade {
+    margin-top: 70px !important;
+    background-size: contain !important;
+    min-height:auto !important;
+    background-position:bottom !important;
+width:100vw;
+  }
+
+  .banner-container{
+    min-height: 10vh !important;
+  }
+  .bg-sm-hidder {
+    display: none !important; /* Hides the container class on smaller screens */
+  }
+}
+@media (max-width: 376px) {
+  .banner-customMade {
+    margin-top: 1.7rem !important;
+    background-size: contain !important;
+    min-height:25vh !important;
+    background-position:bottom !important;
+width:100vw;
+  }
+
+  .banner-container{
+    min-height: 10vh !important;
+  }
+  .bg-sm-hidder {
+    display: none !important; /* Hides the container class on smaller screens */
+  }
+}
+
+@media (max-width: 320px) {
+  .banner-customMade {
+    margin-top: 10px !important;
+    background-size: contain !important;
+    min-height:30vh !important;
+    background-position:bottom !important;
+width:100vw;
+  }
+
+  .banner-container{
+    min-height: 10vh !important;
+  }
+  .bg-sm-hidder {
+    display: none !important; /* Hides the container class on smaller screens */
+  }
+}
+
+
+
+
+
+.banner-container{
+  min-height: 80vh;
+
+}
+
+
+
+
+
+
+/*-----------------
     1. General
 -----------------------*/
 
@@ -63,6 +159,7 @@ body {
   font-size: 16px;
   height: 100%;
   overflow-x: hidden;
+  
 }
 
 
@@ -1059,6 +1156,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   box-shadow: 0px 10px 40px rgba(202, 202, 202, 0.2);
   left: 0;
   top: 0;
+  margin-bottom: 30px;
   width: 100%;
   z-index: 9999;
   transition: ease all 0.5s;

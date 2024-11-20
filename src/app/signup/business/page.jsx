@@ -526,7 +526,7 @@ const business = () => {
                             value={state}
                             onChange={handleStateChange}
                           >
-                            <option value="">Select state</option>
+                            <option value="">Select Province</option>
                             {stateDropdown?.map((item) => (
                               <option key={item.id} value={item.id}>
                                 {item.name}
