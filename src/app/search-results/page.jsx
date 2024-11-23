@@ -15,7 +15,7 @@ const Search = () => {
 
   useEffect(() => {
     const fetchSearchResults = async () => {
-      if (query) {
+
         try {
           setLoading(true);
           const response = await axios.get(
@@ -32,7 +32,7 @@ const Search = () => {
           setError("An error occurred while fetching search results.");
           setLoading(false);
         }
-      }
+      
     };
 
     fetchSearchResults();

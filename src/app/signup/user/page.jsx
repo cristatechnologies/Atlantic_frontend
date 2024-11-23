@@ -145,7 +145,28 @@ const router = useRouter();
       </div>
       {/* /Breadscrumb Section */}
       {/* Login Section */}
-      <div className="login-content">
+      {/* <div
+        style={{
+          backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px 0",
+        }}
+      > */}
+      <div
+        className="login-content"
+        style={{
+          backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-lg-5 mx-auto">
@@ -361,7 +382,6 @@ const router = useRouter();
                       {/* Region Field */}
                       <div className="form-group group-img">
                         <div className="group-img">
-                         
                           <input
                             className="form-control"
                             placeholder="Region"
@@ -374,7 +394,6 @@ const router = useRouter();
                       </div>
                       <div className="form-group group-img">
                         <div className="group-img">
-                        
                           <input
                             className="form-control"
                             placeholder="Origin Province "
@@ -387,7 +406,6 @@ const router = useRouter();
                       </div>
                       <div className="form-group group-img">
                         <div className="group-img">
-                        
                           <input
                             className="form-control"
                             placeholder="Origin Country"
@@ -421,6 +439,7 @@ const router = useRouter();
           </div>
         </div>
       </div>
+      {/* </div> */}
       {/* /Login Section */}
       <style jsx>{`
         .optional-fields-container {

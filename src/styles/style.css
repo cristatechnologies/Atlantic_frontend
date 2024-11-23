@@ -62,7 +62,7 @@ Version      : 1.0
   background-position: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .banner-customMade {
     margin-top: 10px !important;
     background-size: contain !important;
@@ -81,7 +81,7 @@ width:100vw;
 
 
 
-@media (max-width: 425px) {
+@media (max-width: 450px) {
   .banner-customMade {
     margin-top: 70px !important;
     background-size: contain !important;

@@ -207,7 +207,15 @@ const business = () => {
       {/* /Breadscrumb Section */}
       {/* Login Section */}
 
-      <div className="login-content">
+      <div
+        className="login-content"
+        style={{
+          backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-lg-10 mx-auto">

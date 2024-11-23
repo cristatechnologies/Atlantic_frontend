@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from "./select/page";
 import Banner from "../common/Banner";
 import { Flex } from "antd";
+import LocationInput from "./LocationInput";
 
 
 const HomePage = () => {
@@ -28,9 +29,14 @@ const [apiData,setApiData] = useState("");
 const router = useRouter();
   const [bgImageUrl, setBgImageUrl] = useState("");
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL 
+
+
+
 const handleSearch = (e) => {
   e.preventDefault();
-  if (searchText.trim() || selectedLocation)  {
+
+  // Check if both searchText and selectedLocation are not empty
+  if (searchText.trim() || selectedLocation) {
     const searchQuery = encodeURIComponent(searchText);
     const locationQuery = encodeURIComponent(selectedLocation);
     router.push(
@@ -39,6 +45,12 @@ const handleSearch = (e) => {
   }
 };
 
+
+
+const handleLocationChange = (location) => {
+  console.log("Selected location:", location);
+  // Do something with the location, e.g., update state, make API calls, etc.
+};
 
  
 
@@ -200,7 +212,6 @@ const handleSearch = (e) => {
           <div
             className="row align-items-center banner-container"
             style={{
-     
               height: "auto",
             }}
           >
@@ -229,9 +240,10 @@ const handleSearch = (e) => {
                   <div className="search-input flex-grow-1 mb-2 mb-md-0 me-md-2">
                     <div className="form-group">
                       <div className="group-img">
-                        <Select
-                          value={selectedLocation}
+                        <LocationInput
+                          selectedLocation={selectedLocation}
                           onChange={setSelectedLocation}
+                          onLocationChange={handleLocationChange}
                         />
                       </div>
                     </div>
@@ -273,16 +285,17 @@ const handleSearch = (e) => {
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                     />
-                    <i className="feather-search"></i>
+                 
                   </div>
                 </div>
               </div>
               <div className="search-input w-100 mb-2">
                 <div className="form-group">
                   <div className="group-img">
-                    <Select
-                      value={selectedLocation}
+                    <LocationInput
+                      selectedLocation={selectedLocation}
                       onChange={setSelectedLocation}
+                      onLocationChange={handleLocationChange}
                     />
                   </div>
                 </div>

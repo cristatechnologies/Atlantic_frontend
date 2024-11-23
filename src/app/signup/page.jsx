@@ -4,31 +4,43 @@ import Link from "next/link";
 
 const signup = () => {
   return (
-    <Container
-      className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh" }}
+    <div
+      style={{
+        backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "repeat",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
     >
-      <Row className="w-100 justify-content-center">
-        <Col
-          xs={12}
-          md={5}
-          className="d-flex justify-content-md-end mb-3 mb-md-0"
-        >
-          <Link href="/signup/user" passHref>
-            <Button variant="primary" className="py-2 px-4">
-              Sign up as user
-            </Button>
-          </Link>
-        </Col>
-        <Col xs={12} md={5} className="d-flex justify-content-md-start">
-          <Link href="/signup/business" passHref>
-            <Button variant="primary" className="py-2 px-4">
-              Sign up as business
-            </Button>
-          </Link>
-        </Col>
-      </Row>
-    </Container>
+      <Container
+        className="d-flex align-items-center justify-content-center"
+        style={{ height: "100vh" }}
+      >
+        <Row className="w-100 justify-content-center">
+          <Col
+            xs={12}
+            md={5}
+            className="d-flex justify-content-md-end mb-3 mb-md-0"
+          >
+            <Link href="/signup/user" passHref>
+              <Button variant="primary" className="py-2 px-4">
+                Sign up as user
+              </Button>
+            </Link>
+          </Col>
+          <Col xs={12} md={5} className="d-flex justify-content-md-start">
+            <Link href="/signup/business" passHref>
+              <Button variant="primary" className="py-2 px-4">
+                Sign up as business
+              </Button>
+            </Link>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 

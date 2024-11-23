@@ -48,7 +48,7 @@ const LetUsKnow = () => {
       });
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE}api/let-us-know`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/let-us-know`,
         {
           method: "POST",
           body: formDataToSend,
