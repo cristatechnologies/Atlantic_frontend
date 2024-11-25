@@ -78,7 +78,7 @@ const CategoryPage = ({ params }) => {
                       className="category-links"
                     >
                       <h5>{item.name}</h5>
-                      <span>09 Ads</span>
+                   
                       <img
                         src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
                         alt="icons"

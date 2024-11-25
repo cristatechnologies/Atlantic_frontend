@@ -54,7 +54,7 @@ export default function Carousel({ businessData }) {
               <h2>
                 Featu<span className="title-right magentaCircle">red</span> Ads
               </h2>
-              <p>Checkout these latest coo ads from our members</p>
+              {/* <p>Checkout these latest coo ads from our members</p> */}
             </div>
           </div>
           <div className="col-md-6 text-md-end aos" data-aos="fade-up">

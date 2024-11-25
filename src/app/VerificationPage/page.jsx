@@ -171,7 +171,7 @@ const VerificationPage = () => {
                   {otp.map((digit, index) => (
                     <Col key={index}>
                       <Form.Control
-                        type="text"
+                        type="number"
                         maxLength="1"
                         value={digit}
                         onChange={(e) => handleChange(e.target, index)}

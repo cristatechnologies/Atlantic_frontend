@@ -33,7 +33,7 @@ const Header = ({ parms }) => {
       const settingsData = JSON.parse(settings);
       setLogo(settingsData?.logo);
     }
-  }, []);
+  });
   console.log("the log of the logo is ", logo);
 
   const handleDropdownClick = (e) => {
@@ -117,22 +117,13 @@ const Header = ({ parms }) => {
                 <span></span>
               </span>
             </Link>
-            <Link href="/" className="navbar-brand logo">
+            <Link href="/" className="">
               <Image
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                 alt="logo"
-                width={500} // Base width for large screens
-                height={150} // Base height for large screens
-                style={{
-                  maxWidth: "90%",
-                  height: "auto",
-                  objectFit: "contain",
-                  width: "270px", // Default width for very small screens
-                }}
-                sizes="(max-width: 640px) 200px, 
-           (max-width: 768px) 300px, 
-           (max-width: 1024px) 350px, 
-           600px"
+                width="210"
+                height="45"
+                objectFit="scale-down"
               />
             </Link>
           </div>

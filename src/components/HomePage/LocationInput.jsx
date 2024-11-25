@@ -67,7 +67,8 @@ export default function LocationInput({
     }
   };
 
-  const handleUseCurrentLocation = () => {
+  const handleUseCurrentLocation = (e) => {
+    e.preventDefault()
     getUserLocation();
   };
 
@@ -81,10 +82,14 @@ return (
         onChange={handleInputChange}
         placeholder="Search location..."
         className="form-control form-control-sm " // Increase right padding to make space for icon
-        style={{ // Additional padding to make space for the icon
-        }}
+        style={
+          {
+            // Additional padding to make space for the icon
+          }
+        }
       />
       <button
+        type="button"
         onClick={handleUseCurrentLocation}
         className="position-absolute"
         style={{
@@ -96,7 +101,7 @@ return (
           height: "100%",
           display: "flex",
           alignItems: "center",
-          fontWeight:"bolder",
+          fontWeight: "bolder",
         }}
         aria-label="Use current location"
       >

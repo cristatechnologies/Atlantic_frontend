@@ -23,6 +23,7 @@ const business = () => {
   const [short, setShortDesc] = useState("");
   const [address, setAddress] = useState("");
   const [longDesc, setLongDesc] = useState("");
+  
   const [countryDropdown, setCountryDropdown] = useState(null);
   const [stateDropdown, setStateDropdown] = useState(null);
   const [cityDropdown, setCityDropdown] = useState(null);
@@ -38,6 +39,7 @@ const business = () => {
   const [passwordType, setPasswordType] = useState("password");
   const [passwordInput, setPasswordInput] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [ConfirmPasswordType, setConfirmPasswordType] = useState("password");
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
   };
@@ -49,6 +51,18 @@ const business = () => {
     }
     setPasswordType("password");
   };
+ 
+const toggleConfirmPassword = () => {
+  if (ConfirmPasswordType === "password") {
+    setConfirmPasswordType("text");
+    return;
+  }
+  setConfirmPasswordType("password");
+};
+
+
+
+
   const doSignUp = async () => {
     try {
       const response = await axios.post(
@@ -102,7 +116,7 @@ const business = () => {
       if (err.response && err.response.data && err.response.data.errors) {
         // Handle validation errors
         Object.entries(err.response.data.errors).forEach(([key, value]) => {
-          toast.error(`${key}: ${value[0]}`);
+          toast.error(`${value[0]}`);
         });
       } else {
         // Handle other types of errors
@@ -677,37 +691,28 @@ const business = () => {
                         <div className="pass-group group-img">
                           <i className="feather-lock" />
                           <input
-                            type={passwordType}
+                            type={ConfirmPasswordType} // Use the confirm password specific type
                             className="form-control pass-input"
                             placeholder="Confirm Password"
-                            value={confirmPassword}
+                            value={confirmPassword} // Use the confirmPassword state value
                             onChange={(e) => {
                               setConfirmPassword(e.target.value.trim());
                             }}
                           />
-
                           <span
                             className={`toggle-password  ${
-                              passwordType === "password"
+                              ConfirmPasswordType === "password"
                                 ? "feather-eye"
                                 : "feather-eye-off"
                             } `}
-                            onClick={togglePassword}
+                            onClick={toggleConfirmPassword} // Use the confirm password specific toggle
                           ></span>
-                          {passwordInput && passwordInput.length < 8 ? (
-                            <span className="text-sm mt-1 text-qred absolute top-20 left-0">
-                              Please enter password minimum 8 character
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {errors && Object.hasOwn(errors, "password") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.password[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
+                          {confirmPassword &&
+                            confirmPassword !== passwordInput && (
+                              <span className="text-sm mt-1 text-qred">
+                                Passwords do not match
+                              </span>
+                            )}
                         </div>
                       </div>
                     </div>

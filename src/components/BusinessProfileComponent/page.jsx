@@ -8,6 +8,10 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
+import Image from "next/image";
+
+
+
 
 const BusinessProfileComponent = () => {
   const websiteData = useSelector((state) => state.websiteSetup.data);
@@ -252,7 +256,13 @@ const BusinessProfileComponent = () => {
                           {/*profile image */}
                           <div className="profile-photo">
                             <div className="profile-img">
-                              <img src={imagePreview} alt="profile" />
+                              <Image
+                                src={imagePreview}
+                                alt="Logo"
+                                width={200}
+                                height={150}
+                                objectFit="scale-down"
+                              />
                               <div className="settings-upload-btn mt-2">
                                 <input
                                   type="file"
@@ -276,14 +286,12 @@ const BusinessProfileComponent = () => {
                         <div className="col-md-6">
                           <div className="profile-photo">
                             <div className="profile-img">
-                              <img
+                              <Image
                                 src={bannerPreview}
                                 alt="banner"
-                                style={{
-                                  maxHeight: "150px",
-                                  width: "100%",
-                                  objectFit: "cover",
-                                }}
+                                width={200}
+                                height={150}
+                                objectFit="scale-down"
                               />
                               <div className="settings-upload-btn mt-2">
                                 <input

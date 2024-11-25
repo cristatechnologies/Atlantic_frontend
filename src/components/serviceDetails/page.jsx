@@ -23,6 +23,9 @@ import axios from "axios";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import AnimatedHeart from "./AnimatedHeart";
 import { toast } from "react-toastify";
+import { RWebShare } from "react-web-share";
+
+
 
 const ServiceDetails = ({ data }) => {
   const pathname = usePathname;
@@ -226,9 +229,27 @@ else{
                     </Link>
                   </li> */}
                   <li>
-                    <Link href="#">
-                      <i className="feather-share-2" /> share
-                    </Link>
+                    <a className="pe-auto ">
+                      <RWebShare
+                        data={{
+                          text: "Look i got a Great Deal from IndoAtlantic !!",
+                          url: `https://indoatlantic.ca`,
+                          title: "indoatlantic",
+                        }}
+                        sites={[
+                          "facebook",
+                          "twitter",
+                          "whatsapp",
+                          "linkedin",
+                          "reddit",
+                          "mail",
+                          "copy",
+                        ]}
+                        onClick={() => console.log("shared successfully!")}
+                      >
+                        <i className="feather-share-2" />
+                      </RWebShare>
+                    </a>
                   </li>
                   <li>
                     <Link href="#review-sec">
@@ -287,7 +308,7 @@ else{
                 </div>
                 <div className="card-body">
                   <div className="gallery-content">
-                  {console.log("business_gallery:", data.business_gallery)}
+                    {console.log("business_gallery:", data.business_gallery)}
                     <Roomspics images={data.business_gallery} />
                   </div>
                 </div>
@@ -308,9 +329,10 @@ else{
                               <div className="review-img">
                                 <img
                                   src={
-                                    `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}` ||
-                                    "/img/pngegg.png"
-                                  } // Add a default avatar image
+                                    review.user.image
+                                      ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
+                                      : "/img/pngegg.png"
+                                  }
                                   className="img-fluid"
                                   alt="Profile"
                                 />
@@ -394,7 +416,14 @@ else{
                           </div>
                         </li>
                       ) : (
-                        <h6>Login to Add Your Review</h6>
+                        <h6>
+                          {" "}
+                          <Link href="/login"><mark>
+                            Login
+                            </mark>
+                            </Link>{ " "}
+                          to Add Your Review
+                        </h6>
                       )}
                     </ul>
                   </div>
@@ -446,13 +475,19 @@ else{
                           </a>
                         </li>
                         <li>
-                          <a href={`mailto:${data?.contact_person_email}`}>
-                            <i className="feather-mail" />{" "}
+                          <a
+                            href={`mailto:${data?.contact_person_email}`}
+                            className="text-truncate"
+                          >
+                            <i className="feather-mail " />{" "}
                             {data.contact_person_email}
                           </a>
                         </li>
                         <li>
-                          <Link href={`${data?.website}`}>
+                          <Link
+                            href={`${data?.website}`}
+                            className="text-truncate"
+                          >
                             <img src="/img/website.svg" alt="website" />{" "}
                             {data?.website}
                             {/* www.listee.com */}

@@ -79,8 +79,8 @@ const UserDashboardComponent = () => {
 
               <li>
                 <Link href="/login">
-                  <i className="feather-power" />{" "}
-                  <a onClick={handleLogout}>Logout</a>
+                  <i className="feather-power" />
+                  <span onClick={handleLogout}>Logout</span>
                 </Link>
               </li>
             </ul>

@@ -274,6 +274,7 @@ const handleLocationChange = (location) => {
               action="listing-grid-sidebar"
               className="d-flex flex-column"
               onSubmit={handleSearch}
+         
             >
               <div className="search-input w-100 mb-2">
                 <div className="form-group">
