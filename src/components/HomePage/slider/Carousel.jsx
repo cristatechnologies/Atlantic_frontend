@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 
-export default function Carousel({ businessData }) {
+export default function Carousel({ businessData, color, textColor, Heading }) {
   const [error, setError] = useState(null);
 
   const settings = {
@@ -46,14 +46,15 @@ export default function Carousel({ businessData }) {
   console.log("carousel page", businessData);
   const slider = useRef();
   return (
-    <section className="featured-section">
+    <section
+      className="featured-section"
+      style={{ backgroundColor: `${color}` }}
+    >
       <div className="container">
         <div className="row align-items-center">
           <div className="col-md-6 aos aos-init aos-animate" data-aos="fade-up">
             <div className="section-heading">
-              <h2>
-                Featu<span className="title-right magentaCircle">red</span> Ads
-              </h2>
+              <h2 style={{ color: `${textColor}` }}>{`${Heading}`}</h2>
               {/* <p>Checkout these latest coo ads from our members</p> */}
             </div>
           </div>

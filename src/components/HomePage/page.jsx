@@ -216,7 +216,7 @@ const handleLocationChange = (location) => {
             }}
           >
             {/* Large screens: Search box inside banner */}
-            <div className="col-lg-7 d-none d-lg-flex justify-content-center align-items-center">
+            {/* <div className="col-lg-7 d-none d-lg-flex justify-content-center align-items-center">
               <div className="search-box w-100">
                 <form
                   action="listing-grid-sidebar"
@@ -255,14 +255,14 @@ const handleLocationChange = (location) => {
                   </div>
                 </form>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
-
       {/* Mobile Search Section - Rendered below the banner */}
+      {/* d-lg-none */}
       <section
-        className="mobile-search-section d-lg-none"
+        className="mobile-search-section "
         style={{
           backgroundColor: "#f8f9fa", // Optional: add a light background
           padding: "20px 0",
@@ -274,7 +274,6 @@ const handleLocationChange = (location) => {
               action="listing-grid-sidebar"
               className="d-flex flex-column"
               onSubmit={handleSearch}
-         
             >
               <div className="search-input w-100 mb-2">
                 <div className="form-group">
@@ -286,7 +285,6 @@ const handleLocationChange = (location) => {
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                     />
-                 
                   </div>
                 </div>
               </div>
@@ -312,7 +310,6 @@ const handleLocationChange = (location) => {
       </section>
       {/* Banner Section */}
       {/* Banner Section */}
-
       {/* Category Section */}
       {/* <section className="category-section">
         <div className="container">
@@ -359,131 +356,25 @@ const handleLocationChange = (location) => {
         </div>
       </section> */}
       {/* Category Section */}
-
       {/* Featured Ads Section */}
-      <Carousel businessData={businessData} />
+      <Carousel businessData={businessData} Heading={"Feature Ads"} />
       {/* Featured Ads Section */}
-
       {/* Popular Location Section */}
-      <section className="popular-locations grid-view featured-slider">
-        <div className="popular-circleimg">
-          <img
-            className="img-fluid"
-            src="./img/popular-img.png"
-            alt="Popular-sections"
-          />
-        </div>
-        <div className="container">
-          <div className="section-heading">
-            <h2>
-              Latest <span className="whiteCircle">Bus</span>inesses
-            </h2>
-            <p>
-              Start by selecting your favuorite location and explore the goods
-            </p>
-          </div>
-          <div className="lateestads-content">
-            <div className="row">
-              {latestBusiness &&
-                latestBusiness.map((item, i) => (
-                  <div className="col-lg-3 col-md-4 col-sm-6 d-flex" key={i}>
-                    <div className="card aos flex-fill" data-aos="fade-up">
-                      <div className="blog-widget">
-                        <div className="blog-img">
-                          <Link href={`business-details/${item.id}`}>
-                            <Image
-                              src={`${
-                                process.env.NEXT_PUBLIC_BASE_URL + item.image
-                              }`}
-                              width={312}
-                              height={252}
-                              className="img-fluid"
-                              alt="blog-img"
-                            />
-                          </Link>
-                          <div className="fav-item">
-                            {/* <span className="Featured-text">Featured</span> */}
-                            {/* <Link href="#" className="fav-icon">
-                              <i className="feather-heart"></i>
-                            </Link> */}
-                          </div>
-                        </div>
-                        <div className="bloglist-content">
-                          <div className="card-body">
-                            <div className="blogfeaturelink">
-                              <div className="grid-author">
-                                <img
-                                  src={`${
-                                    process.env.NEXT_PUBLIC_BASE_URL +
-                                    item.image
-                                  }`}
-                                  alt="author"
-                                />
-                              </div>
-                              <div className="blog-features text-black">
-                                <Link href={`business-details/${item.id}`}>
-                                  <span>
-                                    {" "}
-                                    <i className="fa-regular fa-circle-stop"></i>{" "}
-                                    {item.name}
-                                  </span>
-                                </Link>
-                              </div>
-                              <div className="blog-author text-end text-black">
-                                {/* <span>
-                                  {" "}
-                                  <i className="feather-eye"></i> 4000{" "}
-                                </span> */}
-                              </div>
-                            </div>
-                            {/* <h6 className="text-black">
-                                <Link href="/service-details">
-                                  2017 Gulfsteam Ameri-lite
-                                </Link>
-                              </h6> */}
-                            <div className="blog-location-details text-black">
-                              <div className="location-info">
-                                <i className="feather-map-pin"></i>{" "}
-                                {item.address}
-                              </div>
-                              <div className="location-info">
-                                {/* <FontAwesomeIcon icon="fa-solid fa-calendar-days" /> */}
-                                {item.business_category.name}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-          {/* <div className="align-items-center">
-            <Link href="/listing-grid-sidebar" className="browse-btn">
-              Browse Ads
-            </Link>
-          </div> */}
-        </div>
-      </section>
+      <Carousel
+        businessData={latestBusiness}
+        color={"#c10037"}
+        textColor={`#ffffff`}
+        Heading={"Latest Business"}
+      />
       {/* Popular Location Section */}
-
       {/* Latest ads Section */}
-
       {/* Latest ads Section */}
-
       {/* CTA Section */}
-
       {/* CTA Section */}
-
       {/* Client Testimonial Section */}
-
       {/* Client Testimonial Section */}
-
       {/* Partners Section */}
-
       {/* Partners Section */}
-
       {/* Pricing Plan Section */}
       {/* <section className="pricingplan-section">
           <div className="section-heading">
@@ -610,15 +501,10 @@ const handleLocationChange = (location) => {
           </div>
         </section> */}
       {/* Pricing Plan Section */}
-
       {/* Blog Section */}
-
       {/* Blog Section */}
-
       {/* Footer */}
-
       {/* Footer */}
-
       {/* scrollToTop start */}
       <div className="progress-wrap active-progress">
         <svg
