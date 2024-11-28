@@ -132,7 +132,7 @@ const Header = ({ parms }) => {
               <Link href="/" className="menu-logo">
                 <img
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                  className="img-fluid"
+                 style={{maxWidth:"100%",height:"auto"}}
                   alt="Logo"
                 />
               </Link>
@@ -147,28 +147,16 @@ const Header = ({ parms }) => {
               </Link>
             </div>
             <ul className="main-nav">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-
               <Categories activeMenu={parms} />
               {/*
               <PagesMenu activeMenus={parms} />
               <UserPagesMenu />
               <BlogMenu activesMenus={parms} /> */}
-              <li>
-                <Link href="/let-us-know">Let us know</Link>
-              </li>
-              <li>
-                <Link href="/about-us">About Us</Link>
-              </li>
-              <li>
-                <Link href="/active-deals">Active Deals </Link>
-              </li>
 
               <li>
-                <Link href="/faq">FAQs</Link>
+                <Link href="/active-deals">Active Offers </Link>
               </li>
+
               {isLoggedIn && userType === 1 && (
                 <>
                   <li className="d-lg-none has-submenu">

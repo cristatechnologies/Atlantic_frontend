@@ -55,24 +55,26 @@ Version      : 1.0
 .banner-customMade {
   /* margin-top: 90px; */
   background-size: cover;
-  background-image: center;
+
   overflow-x: hidden;
   /* Adjust as needed */
   /* min-height: 100vh; */
-  background-position: center;
+
+  margin-top:80px;
+ object-fit: scale-down;
 }
 
 @media (max-width: 780px) {
   .banner-customMade {
     /* margin-top: 10px !important; */
-    background-size: contain !important;
+  
     /* min-height:58vh !important; */
     background-position: bottom !important;
     width: 100vw;
   }
 
   .banner-container {
-    min-height: 10vh !important;
+    min-height: 40vh !important;
   }
   .bg-sm-hidder {
     display: none !important; /* Hides the container class on smaller screens */
@@ -82,14 +84,15 @@ Version      : 1.0
 @media (max-width: 450px) {
   .banner-customMade {
     /* margin-top: 70px !important; */
-    background-size: contain !important;
+  
     /* min-height: auto !important; */
     background-position: bottom !important;
     width: 100vw;
+     margin-top:65px;
   }
 
   .banner-container {
-    min-height: 10vh !important;
+    min-height: 22.5vh !important;
   }
   .bg-sm-hidder {
     display: none !important; /* Hides the container class on smaller screens */
@@ -98,14 +101,15 @@ Version      : 1.0
 @media (max-width: 376px) {
   .banner-customMade {
     /* margin-top: 1.7rem !important; */
-    background-size: contain !important;
+  
     /* min-height: 25vh !important; */
     background-position: bottom !important;
     width: 100vw;
+     margin-top:65px;
   }
 
   .banner-container {
-    min-height: 10vh !important;
+    min-height: 19vh !important;
   }
   .bg-sm-hidder {
     display: none !important; /* Hides the container class on smaller screens */
@@ -115,22 +119,31 @@ Version      : 1.0
 @media (max-width: 320px) {
   .banner-customMade {
     /* margin-top: 10px !important; */
-    background-size: contain !important;
+   
     /* min-height: 30vh !important; */
     background-position: bottom !important;
     width: 100vw;
+    margin-top:65px;
   }
 
   .banner-container {
-    min-height: 10vh !important;
+    min-height: 17vh !important;
   }
   .bg-sm-hidder {
     display: none !important; /* Hides the container class on smaller screens */
   }
 }
 
+@media (max-width:1040px)
+{
+  .banner-container {
+  min-height: 55vh;
+}
+
+}
+
 .banner-container {
-  min-height: 65vh;
+  min-height: 77vh;
 }
 
 /*-----------------
@@ -2033,7 +2046,7 @@ html.menu-opened body {
   overflow: hidden;
 }
 .main-menu-wrapper {
-  margin: 0 15px 0;
+  margin: 0 0 0;
 }
 .navbar-brand.logo-small {
   display: none;
@@ -3933,7 +3946,7 @@ a:focus {
   color: #fff;
 }
 .breadcrumb-bar {
-  background: #384b5c;
+  background: var(--secondary-color);
   padding: 170px 0 90px;
   position: relative;
   z-index: 1;
@@ -18021,6 +18034,7 @@ section.advertisement {
   #mobile_btn {
     display: inline-block;
     padding-top: 6px;
+    padding-left:10px;
   }
   .sidebar {
     margin-left: -225px;

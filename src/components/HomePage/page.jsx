@@ -15,6 +15,7 @@ import Select from "./select/page";
 import Banner from "../common/Banner";
 import { Flex } from "antd";
 import LocationInput from "./LocationInput";
+import CarouselActiveDeals from "./Carousel-Active-deals";
 
 
 const HomePage = () => {
@@ -29,7 +30,7 @@ const [apiData,setApiData] = useState("");
 const router = useRouter();
   const [bgImageUrl, setBgImageUrl] = useState("");
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL 
-
+  const [dailyOffers, setDailyOffers] = useState([]);
 
 
 const handleSearch = (e) => {
@@ -193,78 +194,48 @@ const handleLocationChange = (location) => {
     }
   }, [apiData]);
 
+  useEffect(() => {
+    // Fetch token from local storage on the client side
+    
+    const fetchDailyOffers = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/daily-offers`
+        );
+        setDailyOffers(response.data);
+      } catch (error) {
+        console.error("Error fetching daily offers:", error);
+      }
+    };
+
+    fetchDailyOffers();
+  }, []);
+
   return (
     <>
       {/* Banner Section */}
+
       <section
-        className="banner-section position-relative banner-customMade"
+        className="banner-section position-relative banner-customMade banner-container"
         style={{
           backgroundImage: `url(${bgImageUrl})`,
-          backgroundSize: "contain", // Default to cover for larger screens
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          // Default to cover for larger screens
 
           backgroundRepeat: "no-repeat",
 
           height: "auto",
           overflow: "hidden",
         }}
-      >
-        <div className="container">
-          <div
-            className="row align-items-center banner-container"
-            style={{
-              height: "auto",
-            }}
-          >
-            {/* Large screens: Search box inside banner */}
-            {/* <div className="col-lg-7 d-none d-lg-flex justify-content-center align-items-center">
-              <div className="search-box w-100">
-                <form
-                  action="listing-grid-sidebar"
-                  className="d-flex"
-                  onSubmit={handleSearch}
-                >
-                  <div className="search-input flex-grow-1 mb-2 mb-md-0 me-md-2">
-                    <div className="form-group">
-                      <div className="group-img">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Search"
-                          value={searchText}
-                          onChange={(e) => setSearchText(e.target.value)}
-                        />
-                        <i className="feather-search"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="search-input flex-grow-1 mb-2 mb-md-0 me-md-2">
-                    <div className="form-group">
-                      <div className="group-img">
-                        <LocationInput
-                          selectedLocation={selectedLocation}
-                          onChange={setSelectedLocation}
-                          onLocationChange={handleLocationChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="search-btn">
-                    <button className="btn btn-primary" type="submit">
-                      <i className="fa fa-search" aria-hidden="true"></i> Search
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </section>
+      ></section>
+
       {/* Mobile Search Section - Rendered below the banner */}
       {/* d-lg-none */}
       <section
-        className="mobile-search-section "
+        className="mobile-search-section"
         style={{
-          backgroundColor: "#f8f9fa", // Optional: add a light background
+          backgroundColor: "#f8f9fa",
           padding: "20px 0",
         }}
       >
@@ -272,10 +243,12 @@ const handleLocationChange = (location) => {
           <div className="search-box w-100">
             <form
               action="listing-grid-sidebar"
-              className="d-flex flex-column"
+              className="d-flex flex-column flex-md-row" // Changed to allow row layout on medium screens and up
               onSubmit={handleSearch}
             >
-              <div className="search-input w-100 mb-2">
+              <div className="search-input flex-grow-1 me-md-2 mb-2 mb-md-0">
+                {" "}
+                {/* Added flex-grow and margin utilities */}
                 <div className="form-group">
                   <div className="group-img">
                     <input
@@ -288,7 +261,9 @@ const handleLocationChange = (location) => {
                   </div>
                 </div>
               </div>
-              <div className="search-input w-100 mb-2">
+              <div className="search-input flex-grow-1 me-md-2 mb-2 mb-md-0">
+                {" "}
+                {/* Added flex-grow and margin utilities */}
                 <div className="form-group">
                   <div className="group-img">
                     <LocationInput
@@ -299,7 +274,9 @@ const handleLocationChange = (location) => {
                   </div>
                 </div>
               </div>
-              <div className="search-btn w-100">
+              <div className="search-btn flex-shrink-0">
+                {" "}
+                {/* Added flex-shrink to prevent button from growing */}
                 <button className="btn btn-primary w-100" type="submit">
                   <i className="fa fa-search" aria-hidden="true"></i> Search
                 </button>
@@ -357,14 +334,14 @@ const handleLocationChange = (location) => {
       </section> */}
       {/* Category Section */}
       {/* Featured Ads Section */}
-      <Carousel businessData={businessData} Heading={"Feature Ads"} />
+      <Carousel businessData={businessData} Heading={"Business Near You"} />
       {/* Featured Ads Section */}
       {/* Popular Location Section */}
-      <Carousel
-        businessData={latestBusiness}
+      <CarouselActiveDeals
+        dailyOffers={dailyOffers}
         color={"#c10037"}
         textColor={`#ffffff`}
-        Heading={"Latest Business"}
+        Heading={" Active Offers"}
       />
       {/* Popular Location Section */}
       {/* Latest ads Section */}

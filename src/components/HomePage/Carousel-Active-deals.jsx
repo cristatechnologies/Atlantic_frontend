@@ -8,9 +8,12 @@ import { MdAppRegistration } from "react-icons/md";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
-
-export default function Carousel({ businessData, color, textColor, Heading }) {
+export default function CarouselActiveDeals({
+  dailyOffers,
+  color,
+  textColor,
+  Heading,
+}) {
   const [error, setError] = useState(null);
 
   const settings = {
@@ -42,21 +45,22 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
         },
       },
       {
-        breakpoint: 450, // At screen width of 768px and below
+        breakpoint: 490, // At screen width of 768px and below
         settings: {
           slidesToShow: 1, // Show 1 slide
         },
-      },
-      
+      }
     ],
   };
 
-  console.log("carousel page", businessData);
+  console.log("carousel page", dailyOffers);
   const slider = useRef();
   return (
     <section
       className="featured-section"
-      style={{ backgroundColor: `${color}` }}
+      style={{
+        backgroundColor: `${color}`,
+      }}
     >
       <div className="container">
         <div className="row align-items-center">
@@ -98,70 +102,36 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                 {...settings}
                 className=" featured-slider grid-view"
               >
-                {businessData &&
-                  businessData.map((item, index) => (
+                {dailyOffers &&
+                  dailyOffers.map((offer, index) => (
                     <div className="card aos" data-aos="fade-up " key={index}>
                       <div className="blog-widget">
-                        <div className="blog-img">
-                          <Link href={`business-details/${item.id}`}>
+                        <Link href={`/active-deals/${offer.slug}`}>
+                          <div className="blog-img">
                             <img
                               src={`${
-                                process.env.NEXT_PUBLIC_BASE_URL + item.image
+                                process.env.NEXT_PUBLIC_BASE_URL + offer.image
                               }`}
                               className="img-fluid"
                               alt="blog-img"
                             />
-                          </Link>
-                          {/* <div className="fav-item">
+                            {/* <div className="fav-item">
                             <span className="Featured-text">Featured</span>
                             <Link href="#" className="fav-icon">
-                              <i className="feather-heart"></i>
+                            <i className="feather-heart"></i>
                             </Link>
-                          </div> */}
-                        </div>
+                            </div> */}
+                          </div>
+                        </Link>
                         <div className="bloglist-content pe-auto">
                           <div className="card-body">
-                            <div className="blogfeaturelink">
-                              <div className="grid-author">
-                                <img
-                                  src={`${
-                                    process.env.NEXT_PUBLIC_BASE_URL +
-                                    item.image
-                                  }`}
-                                  alt="author"
-                                />
-                              </div>
-                              <div className="blog-features">
-                                <Link href={`business-details/${item.id}`}>
-                                  <span>
-                                    {" "}
-                                    <i className="fa-regular fa-circle-stop"></i>{" "}
-                                    {item.business_category.name}
-                                  </span>
-                                </Link>
-                              </div>
-                              <div className="blog-author text-end">
-                                <span>
-                                  {" "}
-                                  <MdAppRegistration />
-                                  {item.reg_no}
-                                </span>
-                              </div>
-                            </div>
                             <h6>
-                              <Link href={`business-details/${item.id}`}>
-                                {item.name}
+                              <Link href={`/active-deals/${offer.slug}`}>
+                                {offer.title}
                               </Link>
                             </h6>
                             <div className="blog-location-details">
-                              <div className="location-info">
-                                <i className="feather-map-pin"></i>{" "}
-                                {item.address}
-                              </div>
-                              {/* <div className="location-info"> */}
-                              {/* <i className="fa-regular fa-calendar-days"></i>{" "} */}
-                              {/* 06 Oct, 2022
-                              </div> */}
+                            
                             </div>
                           </div>
                         </div>

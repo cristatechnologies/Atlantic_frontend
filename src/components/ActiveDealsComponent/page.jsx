@@ -1,13 +1,31 @@
 const { useState, useEffect } = require("react");
 import axios from "axios";
 import Link from "next/link";
-
+import { toast } from "react-toastify";
 import { RWebShare } from "react-web-share";
+import { useRouter } from "next/navigation";
 
 const AcitveDealsComponent = ({ pathName }) => {
+
+const router = useRouter()
   const slug = pathName.split("/")[2];
   console.log("slug in active-deals slug page is ", slug);
   const [apiData, setApiData] = useState();
+
+  useEffect(() => {
+    // Fetch token from local storage on the client side
+    const auth =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("auth"))
+        : null;
+    const token = auth?.access_token;
+
+    if (!token) {
+      toast.error("Please log in.");
+      router.push("/login");
+      return;
+    } 
+  }, []);
 
   useEffect(() => {
     const fetchDailyOffersBySlug = async () => {
