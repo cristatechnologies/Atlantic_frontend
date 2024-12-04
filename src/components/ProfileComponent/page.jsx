@@ -26,7 +26,8 @@ const ProfileComponent = () => {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
+  const [lineOne, setLineOne] = useState("");
+  const [lineTwo, setLineTwo] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [imagePreview, setImagePreview] = useState("/img/profile.jpg");
   const [isLoading, setIsLoading] = useState(true);
@@ -74,15 +75,16 @@ const ProfileComponent = () => {
           setCountry(profile.country_id || "");
           setState(profile.state_id || "");
           setCity(profile.city_id || "");
-          setAddress(profile.address || "");
+          setLineOne(profile.address_line_one || "");
+            setLineOne(profile.address_line_two || "");
           setZipCode(profile.zip_code || "");
           setRegion(profile.region || "");
 
           // Origin Country
-          setOriginCountry(profile.origin_country || "");
+          setOriginCountry(profile.origin_country_id || "");
 
           // Origin State
-          setOriginState(profile.origin_state || "");
+          setOriginState(profile.origin_state_id || "");
 
           // Language Tags
           setLanguageTags(profile.language ? profile.language.split(",") : []);
@@ -172,11 +174,13 @@ const ProfileComponent = () => {
     formData.append("country_id", country);
     formData.append("state_id", state);
     formData.append("city_id", city);
-    formData.append("address", address);
+  
     formData.append("zip_code", zipCode);
     formData.append("region", region);
-    formData.append("origin_country", originCountry);
-    formData.append("origin_state", originState);
+    formData.append("origin_country_id", originCountry);
+    formData.append("origin_state_id", originState);
+     formData.append("address_line_two", lineTwo);
+      formData.append("address_line_two", lineOne);
     formData.append(
       "language",
       languageTags.length > 0 ? languageTags.join(",") : null
@@ -519,9 +523,9 @@ const ProfileComponent = () => {
                             </div>
                           </div>
 
-                          {/* Address */}
+                          {/* Line 1 */}
                           <div className="col-md-6 form-group">
-                            <label className="col-form-label">Address</label>
+                            <label className="col-form-label">Address Line 1</label>
                             <div className="pass-group group-img">
                               <span className="lock-icon">
                                 <i className="feather-home" />
@@ -529,8 +533,23 @@ const ProfileComponent = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}
+                                value={lineOne}
+                                onChange={(e) => setLineOne(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                          {/* Line 2 */}
+                          <div className="col-md-6 form-group">
+                            <label className="col-form-label">Address Line 2</label>
+                            <div className="pass-group group-img">
+                              <span className="lock-icon">
+                                <i className="feather-home" />
+                              </span>
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={lineTwo}
+                                onChange={(e) => setLineTwo(e.target.value)}
                               />
                             </div>
                           </div>

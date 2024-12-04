@@ -112,7 +112,7 @@ export default function CarouselActiveDeals({
                               src={`${
                                 process.env.NEXT_PUBLIC_BASE_URL + offer.image
                               }`}
-                              className="img-fluid"
+                              className="img-fluid-custom"
                               alt="blog-img"
                             />
                             {/* <div className="fav-item">
@@ -130,9 +130,7 @@ export default function CarouselActiveDeals({
                                 {offer.title}
                               </Link>
                             </h6>
-                            <div className="blog-location-details">
-                            
-                            </div>
+                            <div className="blog-location-details"></div>
                           </div>
                         </div>
                       </div>

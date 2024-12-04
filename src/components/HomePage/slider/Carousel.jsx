@@ -103,12 +103,12 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                     <div className="card aos" data-aos="fade-up " key={index}>
                       <div className="blog-widget">
                         <div className="blog-img">
-                          <Link href={`business-details/${item.id}`}>
+                          <Link href={`business-details/${item.slug}`}>
                             <img
                               src={`${
                                 process.env.NEXT_PUBLIC_BASE_URL + item.image
                               }`}
-                              className="img-fluid"
+                              className="img-fluid-custom"
                               alt="blog-img"
                             />
                           </Link>
@@ -132,7 +132,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                 />
                               </div>
                               <div className="blog-features">
-                                <Link href={`business-details/${item.id}`}>
+                                <Link href={`business-details/${item.slug}`}>
                                   <span>
                                     {" "}
                                     <i className="fa-regular fa-circle-stop"></i>{" "}
@@ -149,14 +149,17 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                               </div>
                             </div>
                             <h6>
-                              <Link href={`business-details/${item.id}`}>
+                              <Link href={`business-details/${item.slug}`}>
                                 {item.name}
                               </Link>
                             </h6>
                             <div className="blog-location-details">
                               <div className="location-info">
-                                <i className="feather-map-pin"></i>{" "}
-                                {item.address}
+                                <>
+                                  <i className="feather-map-pin"></i>{" "}
+                                  {item.business_city?.name},{" "}
+                                  {item.business_state?.name}
+                                </>
                               </div>
                               {/* <div className="location-info"> */}
                               {/* <i className="fa-regular fa-calendar-days"></i>{" "} */}

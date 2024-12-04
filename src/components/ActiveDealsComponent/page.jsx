@@ -9,6 +9,7 @@ const AcitveDealsComponent = ({ pathName }) => {
 
 const router = useRouter()
   const slug = pathName.split("/")[2];
+  const [fullUrl,setFullUrl] = useState("")
   console.log("slug in active-deals slug page is ", slug);
   const [apiData, setApiData] = useState();
 
@@ -25,6 +26,12 @@ const router = useRouter()
       router.push("/login");
       return;
     } 
+  }, []);
+
+
+  useEffect(() => {
+    // This will work only on the client-side
+    setFullUrl(window.location.href);
   }, []);
 
   useEffect(() => {
@@ -102,28 +109,31 @@ const router = useRouter()
             <div className="col-md-6 h-auto">
               <div>
                 <h3 className="deal-title">{apiData?.title}</h3>{" "}
-                <a className="pe-auto">
-                  <RWebShare
-                    data={{
-                      text: "Look i got a Great Deal from IndoAtlantic !!",
-                      url: `https://indoatlantic.ca${pathName}`,
-                      title: "indoatlantic",
-                    }}
-                    sites={[
-                      "facebook",
-                      "twitter",
-                      "whatsapp",
-                      "linkedin",
-                      "reddit",
-                      "mail",
-                      "copy",
-                    ]}
-                    onClick={() => console.log("shared successfully!")}
-                  >
-                    <i className="feather-share-2" />
-                  </RWebShare>
-                </a>
-                <p className="mb-0">{apiData?.description}</p>
+                <Link className="pe-auto" href="#">
+                  <>
+                    <RWebShare
+                      data={{
+                        text: "Look i got a Great Deal from IndoAtlantic !!",
+                        // url: `https://indoatlantic.ca${pathName}`,
+                        url: `${fullUrl}`,
+                        title: "indoatlantic",
+                      }}
+                      sites={[
+                        "facebook",
+                        "twitter",
+                        "whatsapp",
+                        "linkedin",
+                        "reddit",
+                        "mail",
+                        "copy",
+                      ]}
+                      onClick={() => console.log("shared successfully!")}
+                    >
+                      <i className="feather-share-2" />
+                    </RWebShare> {" "}Share
+                  </>
+                </Link>
+                <p className="mb-4">{apiData?.description}</p>
               </div>
             </div>
           </div>

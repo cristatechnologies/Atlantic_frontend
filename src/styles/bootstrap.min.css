@@ -545,13 +545,18 @@ progress {
   content: "— ";
 }
 .img-fluid {
+  max-width: 100%;
+  height: auto;
+
+}
+.img-fluid-custom {
   max-width: auto;
   height: 300px;
 
 }
 @media(max-width:800px)
 {
-  .img-fluid {
+  .img-fluid-custom {
   max-width: auto;
   height: 450px;
 
@@ -559,12 +564,13 @@ progress {
 }
 @media(max-width:450px)
 {
-  .img-fluid {
+  .img-fluid-custom {
   max-width: auto;
   height: 425px;
 
 }
 }
+
 .img-thumbnail {
   padding: 0.25rem;
   background-color: #fff;

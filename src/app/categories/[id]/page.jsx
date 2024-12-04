@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
+import categories from "../page";
 
 const CategoryPage = ({ params }) => {
   const { id } = params;
@@ -70,34 +71,38 @@ const CategoryPage = ({ params }) => {
                 </div>
               </div>
 
-              <div className="row">
-                {categoryData.children.map((item, i) => (
-                  <div className="col-lg-3 col-md-4" key={i}>
-                    <Link
-                      href={`/categories/${item.id}`}
-                      className="category-links"
-                    >
-                      <h5>{item.name}</h5>
-                   
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
-                        alt="icons"
-                        className="img-fluid"
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          maxHeight: "200px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </Link>
-                  </div>
-                ))}
+              <div className="row ">
+                {categoryData &&
+                  categoryData.children.length > 0 &&
+                  categoryData.children.map((item, i) => (
+                    <div className="col-lg-3 col-md-4" key={i}>
+                      <Link
+                        href={`/categories/${item.id}`}
+                        className="category-links"
+                      >
+                        <h5>{item.name}</h5>
+
+                        <img
+                          src={`${
+                            process.env.NEXT_PUBLIC_BASE_URL + item.image
+                          }`}
+                          alt="icons"
+                          className="img-fluid"
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            maxHeight: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </Link>
+                    </div>
+                  ))}
               </div>
             </>
           )}
 
-          {categoryData.business && categoryData.business.length > 0 && (
+          {categoryData.business && categoryData.business.length > 0 ? (
             <>
               <div className="section-heading text-center mt-5">
                 <div className="row align-items-center">
@@ -112,7 +117,10 @@ const CategoryPage = ({ params }) => {
                 </div>
               </div>
 
-              <div className="lateestads-content mt-4">
+              <div
+                className="lateestads-content mt-4"
+                style={{ fontFamily: "sans-serif" }}
+              >
                 <div className="row">
                   {categoryData.business.map((item, i) => (
                     <div className="col-lg-3 col-md-4 col-sm-6 d-flex" key={i}>
@@ -120,7 +128,7 @@ const CategoryPage = ({ params }) => {
                         <div className="blog-widget">
                           <div className="blog-img">
                             <Link
-                              href={`/business-details/${item.id}`}
+                              href={`/business-details/${item.slug}`}
                               legacyBehavior
                             >
                               <a>
@@ -144,10 +152,10 @@ const CategoryPage = ({ params }) => {
                             <div className="card-body">
                               <div className="blogfeaturelink">
                                 <div className="blog-features text-black">
-                                  <Link href={`/business-details/${item.id}`}>
+                                  <Link href={`/business-details/${item.slug}`}>
                                     <span>
                                       <i className="fa-regular fa-circle-stop"></i>{" "}
-                                      {item?.display_name}
+                                      {item?.name}
                                     </span>
                                   </Link>
                                 </div>
@@ -155,7 +163,8 @@ const CategoryPage = ({ params }) => {
                               <div className="blog-location-details text-black">
                                 <div className="location-info">
                                   <i className="feather-map-pin"></i>{" "}
-                                  {item.address}
+                                  {item.business_city?.name},{" "}
+                                  {item.business_state?.name}
                                 </div>
                                 {/* <div className="location-info">
                                   <i className="fa-solid fa-calendar-days"></i>{" "}
@@ -171,6 +180,8 @@ const CategoryPage = ({ params }) => {
                 </div>
               </div>
             </>
+          ) : (
+            <p>No business Found</p>
           )}
         </div>
       </section>

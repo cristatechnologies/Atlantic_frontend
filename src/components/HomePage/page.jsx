@@ -24,36 +24,44 @@ const HomePage = () => {
   const [categories, setCategories] = useState();
   const dispatch = useDispatch();
   const [latestBusiness, setLatestBusiness] = useState();
-const [searchText, setSearchText] = useState("");
-const [selectedLocation, setSelectedLocation] = useState("");
-const [apiData,setApiData] = useState("");
-const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [apiData, setApiData] = useState("");
+  const router = useRouter();
   const [bgImageUrl, setBgImageUrl] = useState("");
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const [dailyOffers, setDailyOffers] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
+  const [fallbackBusinessData, setFallbackBusinessData] = useState(null);
 
+  // Fetch fallback business data
+  const fetchFallbackBusinessData = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}api/business`);
+      if (response.data) {
+        setFallbackBusinessData(response.data);
+        // If no location-based data, use fallback
+        if (!businessData) {
+          setBusinessData(response.data);
+        }
+      }
+    } catch (err) {
+      console.log("Error fetching fallback business data:", err);
+    }
+  };
 
-const handleSearch = (e) => {
-  e.preventDefault();
+  const handleSearch = (e) => {
+    e.preventDefault();
 
-  // Check if both searchText and selectedLocation are not empty
-  if (searchText.trim() || selectedLocation) {
-    const searchQuery = encodeURIComponent(searchText);
-    const locationQuery = encodeURIComponent(selectedLocation);
-    router.push(
-      `/search-results?query=${searchQuery}&location=${locationQuery}`
-    );
-  }
-};
-
-
-
-const handleLocationChange = (location) => {
-  console.log("Selected location:", location);
-  // Do something with the location, e.g., update state, make API calls, etc.
-};
-
- 
+    // Check if both searchText and selectedLocation are not empty
+    if (searchText.trim() || selectedLocation) {
+      const searchQuery = encodeURIComponent(searchText);
+      const locationQuery = encodeURIComponent(selectedLocation);
+      router.push(
+        `/search-results?query=${searchQuery}&location=${locationQuery}`
+      );
+    }
+  };
 
   const websiteData = useSelector((state) => state.websiteSetup.data);
   console.log("website data in the homepage ", websiteData);
@@ -131,6 +139,79 @@ const handleLocationChange = (location) => {
     document.querySelector(".switch")?.classList.toggle("switched", isLight);
   }, [isLight]);
 
+const getUserLocation = () => {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchCityName(latitude, longitude);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        // If location is blocked, use fallback data
+        fetchFallbackBusinessData();
+      }
+    );
+  } else {
+    // Geolocation not supported, use fallback data
+    fetchFallbackBusinessData();
+  }
+};
+
+const fetchCityName = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+    );
+    const data = await response.json();
+    const cityName = data.city || data.locality || "Unknown location";
+
+    // Set user location and trigger business search
+    setUserLocation({
+      city: cityName,
+      latitude,
+      longitude,
+    });
+
+    // Fetch businesses based on detected location
+    fetchBusinessesByLocation(cityName);
+  } catch (error) {
+    console.error("Error fetching city name:", error);
+    // If city name fetch fails, use fallback data
+    fetchFallbackBusinessData();
+  }
+};
+  const fetchBusinessesByLocation = async (location) => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}api/business?search=&location=${encodeURIComponent(
+          location
+        )}`
+      );
+
+      if (response.data && response.data.length > 0) {
+        setBusinessData(response.data);
+      } else {
+        // If no businesses found for location, use fallback
+        fetchFallbackBusinessData();
+      }
+    } catch (err) {
+      console.log("Error fetching businesses by location:", err);
+      // If API call fails, use fallback data
+      fetchFallbackBusinessData();
+    }
+  };
+
+
+  const handleLocationChange = (location) => {
+    console.log("Selected location:", location);
+    setSelectedLocation(location);
+  };
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -150,24 +231,22 @@ const handleLocationChange = (location) => {
     fetchData();
   }, []);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api`
-          );
-          if (response) {
-            setApiData(response.data);
-          }
-        } catch (err) {
-          console.log(
-            "An error occurred while fetching the data from the api/"
-          );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api`
+        );
+        if (response) {
+          setApiData(response.data);
         }
-      };
+      } catch (err) {
+        console.log("An error occurred while fetching the data from the api/");
+      }
+    };
 
-      fetchData();
-    }, []);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -196,7 +275,7 @@ const handleLocationChange = (location) => {
 
   useEffect(() => {
     // Fetch token from local storage on the client side
-    
+
     const fetchDailyOffers = async () => {
       try {
         const response = await axios.get(
@@ -239,8 +318,8 @@ const handleLocationChange = (location) => {
           padding: "20px 0",
         }}
       >
-        <div className="container">
-          <div className="search-box w-100">
+        <div className="container d-flex justify-content-center ">
+          <div className="search-box lg-w-60 ">
             <form
               action="listing-grid-sidebar"
               className="d-flex flex-column flex-md-row" // Changed to allow row layout on medium screens and up
@@ -334,7 +413,14 @@ const handleLocationChange = (location) => {
       </section> */}
       {/* Category Section */}
       {/* Featured Ads Section */}
-      <Carousel businessData={businessData} Heading={"Business Near You"} />
+      <Carousel
+        businessData={businessData}
+        Heading={
+          userLocation
+            ? `Businesses Near ${userLocation.city}`
+            : "Business Near You"
+        }
+      />
       {/* Featured Ads Section */}
       {/* Popular Location Section */}
       <CarouselActiveDeals

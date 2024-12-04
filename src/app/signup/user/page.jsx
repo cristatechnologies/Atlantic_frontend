@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Link from "next/link";
 import { languagesInAsia } from "@/constant/languageinAsia";
 import axios from "axios";
@@ -8,6 +8,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
+import { SuccessImg } from "@/components/imagepath";
+
+
+
+
 const user = () => {
    const [fname, setFname] = useState("");
    const [lname, setLname] = useState("")
@@ -25,8 +30,120 @@ const user = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [languageTags, setLanguageTags] = useState([]);
    const [showOptionalFields, setShowOptionalFields] = useState(false);
+ const [line1, setLine1] = useState("");
+ const [line2, setLine2] = useState("");
+ const [postalCode, setPostalCode] = useState("");
+const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+ // Dropdown state variables
+ const [countryDropdown, setCountryDropdown] = useState([]);
+ const [stateDropdown, setStateDropdown] = useState([]);
+ const [cityDropdown, setCityDropdown] = useState([]);
+
+ // Selected dropdown values
+ const [country, setCountry] = useState("");
+ const [state, setState] = useState("");
+ const [city, setCity] = useState("");
+
+  const [originCountryDropdown, setOriginCountryDropdown] = useState([]);
+  const [originStateDropdown, setOriginStateDropdown] = useState([]);
+ 
 
 
+
+   const togglePasswordVisibility = (field) => {
+     if (field === "password") {
+       setPasswordType(passwordType === "password" ? "text" : "password");
+     } else if (field === "confirmPassword") {
+       setConfirmPasswordType(
+         confirmPasswordType === "password" ? "text" : "password"
+       );
+     }
+   };
+
+      useEffect(() => {
+        // Fetch countries for both current address and origin
+        axios
+          .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/address/create`)
+          .then((res) => {
+            if (res.data) {
+              setCountryDropdown(res.data.countries);
+              setOriginCountryDropdown(res.data.countries);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, []);
+
+     
+        
+     
+      
+
+      const handleOriginCountryChange = (e) => {
+        const selectedCountryId = e.target.value;
+        setOriginCountry(selectedCountryId);
+        getOriginState(selectedCountryId);
+      };
+
+      useEffect(()=>
+      {
+        setState(null);
+        setCityDropdown(null);
+     
+          axios
+            .get(
+              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${43}`
+            )
+            .then((res) => {
+              setStateDropdown(res.data && res.data.states);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },[]
+      );
+
+
+  
+
+      const getOriginState = (countryId) => {
+        setOriginState(null);
+        if (countryId) {
+          axios
+            .get(
+              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
+            )
+            .then((res) => {
+              setOriginStateDropdown(res.data && res.data.states);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      };
+
+      const handleStateChange = (e) => {
+        const selectedStateId = e.target.value;
+        setState(selectedStateId);
+        getcity(selectedStateId);
+      };
+
+      const getcity = (stateId) => {
+        setCity(null);
+        if (stateId) {
+          axios
+            .get(
+              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+            )
+            .then((res) => {
+              setCityDropdown(res.data && res.data.cities);
+            })
+            .catch((err) => {
+              console.log(err.response);
+            });
+        }
+      };
 
 
 
@@ -50,67 +167,85 @@ const router = useRouter();
     }
     setPasswordType("password");
   };
-  const doSignUp = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
-        {
-          name: fname,
-          email: email,
-          password: passwordInput,
-          password_confirmation: confirmPassword,
-          agree: 1,
-          language: languageTags.length > 0 ? languageTags.join(",") : null, // Convert language tags array to comma-separated string or set to null if empty
-          phone: phone ? phone : "",
-          user_type: 2,
-          region: region,
-          origin_country: originCountry,
-          origin_state: originState,
-        }
-      );
+   const doSignUp = async () => {
+     try {
+       const response = await axios.post(
+         `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
+         {
+           name: fname,
+           email: email,
+           password: passwordInput,
+           password_confirmation: confirmPassword,
+           agree: 1,
+           language: languageTags.length > 0 ? languageTags.join(",") : null,
+           phone: phone ? phone : "",
+           user_type: 2,
+           region: region,
+           address_line_one: line1,
+           address_line_two: line2,
+           zip_code: postalCode,
+           city_id: city,
+           state_id: state,
+           country_id: 43,       
+           origin_country_id: originCountry,
+           origin_state_id: originState,
+         }
+       ).then((res)=>
+      {
+         setFname("");
+         setEmail("");
+         setPasswordInput("");
+         setConfirmPassword("");
+         setCheck(false);
+         setRegion("");
+         setLine1("");
+         setLine2("");
+         setPostalCode("");
+         setCity("");
+         setState("");
+         setCountry("");
+         setOriginCountry("");
+         setOriginState("");
+         setLanguageTags([]);
 
-      setFname("");
-      setEmail("");
-      setPasswordInput("");
-      setConfirmPassword("");
-      setCheck(false);
-      setRegion("");
-      setOriginCountry(""),
-      setOriginState("")
-  setLanguageTags([]);
-      router.push("/VerificationPage");
-    } catch (err) {
-      if (
-        err.response &&
-        err.response.data.errors &&
-        err.response.data.errors.email
-      ) {
-        // Display toast notification
-        toast.error(err.response.data.errors.email[0], {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
 
-        // Redirect to login page
-        router.push("/login");
-      } else {
-        // Handle other errors
-        console.error(err);
-        toast.error("An error occurred. Please try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
-    }
-  };
+         toast.success(res.notification)
+         router.push("/VerificationPage");
+
+      });
+
+       // Reset form fields
+      
+     } catch (err) {
+       if (
+         err.response &&
+         err.response.data.errors &&
+         err.response.data.errors.email
+       ) {
+         toast.error(err.response.data.errors.email[0], {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+         });
+
+         router.push("/login");
+       } else {
+         console.error(err);
+         toast.error("An error occurred. Please try again.", {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+         });
+       }
+     }
+   };
+
 
     const handleInputChange = (emailValue) => {
       const inputEmail = emailValue;
@@ -271,7 +406,6 @@ const router = useRouter();
                     <div className="pass-group group-img">
                       <i className="feather-lock" />
                       <input
-                        label={passwordInput}
                         type={passwordType}
                         mandatory={true}
                         className="form-control pass-input"
@@ -279,19 +413,14 @@ const router = useRouter();
                         onChange={handlePasswordChange}
                         value={passwordInput}
                         min={"8"}
-                        inputHandler={(e) => {
-                          setPassword(e.target.value.trim());
-                          setErrors({ ...errors, password: [null] });
-                        }}
                       />
-
                       <span
                         className={`toggle-password  ${
                           passwordType === "password"
                             ? "feather-eye"
                             : "feather-eye-off"
                         } `}
-                        onClick={togglePassword}
+                        onClick={() => togglePasswordVisibility("password")}
                       ></span>
                       {passwordInput && passwordInput.length < 8 ? (
                         <span className="text-sm mt-1 text-qred absolute top-20 left-0">
@@ -313,7 +442,7 @@ const router = useRouter();
                     <div className="pass-group group-img">
                       <i className="feather-lock" />
                       <input
-                        type={passwordType}
+                        type={confirmPasswordType}
                         className="form-control pass-input"
                         placeholder="Confirm Password"
                         value={confirmPassword}
@@ -321,14 +450,15 @@ const router = useRouter();
                           setConfirmPassword(e.target.value.trim());
                         }}
                       />
-
                       <span
                         className={`toggle-password  ${
-                          passwordType === "password"
+                          confirmPasswordType === "password"
                             ? "feather-eye"
                             : "feather-eye-off"
                         } `}
-                        onClick={togglePassword}
+                        onClick={() =>
+                          togglePasswordVisibility("confirmPassword")
+                        }
                       ></span>
                       {passwordInput && passwordInput.length < 8 ? (
                         <span className="text-sm mt-1 text-qred absolute top-20 left-0">
@@ -392,7 +522,7 @@ const router = useRouter();
                           />
                         </div>
                       </div>
-                      <div className="form-group group-img">
+                      {/* <div className="form-group group-img">
                         <div className="group-img">
                           <input
                             className="form-control"
@@ -415,6 +545,119 @@ const router = useRouter();
                             onChange={(e) => setOriginCountry(e.target.value)}
                           />
                         </div>
+                      </div> */}
+                      <div className="form-group group-img">
+                        <input
+                          className="form-control"
+                          placeholder="Current Address Line 1"
+                          name="line1"
+                          type="text"
+                          value={line1}
+                          onChange={(e) => setLine1(e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group group-img">
+                        <input
+                          className="form-control"
+                          placeholder="Current Address Line 2"
+                          name="line2"
+                          type="text"
+                          value={line2}
+                          onChange={(e) => setLine2(e.target.value)}
+                        />
+                      </div>
+                      {/* Country Dropdown */}
+                      {/* <div className="form-group group-img">
+                        <select
+                          className="form-control"
+                          value={country}
+                          onChange={handleCountryChange}
+                        >
+                          <option value="">Select Country</option>
+                          {countryDropdown.map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div> */}
+
+                      {/* State Dropdown */}
+                      <div className="form-group group-img">
+                        <select
+                          className="form-control"
+                          value={state}
+                          onChange={handleStateChange}
+                        >
+                          <option value="">Select Province</option>
+                          {stateDropdown &&
+                            stateDropdown.map((s) => (
+                              <option key={s.id} value={s.id}>
+                                {s.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                      {/* City Dropdown */}
+                      <div className="form-group group-img">
+                        <select
+                          className="form-control"
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          disabled={!state}
+                        >
+                          <option value="">Select City</option>
+                          {cityDropdown &&
+                            cityDropdown.map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {c.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+
+                      {/* Postal Code */}
+                      <div className="form-group group-img">
+                        <input
+                          className="form-control"
+                          placeholder="Postcode"
+                          name="postalCode"
+                          type="text"
+                          value={postalCode}
+                          onChange={(e) => setPostalCode(e.target.value)}
+                        />
+                      </div>
+                      {/* Origin Country Dropdown */}
+                      <div className="form-group group-img">
+                        <select
+                          className="form-control"
+                          value={originCountry}
+                          onChange={handleOriginCountryChange}
+                        >
+                          <option value="">Select Origin Country</option>
+                          {originCountryDropdown.map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      {/* Origin State Dropdown */}
+                      <div className="form-group group-img">
+                        <select
+                          className="form-control"
+                          value={originState}
+                          onChange={(e) => setOriginState(e.target.value)}
+                          disabled={!originCountry}
+                        >
+                          <option value="">Select Origin State/Province</option>
+                          {originStateDropdown &&
+                            originStateDropdown.map((s) => (
+                              <option key={s.id} value={s.id}>
+                                {s.name}
+                              </option>
+                            ))}
+                        </select>
                       </div>
                     </div>
                   )}

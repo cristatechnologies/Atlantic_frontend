@@ -28,7 +28,9 @@ import { RWebShare } from "react-web-share";
 
 
 const ServiceDetails = ({ data }) => {
-  const pathname = usePathname;
+  const pathname = usePathname();
+   const [fullUrl, setFullUrl] = useState("");
+  console.log(pathname)
   console.log(data);
   const [isFavorite, setIsFavorite] = useState(data.like === 1);
   const [totalLikes, setTotalLikes] = useState(data.total_likes);
@@ -54,6 +56,13 @@ const ServiceDetails = ({ data }) => {
         [name]: value,
       }));
     };
+
+useEffect(() => {
+  // This will work only on the client-side
+  setFullUrl(window.location.href);
+}, []);
+
+console.log(fullUrl)
 
     useEffect(()=>
     {
@@ -229,11 +238,11 @@ else{
                     </Link>
                   </li> */}
                   <li>
-                    <a className="pe-auto ">
+                    <Link className="pe-auto " href="#">
                       <RWebShare
                         data={{
-                          text: "Look i got a Great Deal from IndoAtlantic !!",
-                          url: `https://indoatlantic.ca`,
+                          text: "Look i got a Great Business from IndoAtlantic !!",
+                          url: `${fullUrl}`,
                           title: "indoatlantic",
                         }}
                         sites={[
@@ -249,7 +258,7 @@ else{
                       >
                         <i className="feather-share-2" />
                       </RWebShare>
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <Link href="#review-sec">

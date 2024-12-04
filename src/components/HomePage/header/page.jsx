@@ -2,15 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import BlogMenu from "../../common/BlogMenu";
-import HomeMenu from "../../common/HomeMenu";
-import ListingMenu from "../../common/Categories";
-import PagesMenu from "../../common/PagesMenu";
-import UserPagesMenu from "../../common/UserPagesMenu";
+
 import { useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setupAction } from "@/store/websiteSetup";
 import Image from "next/image";
 import Categories from "../../common/Categories";
 const Header = ({ parms }) => {
@@ -27,6 +24,7 @@ const Header = ({ parms }) => {
   //   console.log(settings.logo);
   //   console.log("log of the logo is ", settings.logo);
   // });
+
   useEffect(() => {
     const settings = localStorage.getItem("settings");
     if (settings) {
@@ -64,9 +62,16 @@ const Header = ({ parms }) => {
     root.classList.add("menu-opened");
   };
 
+  const handleMobileMenuItemClick = () => {
+    // Close both mobile dropdown and main mobile menu
+    onhandleCloseMenu();
+  };
   const onhandleCloseMenu = () => {
     var root = document.getElementsByTagName("html")[0];
     root.classList.remove("menu-opened");
+    // Reset menu state
+    setMenu(false);
+    setMobileDropdown(false);
   };
 
   const [menu, setMenu] = useState(false);
@@ -87,6 +92,7 @@ const Header = ({ parms }) => {
         setIsLoggedIn(false);
         setUserType(null);
         router.push("/login");
+         onhandleCloseMenu();
       } catch (error) {
         console.error("Logout failed:", error);
       }
@@ -132,7 +138,7 @@ const Header = ({ parms }) => {
               <Link href="/" className="menu-logo">
                 <img
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                 style={{maxWidth:"100%",height:"auto"}}
+                  style={{ maxWidth: "100%", height: "auto" }}
                   alt="Logo"
                 />
               </Link>
@@ -154,7 +160,9 @@ const Header = ({ parms }) => {
               <BlogMenu activesMenus={parms} /> */}
 
               <li>
-                <Link href="/active-deals">Active Offers </Link>
+                <Link href="/active-deals" onClick={handleMobileMenuItemClick}>
+                  Active Offers{" "}
+                </Link>
               </li>
 
               {isLoggedIn && userType === 1 && (
@@ -189,20 +197,32 @@ const Header = ({ parms }) => {
                     </a>
                     <ul
                       className={`submenu ${mobileDropdown ? "show" : ""}`}
-                      onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMobileDropdown(false);
+                      }}
                     >
                       <li>
-                        <Link href="/user/dashboard">
+                        <Link
+                          href="/user/dashboard"
+                          onClick={handleMobileMenuItemClick}
+                        >
                           <i className="fas fa-columns"></i> Dashboard
                         </Link>
                       </li>
                       <li>
-                        <Link href="/user/profile">
+                        <Link
+                          href="/user/profile"
+                          onClick={handleMobileMenuItemClick}
+                        >
                           <i className="fas fa-user-cog"></i> Profile Settings
                         </Link>
                       </li>
                       <li>
-                        <Link href="/your-deals">
+                        <Link
+                          href="/your-deals"
+                          onClick={handleMobileMenuItemClick}
+                        >
                           <i className="fas fa-handshake"></i> Your Deals
                         </Link>
                       </li>
@@ -247,12 +267,18 @@ const Header = ({ parms }) => {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <li>
-                        <Link href="/user/dashboard">
+                        <Link
+                          href="/user/dashboard"
+                          onClick={handleMobileMenuItemClick}
+                        >
                           <i className="fas fa-columns"></i> Dashboard
                         </Link>
                       </li>
                       <li>
-                        <Link href="/user/profile">
+                        <Link
+                          href="/user/profile"
+                          onClick={handleMobileMenuItemClick}
+                        >
                           <i className="fas fa-user-cog"></i> Profile Settings
                         </Link>
                       </li>
@@ -263,10 +289,14 @@ const Header = ({ parms }) => {
               {!isLoggedIn && (
                 <>
                   <li className="login-link">
-                    <Link href="/signup">Sign Up</Link>
+                    <Link href="/signup" onClick={handleMobileMenuItemClick}>
+                      Sign Up
+                    </Link>
                   </li>
                   <li className="login-link">
-                    <Link href="/login">Sign In</Link>
+                    <Link href="/login" onClick={handleMobileMenuItemClick}>
+                      Sign In
+                    </Link>
                   </li>
                 </>
               )}
@@ -312,12 +342,20 @@ const Header = ({ parms }) => {
             {!isLoggedIn ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link header-reg" href="/signup">
+                  <Link
+                    className="nav-link header-reg"
+                    href="/signup"
+                    onClick={handleMobileMenuItemClick}
+                  >
                     Sign Up
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link header-login" href="/login">
+                  <Link
+                    className="nav-link header-login"
+                    href="/login"
+                    onClick={handleMobileMenuItemClick}
+                  >
                     Sign In
                   </Link>
                 </li>
@@ -359,13 +397,25 @@ const Header = ({ parms }) => {
                     <span>{authData.user?.business?.name}</span>
                   </Link>
                   <div className="dropdown-menu dropdown-menu-end">
-                    <Link className="dropdown-item" href="/user/dashboard">
+                    <Link
+                      className="dropdown-item"
+                      href="/user/dashboard"
+                      onClick={handleMobileMenuItemClick}
+                    >
                       Dashboard
                     </Link>
-                    <Link className="dropdown-item" href="/user/profile">
+                    <Link
+                      className="dropdown-item"
+                      href="/user/profile"
+                      onClick={handleMobileMenuItemClick}
+                    >
                       Profile Settings
                     </Link>
-                    <Link className="dropdown-item" href="/your-deals">
+                    <Link
+                      className="dropdown-item"
+                      href="/your-deals"
+                      onClick={handleMobileMenuItemClick}
+                    >
                       Your Deals{" "}
                     </Link>
                   </div>
@@ -400,10 +450,18 @@ const Header = ({ parms }) => {
                     <span>{authData.user?.name}</span>
                   </Link>
                   <div className="dropdown-menu dropdown-menu-end">
-                    <Link className="dropdown-item" href="/user/dashboard">
+                    <Link
+                      className="dropdown-item"
+                      href="/user/dashboard"
+                      onClick={handleMobileMenuItemClick}
+                    >
                       Dashboard
                     </Link>
-                    <Link className="dropdown-item" href="/user/profile">
+                    <Link
+                      className="dropdown-item"
+                      href="/user/profile"
+                      onClick={handleMobileMenuItemClick}
+                    >
                       Profile Settings
                     </Link>
                     {/* <Link className="dropdown-item" href="/login">

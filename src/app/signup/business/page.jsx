@@ -9,6 +9,9 @@ import { MdAppRegistration } from "react-icons/md";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import { MultiSelect } from "react-multi-select-component";
+
+
 
 const business = () => {
   const websiteData = useSelector((state) => state.websiteSetup.data);
@@ -23,7 +26,7 @@ const business = () => {
   const [short, setShortDesc] = useState("");
   const [address, setAddress] = useState("");
   const [longDesc, setLongDesc] = useState("");
-  
+
   const [countryDropdown, setCountryDropdown] = useState(null);
   const [stateDropdown, setStateDropdown] = useState(null);
   const [cityDropdown, setCityDropdown] = useState(null);
@@ -31,7 +34,7 @@ const business = () => {
   const [country, setCountry] = useState();
   const [city, setcity] = useState(null);
   const [contactPersonName, setContactPersonName] = useState("");
-   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [checked, setCheck] = useState(false);
   const [errors, setErrors] = useState(null);
@@ -40,6 +43,14 @@ const business = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [ConfirmPasswordType, setConfirmPasswordType] = useState("password");
+  const [addressLineOne, setAddressLineOne] = useState(""); // New state for address line 1
+  const [addressLineTwo, setAddressLineTwo] = useState(""); // New state for address line 2
+  const [zipCode, setZipCode] = useState(""); // New state f
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [showMultiCitySelect, setShowMultiCitySelect] = useState(false);
+
+
+
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
   };
@@ -51,17 +62,26 @@ const business = () => {
     }
     setPasswordType("password");
   };
- 
-const toggleConfirmPassword = () => {
-  if (ConfirmPasswordType === "password") {
-    setConfirmPasswordType("text");
-    return;
-  }
-  setConfirmPasswordType("password");
-};
 
+  const toggleConfirmPassword = () => {
+    if (ConfirmPasswordType === "password") {
+      setConfirmPasswordType("text");
+      return;
+    }
+    setConfirmPasswordType("password");
+  };
+   const handleAddMoreCities = () => {
+     setShowMultiCitySelect(!showMultiCitySelect);
+   };
 
-
+   const prepareMultiCityOptions = () => {
+     return (
+       cityDropdown?.map((item) => ({
+         label: item.name,
+         value: item.name,
+       })) || []
+     );
+   };
 
   const doSignUp = async () => {
     try {
@@ -70,18 +90,22 @@ const toggleConfirmPassword = () => {
         {
           user_type: 1,
           business_name: bname,
-          display_name: dname,
-          reg_no: regno,
-          business_category_id: selectedCategoryId,
-          description: short,
-          long_description: longDesc,
-          address: address,
-          phone: phone ? phone : "",
-          name: contactPersonName,
-          country_id: country,
-          state_id: state,
-          city_id: city,
           email: email,
+          phone: phone ? phone : "",
+          business_category_id: selectedCategoryId,
+          // address: address,
+          state_id: state,
+          // display_name: dname,
+           reg_no: regno,
+          city_id: city,
+           description: short,
+          // long_description: longDesc,
+          address_line_one: addressLineOne, // New field
+          address_line_two: addressLineTwo, // New field
+          zip_code: zipCode, // New field
+          name: bname,
+          country_id: 43,
+          other_locations: selectedCities.map((city) => city.value),
           password: passwordInput,
           password_confirmation: confirmPassword,
           agree: 1,
@@ -92,12 +116,14 @@ const toggleConfirmPassword = () => {
       if (response.data && response.data.notification) {
         // Reset form fields
         setBname("");
-        setDname("");
-        setRegNo("");
+    
+         setAddressLineOne(""); // Reset new fields
+         setAddressLineTwo(""); // Reset new fields
+         setZipCode(""); 
         setEmail("");
         setPasswordInput("");
         setConfirmPassword("");
-        setLongDesc("");
+      
         setCheck(false);
 
         // Show success message
@@ -149,24 +175,28 @@ const toggleConfirmPassword = () => {
   const handleCountryChange = (e) => {
     const selectedCountryId = e.target.value;
     setCountry(selectedCountryId);
-    getState(selectedCountryId);
+   
   };
-  const getState = (countryId) => {
-    setState(null);
-    setCityDropdown(null);
-    if (countryId) {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
-        )
-        .then((res) => {
-          setStateDropdown(res.data && res.data.states);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
+
+
+
+   useEffect(() => {
+     setState(null);
+     setCityDropdown(null);
+
+     axios
+       .get(
+         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${43}`
+       )
+       .then((res) => {
+         setStateDropdown(res.data && res.data.states);
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+   }, []);
+
+
 
   const handleStateChange = (e) => {
     const selectedStateId = e.target.value;
@@ -281,7 +311,7 @@ const toggleConfirmPassword = () => {
                       </div>
                     </div>
                     {/*Display name */}
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <i>
@@ -309,7 +339,7 @@ const toggleConfirmPassword = () => {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/*Email address */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -375,7 +405,7 @@ const toggleConfirmPassword = () => {
                       </div>
                     </div>
                     {/*registration number */}
-                    <div className="col-md-6">
+                  <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <i className="">
@@ -403,8 +433,8 @@ const toggleConfirmPassword = () => {
                           )}
                         </div>
                       </div>
-                    </div>
-                    {/*categories  */}
+                    </div> 
+                  
                     {/*categories  */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -433,7 +463,7 @@ const toggleConfirmPassword = () => {
                       </div>
                     </div>
                     {/*long description */}
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <input
@@ -458,19 +488,19 @@ const toggleConfirmPassword = () => {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/*short description */}
-                    <div className="col-md-6">
+              <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <input
                             type="text"
                             mandatory={true}
-                            name="short Description "
+                            name="Description "
                             value={short}
                             label="fullName"
                             className="form-control"
-                            placeholder="Short Description"
+                            placeholder="Description"
                             onChange={(e) => {
                               setShortDesc(e.target.value);
                               setErrors({ ...errors, name: [null] });
@@ -485,9 +515,9 @@ const toggleConfirmPassword = () => {
                           )}
                         </div>
                       </div>
-                    </div>
-                    {/*short description */}
-                    <div className="col-md-6">
+                    </div> 
+                    {/* Address */}
+                    {/* <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <input
@@ -512,9 +542,95 @@ const toggleConfirmPassword = () => {
                           )}
                         </div>
                       </div>
-                    </div>
-                    {/*Country  */}
+                    </div> */}
                     <div className="col-md-6">
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                          <input
+                            type="text"
+                            name="Address Line 1"
+                            value={addressLineOne}
+                            className="form-control"
+                            placeholder="Address Line 1"
+                            onChange={(e) => {
+                              setAddressLineOne(e.target.value);
+                              setErrors({
+                                ...errors,
+                                address_line_one: [null],
+                              });
+                            }}
+                          />
+                          {errors &&
+                          Object.hasOwn(errors, "address_line_one") ? (
+                            <span className="text-sm mt-1 text-qred">
+                              {errors.address_line_one[0]}
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* New Address Line 2 Field */}
+                    <div className="col-md-6">
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                          <input
+                            type="text"
+                            name="Address Line 2"
+                            value={addressLineTwo}
+                            className="form-control"
+                            placeholder="Address Line 2 (Optional)"
+                            onChange={(e) => {
+                              setAddressLineTwo(e.target.value);
+                              setErrors({
+                                ...errors,
+                                address_line_two: [null],
+                              });
+                            }}
+                          />
+                          {errors &&
+                          Object.hasOwn(errors, "address_line_two") ? (
+                            <span className="text-sm mt-1 text-qred">
+                              {errors.address_line_two[0]}
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* New Postal Code Field */}
+                    <div className="col-md-6">
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                          <input
+                            type="text"
+                            name="Postal Code"
+                            value={zipCode}
+                            className="form-control"
+                            placeholder="Postal Code"
+                            onChange={(e) => {
+                              // Optional: Add validation for postal code if needed
+                              setZipCode(e.target.value);
+                              setErrors({ ...errors, zip_code: [null] });
+                            }}
+                          />
+                          {errors && Object.hasOwn(errors, "zip_code") ? (
+                            <span className="text-sm mt-1 text-qred">
+                              {errors.zip_code[0]}
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/*Country  */}
+                    {/* <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
                           <i className="feather-globe me-2"></i>
@@ -537,7 +653,7 @@ const toggleConfirmPassword = () => {
                           </span>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                     {/*State  */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -580,6 +696,15 @@ const toggleConfirmPassword = () => {
                               </option>
                             ))}
                           </select>
+                          {city && (
+                            <button
+                              type="button"
+                              className="btn btn-secondary ml-2"
+                              onClick={handleAddMoreCities}
+                            >
+                              Add More
+                            </button>
+                          )}
                         </div>
                         {errors && errors.country && (
                           <span className="text-sm mt-1 text-qred">
@@ -588,8 +713,22 @@ const toggleConfirmPassword = () => {
                         )}
                       </div>
                     </div>
+
+                    {showMultiCitySelect && (
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Select Multiple Cities</label>
+                          <MultiSelect
+                            options={prepareMultiCityOptions()}
+                            value={selectedCities}
+                            onChange={setSelectedCities}
+                            labelledBy="Select cities"
+                          />
+                        </div>
+                      </div>
+                    )}
                     {/* Contact Person Name */}
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <i className="feather-user" />
@@ -612,7 +751,7 @@ const toggleConfirmPassword = () => {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* Language */}
                     <div className="col-md-6">
                       <div className="form-group group-img">

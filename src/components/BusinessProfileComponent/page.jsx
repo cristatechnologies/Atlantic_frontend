@@ -400,7 +400,9 @@ const BusinessProfileComponent = () => {
                         </div>
 
                         <div className="col-md-6 form-group">
-                          <label className="col-form-label">Address</label>
+                          <label className="col-form-label">
+                            Address Line 1
+                          </label>
                           <div className="pass-group group-img">
                             <span className="lock-icon">
                               <i className="feather-map-pin" />
@@ -408,11 +410,44 @@ const BusinessProfileComponent = () => {
                             <input
                               type="text"
                               className="form-control"
-                              name="address"
-                              defaultValue={profileData?.address || ""}
+                              name="address_line_one"
+                              defaultValue={profileData?.address_line_one || ""}
                             />
                           </div>
                         </div>
+
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">
+                            Address Line 2
+                          </label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-map-pin" />
+                            </span>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="address_line_two"
+                              defaultValue={profileData?.address_line_two || ""}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Zip Code</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-map-pin" />
+                            </span>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="zip_code"
+                              defaultValue={profileData?.zip_code || ""}
+                            />
+                          </div>
+                        </div>
+
                         {/* country */}
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">Country</label>
