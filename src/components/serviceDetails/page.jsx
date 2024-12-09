@@ -24,12 +24,14 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import AnimatedHeart from "./AnimatedHeart";
 import { toast } from "react-toastify";
 import { RWebShare } from "react-web-share";
+import Head from "next/head";
 
 
-
-const ServiceDetails = ({ data }) => {
+const ServiceDetails = ({ data, }) => {
   const pathname = usePathname();
-   const [fullUrl, setFullUrl] = useState("");
+ const [fullUrl,setFullUrl] = useState("");
+
+
   console.log(pathname)
   console.log(data);
   const [isFavorite, setIsFavorite] = useState(data.like === 1);
@@ -48,6 +50,11 @@ const ServiceDetails = ({ data }) => {
 
 
 
+  useEffect(()=>
+  {
+    setFullUrl(window.location.href);
+  })
+
     const handleChange = (e) => {
       const { name, value } = e.target;
       console.log("Input changed:", name, value); // Debug log
@@ -57,10 +64,6 @@ const ServiceDetails = ({ data }) => {
       }));
     };
 
-useEffect(() => {
-  // This will work only on the client-side
-  setFullUrl(window.location.href);
-}, []);
 
 console.log(fullUrl)
 
@@ -169,6 +172,7 @@ else{
           <img
             src={`${process.env.NEXT_PUBLIC_BASE_URL + data.banner_image}`}
             alt="Service Banner"
+            className="service-banner-image"
           />
         </div>
       ) : (
@@ -260,6 +264,12 @@ else{
                       </RWebShare>
                     </Link>
                   </li>
+                  <li>
+                    <Link href="#">
+                      <i className="feather-eye" /> {data.views || 0} Views
+                    </Link>
+                  </li>
+
                   <li>
                     <Link href="#review-sec">
                       <i className="feather-message-circle" /> review
@@ -427,10 +437,9 @@ else{
                       ) : (
                         <h6>
                           {" "}
-                          <Link href="/login"><mark>
-                            Login
-                            </mark>
-                            </Link>{ " "}
+                          <Link href="/login">
+                            <mark>Login</mark>
+                          </Link>{" "}
                           to Add Your Review
                         </h6>
                       )}

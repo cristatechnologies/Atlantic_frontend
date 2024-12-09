@@ -1,49 +1,64 @@
-const { useState, useEffect } = require("react");
-import axios from "axios";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { RWebShare } from "react-web-share";
-import { useRouter } from "next/navigation";
+import AnimatedHeart from "../serviceDetails/AnimatedHeart";
+
+import axios from "axios";
+
 
 const AcitveDealsComponent = ({ pathName }) => {
-
-const router = useRouter()
+  const router = useRouter();
   const slug = pathName.split("/")[2];
-  const [fullUrl,setFullUrl] = useState("")
-  console.log("slug in active-deals slug page is ", slug);
-  const [apiData, setApiData] = useState();
 
+  const [isFavorite, setIsFavorite] = useState();
+  const [totalLikes, setTotalLikes] = useState();
+  const [fullUrl, setFullUrl] = useState("");
+  const [apiData, setApiData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+
+   const toggleFavorite = async () => {
+     const auth = JSON.parse(localStorage.getItem("auth"));
+     const token = auth?.access_token;
+     try {
+       const payload = {
+        
+         daily_offer_id: apiData.id, // Changed from data.id to apiData.id
+       };
+       const res = await axios.post(
+         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers/post-like?token=${token}`,
+         payload
+       );
+       console.log(res.data.total_likes);
+       setTotalLikes(res.data.total_likes);
+       setIsFavorite(!isFavorite);
+     } catch (error) {
+       console.error("Error toggling favorite:", error);
+       toast.error("Failed to like the deal");
+     }
+   };
   useEffect(() => {
-    // Fetch token from local storage on the client side
-    const auth =
-      typeof window !== "undefined"
-        ? JSON.parse(localStorage.getItem("auth"))
-        : null;
+    // Authentication check
+    const auth = JSON.parse(localStorage.getItem("auth") || "null");
     const token = auth?.access_token;
 
     if (!token) {
       toast.error("Please log in.");
       router.push("/login");
       return;
-    } 
-  }, []);
+    }
 
 
-  useEffect(() => {
-    // This will work only on the client-side
-    setFullUrl(window.location.href);
-  }, []);
+  
 
-  useEffect(() => {
+    // Fetch data after authentication
     const fetchDailyOffersBySlug = async () => {
       try {
-        const auth = JSON.parse(localStorage.getItem("auth") || "null");
-        const token = auth?.access_token;
-
-        if (!token) {
-          throw new Error("Authentication token not found");
-        }
-
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers-slug/${slug}?token=${token}`
         );
@@ -53,18 +68,47 @@ const router = useRouter()
         }
 
         const data = await response.json();
-        console.log(data);
         setApiData(data);
+        setTotalLikes(data.total_likes); // Initialize total likes
+        setIsFavorite(data.is_liked); // Initialize favorite status
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching daily offers:", error);
+        toast.error("Failed to load deal details");
+        router.push("/login");
       }
     };
 
-    if (slug) {
-      fetchDailyOffersBySlug();
-    }
-  }, [slug]);
+    fetchDailyOffersBySlug();
+  }, [slug, router]);
 
+  useEffect(() => {
+    // This will work only on the client-side
+    setFullUrl(window.location.href);
+  }, []);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="centered">
+        <div className="dot-spinner">
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // No data found
+  if (!apiData) {
+    return <div>No deal found</div>;
+  }
   return (
     <>
       <div className="breadcrumb-bar">
@@ -78,7 +122,7 @@ const router = useRouter()
                     <Link href="/">Home</Link>
                   </li>
                   <li className="breadcrumb-item">
-                    <Link href="/active-deals">Active Deals</Link>
+                    <Link href="/active-Offers">Active Offers</Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
                     {apiData?.slug}
@@ -108,31 +152,46 @@ const router = useRouter()
             </div>
             <div className="col-md-6 h-auto">
               <div>
-                <h3 className="deal-title">{apiData?.title}</h3>{" "}
-                <Link className="pe-auto" href="#">
-                  <>
-                    <RWebShare
-                      data={{
-                        text: "Look i got a Great Deal from IndoAtlantic !!",
-                        // url: `https://indoatlantic.ca${pathName}`,
-                        url: `${fullUrl}`,
-                        title: "indoatlantic",
-                      }}
-                      sites={[
-                        "facebook",
-                        "twitter",
-                        "whatsapp",
-                        "linkedin",
-                        "reddit",
-                        "mail",
-                        "copy",
-                      ]}
-                      onClick={() => console.log("shared successfully!")}
-                    >
-                      <i className="feather-share-2" />
-                    </RWebShare> {" "}Share
-                  </>
-                </Link>
+                <h3 className="deal-title">{apiData?.title}</h3>
+                <div className="descriptionlinks">
+                  <ul className="d-flex align-items-center  justify-content-center justify-content-lg-start">
+                    <li>
+                      <Link className="pe-auto  " href="#">
+                        <div className="d-flex align-items-center justify-content-center w-100" >
+                          <RWebShare
+                            data={{
+                              text: "Look i got a Great Business from IndoAtlantic !!",
+                              url: `${fullUrl}`,
+                              title: "indoatlantic",
+                            }}
+                            sites={[
+                              "facebook",
+                              "twitter",
+                              "whatsapp",
+                              "linkedin",
+                              "reddit",
+                              "mail",
+                              "copy",
+                            ]}
+                            onClick={() => console.log("shared successfully!")}
+                          >
+                            <i className="feather-share-2 me-3" />
+                          </RWebShare>
+                          Share
+                        </div>
+                      </Link>
+                    </li>
+                    <AnimatedHeart
+                      isActive={isFavorite}
+                      onClick={toggleFavorite}
+                      totalLikes={totalLikes}
+                    />
+
+                    <Link href="#">
+                      <i className="feather-eye" /> {apiData.views || 0} Views
+                    </Link>
+                  </ul>
+                </div>
                 <p className="mb-4">{apiData?.description}</p>
               </div>
             </div>
@@ -142,7 +201,5 @@ const router = useRouter()
     </>
   );
 };
-
-
 
 export default AcitveDealsComponent;

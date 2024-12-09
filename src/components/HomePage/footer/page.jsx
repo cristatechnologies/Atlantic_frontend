@@ -113,7 +113,7 @@ const Footer = () => {
       <div className="footer-top aos" data-aos="fade-up">
         <div className="container">
           <div className="row">
-            <div className="col-lg-3 col-md-6">
+            <div className="col-lg-6 col-md-6">
               <div className="footer-widget">
                 <div className="footer-logo">
                   <Link href="/">
@@ -168,7 +168,7 @@ const Footer = () => {
               </>
             )}
             {secondCol && secondCol.col_links.length !== 0 && (
-              <div className="col-lg-2 col-md-6">
+              <div className="col-lg-6 col-md-6">
                 <div className="footer-widget footer-menu">
                   <h2 className="footer-title"> {secondCol.columnTitle}</h2>
                   <ul>
@@ -197,7 +197,7 @@ const Footer = () => {
                 </div>
               </div>
             )}
-            <div className="col-lg-3 col-md-6">
+            {/* <div className="col-lg-3 col-md-6">
               <div className="footer-widget">
                 <h2 className="footer-title">Communication</h2>
                 <div className="footer-contact-info">
@@ -216,7 +216,7 @@ const Footer = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* <div className="footercount"> */}

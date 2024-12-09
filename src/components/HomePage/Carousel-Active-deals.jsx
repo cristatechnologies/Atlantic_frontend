@@ -106,7 +106,7 @@ export default function CarouselActiveDeals({
                   dailyOffers.map((offer, index) => (
                     <div className="card aos" data-aos="fade-up " key={index}>
                       <div className="blog-widget">
-                        <Link href={`/active-deals/${offer.slug}`}>
+                        <Link href={`/active-offers/${offer.slug}`}>
                           <div className="blog-img">
                             <img
                               src={`${
@@ -126,7 +126,7 @@ export default function CarouselActiveDeals({
                         <div className="bloglist-content pe-auto">
                           <div className="card-body">
                             <h6>
-                              <Link href={`/active-deals/${offer.slug}`}>
+                              <Link href={`/active-offers/${offer.slug}`}>
                                 {offer.title}
                               </Link>
                             </h6>

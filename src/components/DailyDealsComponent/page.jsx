@@ -33,7 +33,8 @@ const DailyDealsComponent = () => {
     const fetchDailyOffers = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/daily-offers`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers
+`
         );
         setDailyOffers(response.data);
       } catch (error) {
@@ -58,7 +59,7 @@ const DailyDealsComponent = () => {
                     <Link href="/">Home</Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Active-deals
+                    Active-Offers
                   </li>
                 </ol>
               </nav>
@@ -71,7 +72,7 @@ const DailyDealsComponent = () => {
           <div className="row row-cols-1 row-cols-md-3 g-4">
             {dailyOffers.map((offer) => (
               <div className="col" key={offer.id}>
-                <Link href={`/active-deals/${offer.slug}`}>
+                <Link href={`/active-offers/${offer.slug}`}>
                 <div className="card h-100 offer-card">
                   <img
                     src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}

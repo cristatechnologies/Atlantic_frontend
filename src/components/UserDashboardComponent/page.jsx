@@ -72,7 +72,7 @@ const UserDashboardComponent = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/active-deals">
+                <Link href="/active-offers">
                   <i className="feather-list" /> <span>Active Deals</span>
                 </Link>
               </li>

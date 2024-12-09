@@ -259,7 +259,7 @@ const router = useRouter();
     <>
       {/* Breadscrumb Section */}
 
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
@@ -277,7 +277,7 @@ const router = useRouter();
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* /Breadscrumb Section */}
       {/* Login Section */}
       {/* <div

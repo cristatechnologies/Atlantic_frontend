@@ -1,16 +1,16 @@
-"use client";
-
+// page.js
 import { notFound } from "next/navigation";
 import ServiceDetails from "@/components/serviceDetails/page";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 
 async function getBusinessData(id, token = null) {
   const url = token
     ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}?token=${token}`
     : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}`;
 
-  const res = await fetch(url);
+  const res = await fetch(url, { 
+    next: { revalidate: 3600 },
+    cache: 'no-store'
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch business");
@@ -19,43 +19,76 @@ async function getBusinessData(id, token = null) {
   return res.json();
 }
 
-export default function BusinessDetails() {
-  const params = useParams();
-  const id = params?.id;
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const auth = JSON.parse(localStorage.getItem("auth") || "null");
-        const token = auth?.access_token;
-
-        const businessData = await getBusinessData(id, token);
-
-        if (!businessData) {
-          notFound();
-        }
-
-        setData(businessData);
-      } catch (error) {
-        console.error("Error fetching business:", error);
-        setError(error);
-      }
+export async function generateMetadata({ params }) {
+  try {
+    const businessData = await getBusinessData(params.id);
+console.log(businessData)
+    return {
+      title: businessData.name,
+      description: businessData.description,
+      openGraph: {
+        type: "website",
+        title: businessData.name,
+        description: businessData.description,
+        images: `https://s1.shopico.in/atlantic/${businessData.image}`
+          ? [
+              {
+                url: `https://s1.shopico.in/atlantic/${businessData.image}`,
+                width: 800,
+                height: 600,
+              },
+              {
+                url: `https://s1.shopico.in/atlantic/${businessData.image}`,
+                width: 1200,
+                height: 630,
+              },
+            ]
+          : [],
+      },
     };
+  } catch (error) {
+    return {
+      title: "Business Not Found",
+      description: "Unable to retrieve business details"
+    };
+  }
+}
 
-    if (id) {
-      fetchData();
+export default async function BusinessDetails({ params }) {
+  try {
+    const businessData = await getBusinessData(params.id);
+
+    if (!businessData) {
+      return notFound();
     }
-  }, [id]);
 
-  if (error) {
+    return (
+      <ServiceDetails 
+        data={businessData} 
+
+      />
+    );
+  } catch (error) {
     return notFound();
   }
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
-  return <ServiceDetails data={data} />;
 }
+
+// loading.js
+export function Loading() {
+  return (
+    <div className="centered">
+      <div className="dot-spinner">
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+        <div className="dot-spinner__dot"></div>
+      </div>
+    </div>
+  );
+}
+
+// error.js

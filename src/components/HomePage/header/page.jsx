@@ -112,204 +112,212 @@ const Header = ({ parms }) => {
     };
   }, [mobileDropdown]);
   return (
-    <header className="header " onClick={(value) => toggleMobileMenu()}>
-      <div className="container">
-        <nav className="navbar navbar-expand-lg header-nav">
-          <div className="navbar-header">
-            <Link id="mobile_btn" href="#" onClick={() => onHandleMobileMenu()}>
-              <span className="bar-icon">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            </Link>
-            <Link href="/" className="">
-              <Image
-                src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                alt="logo"
-                width="210"
-                height="45"
-                objectFit="scale-down"
-              />
-            </Link>
-          </div>
-          <div className="main-menu-wrapper">
-            <div className="menu-header">
-              <Link href="/" className="menu-logo">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                  style={{ maxWidth: "100%", height: "auto" }}
-                  alt="Logo"
-                />
-              </Link>
-              <Link
-                id="menu_close"
-                className="menu-close"
-                href="#"
-                onClick={() => onhandleCloseMenu()}
-              >
-                {" "}
-                <i className="feather-x" />
-              </Link>
-            </div>
-            <ul className="main-nav">
-              <Categories activeMenu={parms} />
-              {/*
+    <header className="header w-full" onClick={(value) => toggleMobileMenu()}>
+      <div className="" style={{marginLeft:"3px",marginRight:"10px"}}>
+        <div className=" w-full">
+          <nav className="navbar navbar-expand-lg header-nav w-full">
+            <div className="main-menu-wrapper">
+              <div className="menu-header">
+                <Link href="/" className="menu-logo">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
+                    style={{ maxWidth: "100%", height: "auto" }}
+                    alt="Logo"
+                  />
+                </Link>
+                <Link
+                  id="menu_close"
+                  className="menu-close"
+                  href="#"
+                  onClick={() => onhandleCloseMenu()}
+                >
+                  {" "}
+                  <i className="feather-x" />
+                </Link>
+              </div>
+              <ul className="main-nav">
+                <Categories activeMenu={parms} />
+                {/*
               <PagesMenu activeMenus={parms} />
               <UserPagesMenu />
               <BlogMenu activesMenus={parms} /> */}
 
-              <li>
-                <Link href="/active-deals" onClick={handleMobileMenuItemClick}>
-                  Active Offers{" "}
-                </Link>
-              </li>
+                <li>
+                  <Link
+                    href="/active-offers"
+                    onClick={handleMobileMenuItemClick}
+                  >
+                    Active Offers{" "}
+                  </Link>
+                </li>
 
-              {isLoggedIn && userType === 1 && (
-                <>
-                  <li className="d-lg-none has-submenu">
-                    <a
-                      href="#"
-                      className="mobile-user-menu profile-userlink"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation(); // Stop event bubbling
-                        setMobileDropdown(!mobileDropdown);
-                      }}
-                    >
-                      <div className="user-info">
-                        <img
-                          src={
-                            `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
-                            "/img/pngegg.png"
-                          }
-                          alt="User profile"
-                        />
-                        <span className="user-name">
-                          {authData.user?.business?.name}
-                        </span>
-                        <i
-                          className={`feather-arrow-${
-                            mobileDropdown ? "up" : "down"
-                          }`}
-                        ></i>
-                      </div>
-                    </a>
-                    <ul
-                      className={`submenu ${mobileDropdown ? "show" : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setMobileDropdown(false);
-                      }}
-                    >
-                      <li>
-                        <Link
-                          href="/user/dashboard"
-                          onClick={handleMobileMenuItemClick}
-                        >
-                          <i className="fas fa-columns"></i> Dashboard
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/user/profile"
-                          onClick={handleMobileMenuItemClick}
-                        >
-                          <i className="fas fa-user-cog"></i> Profile Settings
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/your-deals"
-                          onClick={handleMobileMenuItemClick}
-                        >
-                          <i className="fas fa-handshake"></i> Your Deals
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                </>
-              )}
-              {isLoggedIn && userType === 2 && (
-                <>
-                  <li className="d-lg-none has-submenu">
-                    <a
-                      href="#"
-                      className="mobile-user-menu profile-userlink"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setMobileDropdown(!mobileDropdown);
-                      }}
-                    >
-                      <div className="user-info">
-                        <div className="user-info-left">
+                {isLoggedIn && userType === 1 && (
+                  <>
+                    <li className="d-lg-none has-submenu">
+                      <a
+                        href="#"
+                        className="mobile-user-menu profile-userlink"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation(); // Stop event bubbling
+                          setMobileDropdown(!mobileDropdown);
+                        }}
+                      >
+                        <div className="user-info">
                           <img
                             src={
-                              `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}` ||
+                              `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
                               "/img/pngegg.png"
                             }
                             alt="User profile"
                           />
                           <span className="user-name">
-                            {authData.user?.name}
+                            {authData.user?.business?.name}
                           </span>
+                          <i
+                            className={`feather-arrow-${
+                              mobileDropdown ? "up" : "down"
+                            }`}
+                          ></i>
                         </div>
-                        <i
-                          className={`feather-arrow-${
-                            mobileDropdown ? "up" : "down"
-                          }`}
-                        ></i>
-                      </div>
-                    </a>
-                    <ul
-                      className={`submenu ${mobileDropdown ? "show" : ""}`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <li>
-                        <Link
-                          href="/user/dashboard"
-                          onClick={handleMobileMenuItemClick}
-                        >
-                          <i className="fas fa-columns"></i> Dashboard
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/user/profile"
-                          onClick={handleMobileMenuItemClick}
-                        >
-                          <i className="fas fa-user-cog"></i> Profile Settings
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                </>
-              )}
-              {!isLoggedIn && (
-                <>
+                      </a>
+                      <ul
+                        className={`submenu ${mobileDropdown ? "show" : ""}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMobileDropdown(false);
+                        }}
+                      >
+                        <li>
+                          <Link
+                            href="/user/dashboard"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-columns"></i> Dashboard
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/profile"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> Profile Settings
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/your-deals"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-handshake"></i> Your Deals
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                  </>
+                )}
+                {isLoggedIn && userType === 2 && (
+                  <>
+                    <li className="d-lg-none has-submenu">
+                      <a
+                        href="#"
+                        className="mobile-user-menu profile-userlink"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setMobileDropdown(!mobileDropdown);
+                        }}
+                      >
+                        <div className="user-info">
+                          <div className="user-info-left">
+                            <img
+                              src={
+                                `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}` ||
+                                "/img/pngegg.png"
+                              }
+                              alt="User profile"
+                            />
+                            <span className="user-name">
+                              {authData.user?.name}
+                            </span>
+                          </div>
+                          <i
+                            className={`feather-arrow-${
+                              mobileDropdown ? "up" : "down"
+                            }`}
+                          ></i>
+                        </div>
+                      </a>
+                      <ul
+                        className={`submenu ${mobileDropdown ? "show" : ""}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <li>
+                          <Link
+                            href="/user/dashboard"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-columns"></i> Dashboard
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/profile"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> Profile Settings
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                  </>
+                )}
+                {!isLoggedIn && (
+                  <>
+                    <li className="login-link">
+                      <Link href="/signup" onClick={handleMobileMenuItemClick}>
+                        Sign Up
+                      </Link>
+                    </li>
+                    <li className="login-link">
+                      <Link href="/login" onClick={handleMobileMenuItemClick}>
+                        Sign In
+                      </Link>
+                    </li>
+                  </>
+                )}
+                {isLoggedIn && (
                   <li className="login-link">
-                    <Link href="/signup" onClick={handleMobileMenuItemClick}>
-                      Sign Up
+                    <Link onClick={handleLogout} href="#">
+                      Logout
                     </Link>
                   </li>
-                  <li className="login-link">
-                    <Link href="/login" onClick={handleMobileMenuItemClick}>
-                      Sign In
-                    </Link>
-                  </li>
-                </>
-              )}
-              {isLoggedIn && (
-                <li className="login-link">
-                  <Link onClick={handleLogout} href="#">
-                    Logout
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </div>
-          {/* <div class="btn-group">
+                )}
+              </ul>
+            </div>
+            <div className="navbar-header">
+              <Link
+                id="mobile_btn"
+                href="#"
+                onClick={() => onHandleMobileMenu()}
+              >
+                <span className="bar-icon">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </Link>
+              <Link href="/" className="">
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
+                  alt="logo"
+                  width="210"
+                  height="45"
+                  objectFit="scale-down"
+                />
+              </Link>
+            </div>
+            {/* <div class="btn-group">
             <button type="button" class="btn btn-danger">
               Action
             </button>
@@ -338,141 +346,142 @@ const Header = ({ parms }) => {
               </a>
             </div>
           </div> */}
-          <ul className="nav header-navbar-rht">
-            {!isLoggedIn ? (
-              <>
+            <ul className="nav header-navbar-rht">
+              {!isLoggedIn ? (
+                <>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link header-reg"
+                      href="/signup"
+                      onClick={handleMobileMenuItemClick}
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link header-login"
+                      href="/login"
+                      onClick={handleMobileMenuItemClick}
+                    >
+                      Sign In
+                    </Link>
+                  </li>
+                </>
+              ) : (
                 <li className="nav-item">
-                  <Link
-                    className="nav-link header-reg"
-                    href="/signup"
-                    onClick={handleMobileMenuItemClick}
-                  >
-                    Sign Up
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
+                  <a
                     className="nav-link header-login"
-                    href="/login"
-                    onClick={handleMobileMenuItemClick}
-                  >
-                    Sign In
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <li className="nav-item">
-                <a
-                  className="nav-link header-login"
-                  href="#"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </a>
-              </li>
-            )}
-            {isLoggedIn && userType === 1 && (
-              <>
-                <li className="nav-item dropdown has-arrow logged-item">
-                  <Link
                     href="#"
-                    className={`${
-                      drops === true
-                        ? "dropdown-toggle profile-userlink show "
-                        : "dropdown-toggle profile-userlink"
-                    }`}
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    onClick={() => setDrops(!drops)}
-                    // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
+                    onClick={handleLogout}
                   >
-                    <img
-                      src={
-                        `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
-                        "/img/pngegg.png"
-                      }
-                      alt="User profile"
-                    />
-
-                    <span>{authData.user?.business?.name}</span>
-                  </Link>
-                  <div className="dropdown-menu dropdown-menu-end">
-                    <Link
-                      className="dropdown-item"
-                      href="/user/dashboard"
-                      onClick={handleMobileMenuItemClick}
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      className="dropdown-item"
-                      href="/user/profile"
-                      onClick={handleMobileMenuItemClick}
-                    >
-                      Profile Settings
-                    </Link>
-                    <Link
-                      className="dropdown-item"
-                      href="/your-deals"
-                      onClick={handleMobileMenuItemClick}
-                    >
-                      Your Deals{" "}
-                    </Link>
-                  </div>
+                    Logout
+                  </a>
                 </li>
-              </>
-            )}
-
-            {isLoggedIn && userType === 2 && (
-              <>
-                <li className="nav-item dropdown has-arrow logged-item">
-                  <Link
-                    href="#"
-                    className={`${
-                      drops === true
-                        ? "dropdown-toggle profile-userlink show "
-                        : "dropdown-toggle profile-userlink"
-                    }`}
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    onClick={() => setDrops(!drops)}
-                    // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
-                  >
-                    <img
-                      src={
-                        authData.user.image
-                          ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
-                          : "/img/pngegg.png"
-                      }
-                      alt="User profile"
-                    />
-
-                    <span>{authData.user?.name}</span>
-                  </Link>
-                  <div className="dropdown-menu dropdown-menu-end">
+              )}
+              {isLoggedIn && userType === 1 && (
+                <>
+                  <li className="nav-item dropdown has-arrow logged-item">
                     <Link
-                      className="dropdown-item"
-                      href="/user/dashboard"
-                      onClick={handleMobileMenuItemClick}
+                      href="#"
+                      className={`${
+                        drops === true
+                          ? "dropdown-toggle profile-userlink show "
+                          : "dropdown-toggle profile-userlink"
+                      }`}
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      onClick={() => setDrops(!drops)}
+                      // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                     >
-                      Dashboard
+                      <img
+                        src={
+                          `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
+                          "/img/pngegg.png"
+                        }
+                        alt="User profile"
+                      />
+
+                      <span>{authData.user?.business?.name}</span>
                     </Link>
+                    <div className="dropdown-menu dropdown-menu-end">
+                      <Link
+                        className="dropdown-item"
+                        href="/user/dashboard"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Dashboard
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/user/profile"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Profile Settings
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/your-deals"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Your Deals{" "}
+                      </Link>
+                    </div>
+                  </li>
+                </>
+              )}
+
+              {isLoggedIn && userType === 2 && (
+                <>
+                  <li className="nav-item dropdown has-arrow logged-item">
                     <Link
-                      className="dropdown-item"
-                      href="/user/profile"
-                      onClick={handleMobileMenuItemClick}
+                      href="#"
+                      className={`${
+                        drops === true
+                          ? "dropdown-toggle profile-userlink show "
+                          : "dropdown-toggle profile-userlink"
+                      }`}
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      onClick={() => setDrops(!drops)}
+                      // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                     >
-                      Profile Settings
+                      <img
+                        src={
+                          authData.user.image
+                            ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
+                            : "/img/pngegg.png"
+                        }
+                        alt="User profile"
+                      />
+
+                      <span>{authData.user?.name}</span>
                     </Link>
-                    {/* <Link className="dropdown-item" href="/login">
+                    <div className="dropdown-menu dropdown-menu-end">
+                      <Link
+                        className="dropdown-item"
+                        href="/user/dashboard"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Dashboard
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/user/profile"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Profile Settings
+                      </Link>
+                      {/* <Link className="dropdown-item" href="/login">
                       Logout
                     </Link> */}
-                  </div>
-                </li>
-              </>
-            )}
-          </ul>
-        </nav>
+                    </div>
+                  </li>
+                </>
+              )}
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
   );

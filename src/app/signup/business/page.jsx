@@ -48,7 +48,8 @@ const business = () => {
   const [zipCode, setZipCode] = useState(""); // New state f
   const [selectedCities, setSelectedCities] = useState([]);
   const [showMultiCitySelect, setShowMultiCitySelect] = useState(false);
-
+  const [zipCodeValidationError, setZipCodeValidationError] = useState("");
+  const [isValidZipCode, setIsValidZipCode] = useState(false);
 
 
   const handlePasswordChange = (evnt) => {
@@ -82,6 +83,61 @@ const business = () => {
        })) || []
      );
    };
+
+
+
+  const validateZipCode = async (postalCode) => {
+    try {
+      // Reset previous validation states
+      setZipCodeValidationError("");
+      setIsValidZipCode(false);
+
+      // If zip code is empty, return early
+      if (!postalCode) return;
+
+      // Call zip code validation API
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/zipcode-validation/${postalCode}`
+      );
+
+      // Check if response has data
+      if (response.data && response.data.city) {
+        // Set state and city based on API response as suggestions
+        setState(response.data.city.country_state.id);
+        setcity(response.data.city.id);
+        setIsValidZipCode(true);
+
+        // Fetch states and cities to update dropdowns
+        const statesResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/43`
+        );
+        setStateDropdown(statesResponse.data && statesResponse.data.states);
+
+        const citiesResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${response.data.city.country_state.id}`
+        );
+        setCityDropdown(citiesResponse.data && citiesResponse.data.cities);
+      } else {
+        // If no data found, set error
+        setZipCodeValidationError(" ");
+      }
+    } catch (error) {
+      console.error("Zip code validation error:", error);
+      setZipCodeValidationError("Error validating Postal Code");
+    }
+  };
+
+  // Modify zip code input handler to trigger validation
+  const handleZipCodeChange = (e) => {
+    const postalCode = e.target.value;
+    setZipCode(postalCode);
+
+    // Validate zip code if it meets a minimum length (e.g., 6 characters)
+    if (postalCode.length >= 6) {
+      validateZipCode(postalCode);
+    }
+  };
+   
 
   const doSignUp = async () => {
     try {
@@ -130,7 +186,7 @@ const business = () => {
         toast.success(response.data.notification);
 
         // Redirect to verification page
-        router.push("/VerificationPage");
+        router.push("/verification-page");
       } else {
         // Handle unexpected response structure
         console.error("Unexpected response structure:", response);
@@ -229,7 +285,7 @@ const business = () => {
   return (
     <>
       {/* Breadscrumb Section */}
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
@@ -247,7 +303,7 @@ const business = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* /Breadscrumb Section */}
       {/* Login Section */}
 
@@ -405,7 +461,7 @@ const business = () => {
                       </div>
                     </div>
                     {/*registration number */}
-                  <div className="col-md-6">
+                    <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <i className="">
@@ -433,8 +489,8 @@ const business = () => {
                           )}
                         </div>
                       </div>
-                    </div> 
-                  
+                    </div>
+
                     {/*categories  */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -490,7 +546,7 @@ const business = () => {
                       </div>
                     </div> */}
                     {/*short description */}
-              <div className="col-md-6">
+                    <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <input
@@ -515,7 +571,7 @@ const business = () => {
                           )}
                         </div>
                       </div>
-                    </div> 
+                    </div>
                     {/* Address */}
                     {/* <div className="col-md-6">
                       <div className="form-group group-img">
@@ -612,57 +668,29 @@ const business = () => {
                             value={zipCode}
                             className="form-control"
                             placeholder="Postal Code"
-                            onChange={(e) => {
-                              // Optional: Add validation for postal code if needed
-                              setZipCode(e.target.value);
-                              setErrors({ ...errors, zip_code: [null] });
-                            }}
+                            onChange={handleZipCodeChange}
                           />
-                          {errors && Object.hasOwn(errors, "zip_code") ? (
+                          {zipCodeValidationError && (
                             <span className="text-sm mt-1 text-qred">
-                              {errors.zip_code[0]}
+                              {zipCodeValidationError}
                             </span>
-                          ) : (
-                            ""
                           )}
                         </div>
                       </div>
                     </div>
 
-                    {/*Country  */}
-                    {/* <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
-                          <select
-                            className="form-control"
-                            value={country}
-                            onChange={handleCountryChange}
-                          >
-                            <option value="">Select country</option>
-                            {countryDropdown?.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {errors && errors.country && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.country[0]}
-                          </span>
-                        )}
-                      </div>
-                    </div> */}
-                    {/*State  */}
+                    {/* Province Field */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
                           <select
                             className="form-control"
                             value={state}
-                            onChange={handleStateChange}
+                            onChange={(e) => {
+                              setState(e.target.value);
+                              // Fetch cities for the selected state
+                              getcity(e.target.value);
+                            }}
                           >
                             <option value="">Select Province</option>
                             {stateDropdown?.map((item) => (
@@ -672,49 +700,30 @@ const business = () => {
                             ))}
                           </select>
                         </div>
-                        {errors && errors.country && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.country[0]}
-                          </span>
-                        )}
                       </div>
                     </div>
-                    {/*City  */}
+
+                    {/* City Field */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
                           <select
                             className="form-control"
                             value={city}
                             onChange={(e) => setcity(e.target.value)}
                           >
-                            <option value="">Select city</option>
+                            <option value="">Select City</option>
                             {cityDropdown?.map((item) => (
                               <option key={item.id} value={item.id}>
                                 {item.name}
                               </option>
                             ))}
                           </select>
-                          {city && (
-                            <button
-                              type="button"
-                              className="btn btn-secondary ml-2"
-                              onClick={handleAddMoreCities}
-                            >
-                              Add More
-                            </button>
-                          )}
                         </div>
-                        {errors && errors.country && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.country[0]}
-                          </span>
-                        )}
                       </div>
                     </div>
 
-                    {showMultiCitySelect && (
+                    {/* {showMultiCitySelect && (
                       <div className="col-md-6">
                         <div className="form-group">
                           <label>Select Multiple Cities</label>
@@ -726,7 +735,7 @@ const business = () => {
                           />
                         </div>
                       </div>
-                    )}
+                    )} */}
                     {/* Contact Person Name */}
                     {/* <div className="col-md-6">
                       <div className="form-group group-img">
@@ -753,7 +762,7 @@ const business = () => {
                       </div>
                     </div> */}
                     {/* Language */}
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
                           <i className="feather-globe me-2"></i>
@@ -778,7 +787,7 @@ const business = () => {
                           </span>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                     {/*Password*/}
                     <div className="col-md-6">
                       <div className="form-group">

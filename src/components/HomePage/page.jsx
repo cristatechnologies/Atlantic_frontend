@@ -279,7 +279,8 @@ const fetchCityName = async (latitude, longitude) => {
     const fetchDailyOffers = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/daily-offers`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers
+`
         );
         setDailyOffers(response.data);
       } catch (error) {

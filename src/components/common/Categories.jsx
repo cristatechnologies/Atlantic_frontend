@@ -37,31 +37,34 @@ const Categories = ({ activeMenu }) => {
  };
   
   return (
-    <li className="has-submenu">
-      <a
-        className="mobile-user-menu profile-userlink"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setMobileDropdown(!mobileDropdown);
-        }}
-      >
-        Categories
-        <i className={`feather-arrow-${mobileDropdown ? "up" : "down"}`}></i>
-      </a>
-      <ul
-        className={`submenu ${mobileDropdown ? "show" : ""}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {websiteData?.businessCategories.map((item, index) => (
-          <li key={index}>
-            <Link onClick={handleItemClick} href={`/categories/${item.id}`}>
-              {item.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </li>
+    <>
+      <li className="has-submenu">
+        <a
+          className="mobile-user-menu profile-userlink"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setMobileDropdown(!mobileDropdown);
+          }}
+          href="/categories"
+        >
+          Categories
+          <i className={`feather-arrow-${mobileDropdown ? "up" : "down"}`}></i>
+        </a>
+        <ul
+          className={`submenu ${mobileDropdown ? "show" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {websiteData?.businessCategories.map((item, index) => (
+            <li key={index}>
+              <Link onClick={handleItemClick} href={`/categories/${item.id}`}>
+                {item.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </li>
+    </>
   );
 };
 

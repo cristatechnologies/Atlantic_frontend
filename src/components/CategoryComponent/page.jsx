@@ -5,7 +5,7 @@ import React from "react";
 
 import Link from "next/link";
 import { useSelector } from "react-redux";
-
+import Image from "next/image";
 
 const CategoryComponent = () => {
    
@@ -42,10 +42,12 @@ const CategoryComponent = () => {
                   <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
                     <Link href={`/categories/${item.id}`} className="category-links">
                       <h5>{item.name}</h5>
-                      <img
+                      <Image
                         src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
                         alt="icons"
-                      />
+                        height={110}
+                        width={110}     
+                                         />
                     </Link>
                   </div>
                 ))}
