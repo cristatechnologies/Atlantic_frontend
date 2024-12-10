@@ -133,7 +133,7 @@ const business = () => {
     setZipCode(postalCode);
 
     // Validate zip code if it meets a minimum length (e.g., 6 characters)
-    if (postalCode.length >= 6) {
+    if (postalCode.length >= 3) {
       validateZipCode(postalCode);
     }
   };
@@ -311,7 +311,7 @@ const business = () => {
         className="login-content"
         style={{
           backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
-          backgroundSize: "cover",
+          backgroundSize: "contain",
           backgroundPosition: "center",
           backgroundRepeat: "repeat",
         }}

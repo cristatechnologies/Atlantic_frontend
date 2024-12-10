@@ -210,7 +210,7 @@ const router = useRouter();
 
 
          toast.success(res.notification)
-         router.push("/VerificationPage");
+         router.push(`/verification-page?email=${encodeURIComponent(email)}`);
 
       });
 

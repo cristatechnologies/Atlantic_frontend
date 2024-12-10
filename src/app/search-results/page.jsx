@@ -95,7 +95,7 @@ const Search = () => {
                       >
                         <div className="blog-widget">
                           <div className="blog-img">
-                            <Link href={`/business-details/${business.id}`}>
+                            <Link href={`/business-details/${business.slug}`}>
                               <Image
                                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${business.image}`}
                                 width={400}
@@ -121,7 +121,7 @@ const Search = () => {
                                 </div> */}
                               </div>
                               <h6 className="text-black">
-                                <Link href={`/business-details/${business.id}`}>
+                                <Link href={`/business-details/${business.slug}`}>
                                   {business.name}
                                 </Link>
                               </h6>

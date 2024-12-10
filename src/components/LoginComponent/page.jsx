@@ -42,7 +42,7 @@ const LoginComponent = () => {
       console.log("API response:", response);
       if (response.data && response.status === 200) {
         toast.success("Verification code sent successfully!");
-        router.push(`/VerificationPage?email=${email}`);
+        router.push(`/verification-page?email=${email}`);
       } else {
         toast.error("Failed to send verification code. Please try again.");
       }
@@ -69,7 +69,7 @@ const LoginComponent = () => {
       );
       if (response.data && response.status === 200) {
         toast.success("Verification code resent successfully!");
-        router.push("/VerificationPage");
+        router.push("/verification-page");
       } else {
         toast.error("Failed to resend verification code. Please try again.");
       }
