@@ -32,7 +32,7 @@ const Header = ({ parms }) => {
       setLogo(settingsData?.logo);
     }
   });
-  console.log("the log of the logo is ", logo);
+
 
   const handleDropdownClick = (e) => {
     e.preventDefault();
@@ -113,7 +113,7 @@ const Header = ({ parms }) => {
   }, [mobileDropdown]);
   return (
     <header className="header w-full" onClick={(value) => toggleMobileMenu()}>
-      <div className="" style={{marginLeft:"3px",marginRight:"10px"}}>
+      <div className="" style={{ marginLeft: "3px", marginRight: "10px" }}>
         <div className=" w-full">
           <nav className="navbar navbar-expand-lg header-nav w-full">
             <div className="main-menu-wrapper">
@@ -311,8 +311,8 @@ const Header = ({ parms }) => {
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                   alt="logo"
-                  width="210"
-                  height="45"
+                  width="270"
+                  height="65"
                   objectFit="scale-down"
                 />
               </Link>
@@ -369,15 +369,16 @@ const Header = ({ parms }) => {
                   </li>
                 </>
               ) : (
-                <li className="nav-item">
-                  <a
-                    className="nav-link header-login"
-                    href="#"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </a>
-                </li>
+                <></>
+                // <li className="nav-item">
+                //   <a
+                //     className="nav-link header-login"
+                //     href="#"
+                //     onClick={handleLogout}
+                //   >
+                //     Logout
+                //   </a>
+                // </li>
               )}
               {isLoggedIn && userType === 1 && (
                 <>
@@ -426,6 +427,13 @@ const Header = ({ parms }) => {
                       >
                         Your Deals{" "}
                       </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="#"
+                        onClick={handleLogout}
+                      >
+                        Logout{" "}
+                      </Link>
                     </div>
                   </li>
                 </>
@@ -472,9 +480,13 @@ const Header = ({ parms }) => {
                       >
                         Profile Settings
                       </Link>
-                      {/* <Link className="dropdown-item" href="/login">
-                      Logout
-                    </Link> */}
+                      <Link
+                        className="dropdown-item"
+                        href="#"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </Link>
                     </div>
                   </li>
                 </>

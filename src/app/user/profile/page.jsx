@@ -28,7 +28,20 @@ console.log(typeof(1));
 
   if (userType === null) {
     // Loading state
-    return <div className="mt-lg-5 pt-5">Loading...</div>;
+    return (
+      <div className="centered">
+        <div className="dot-spinner">
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+        </div>
+      </div>
+    );
   }
   if (userType === "invalid") {F
     return <div>Invalid User Type</div>;

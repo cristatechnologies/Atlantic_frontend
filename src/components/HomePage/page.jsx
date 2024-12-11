@@ -173,6 +173,8 @@ const fetchCityName = async (latitude, longitude) => {
       longitude,
     });
 
+     setSelectedLocation(cityName);
+
     // Fetch businesses based on detected location
     fetchBusinessesByLocation(cityName);
   } catch (error) {

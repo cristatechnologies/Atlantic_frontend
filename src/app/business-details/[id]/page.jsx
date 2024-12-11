@@ -2,13 +2,15 @@
 import { notFound } from "next/navigation";
 import ServiceDetails from "@/components/serviceDetails/page";
 
-async function getBusinessData(id, token = null) {
+async function getBusinessData(id, token ) {
+
+  
   const url = token
     ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}?token=${token}`
     : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}`;
 
-  const res = await fetch(url, { 
-    next: { revalidate: 3600 },
+  const res = await fetch(url,{ 
+  
     cache: 'no-store'
   });
 
@@ -21,8 +23,9 @@ async function getBusinessData(id, token = null) {
 
 export async function generateMetadata({ params }) {
   try {
+
     const businessData = await getBusinessData(params.id);
-console.log(businessData)
+
     return {
       title: businessData.name,
       description: businessData.description,
@@ -55,15 +58,18 @@ console.log(businessData)
 }
 
 export default async function BusinessDetails({ params }) {
+ 
   try {
     const businessData = await getBusinessData(params.id);
 
-    if (!businessData) {
+
+     if (!businessData) {
       return notFound();
     }
 
     return (
       <ServiceDetails 
+      slug={params.id}
         data={businessData} 
 
       />

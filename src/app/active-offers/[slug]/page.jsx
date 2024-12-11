@@ -5,10 +5,10 @@ import AcitveDealsComponent from "@/components/ActiveDealsComponent/page";
 async function fetchDailyOffersBySlug(slug) {
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers`;
 
-  const res = await fetch(url, {
-    next: { revalidate: 3600 },
-    cache: "no-store",
-  });
+   const res = await fetch(url, {
+     next: { revalidate: 3600 },
+     cache: "no-store",
+   });
 
   if (!res.ok) {
     throw new Error("Failed to fetch business");
@@ -56,6 +56,7 @@ export default async function ActiveDealsPage({ params }) {
   const selectedOffer = dailyOffers.find((offer) => offer.slug === slug);
 
   if (!selectedOffer) {
+    console.log(selectedOffer);
     redirect("/404");
   }
 

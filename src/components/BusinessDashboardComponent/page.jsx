@@ -13,13 +13,14 @@ const BusinessDashboardComponent = () => {
   const [change, setChange] = useState(false);
   const [change1, setChange1] = useState(false);
    const [reviews, setReviews] = useState([]);
-   
+   const [slug,setSlug] = useState("")
   
   useEffect(() => {
     const fetchOffers = async () => {
       try {
         const auth = JSON.parse(localStorage.getItem("auth"));
         const token = auth?.access_token;
+        setSlug(auth?.user?.business?.slug);
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`
         );
@@ -114,11 +115,15 @@ const BusinessDashboardComponent = () => {
                   <i className="feather-list" /> <span>Your Deals</span>
                 </Link>
               </li>
-
+              <li>
+                <Link href={`/business-details/${slug}`}>
+                  <i className="feather-list" /> <span>Your Page</span>
+                </Link>
+              </li>
               <li>
                 <Link href="/login">
                   <i className="feather-power" />
-  <span onClick={handleLogout}>Logout</span>
+                  <span onClick={handleLogout}>Logout</span>
                 </Link>
               </li>
             </ul>
@@ -314,17 +319,17 @@ const BusinessDashboardComponent = () => {
                             </div>
                             <div className="review-details">
                               <h6>{review.user.name}</h6>
-                                <div className="rating-star">
-                                  <StarRatings
-                                    rating={review?.rating || 0}
-                                    starRatedColor="#FFD700"
-                                    starDimension="18px"
-                                    starSpacing="0.1px"
-                                    numberOfStars={5}
-                                    name="rating"
-                                  />
-                                </div>
-                                {/* <div>by: {review.user.name}</div> */}
+                              <div className="rating-star">
+                                <StarRatings
+                                  rating={review?.rating || 0}
+                                  starRatedColor="#FFD700"
+                                  starDimension="18px"
+                                  starSpacing="0.1px"
+                                  numberOfStars={5}
+                                  name="rating"
+                                />
+                              </div>
+                              {/* <div>by: {review.user.name}</div> */}
 
                               <p>{review.reviews}</p>
                             </div>

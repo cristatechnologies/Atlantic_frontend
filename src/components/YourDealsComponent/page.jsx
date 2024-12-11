@@ -124,16 +124,26 @@ const YourDealsComponent = () => {
     try {
       const auth = JSON.parse(localStorage.getItem("auth"));
       const token = auth?.access_token;
-      await axios.post(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/store-daily-offer?token=${token}`,
         formData
       );
-      toast.success("New offer added successfully");
+
+      console.log(res)
+      toast.success(res.data.notification);
+      setOffers(res.data.dailyOffers);
       setModalIsOpen(false);
-      router.reload("/your-deals");
-    } catch (error) {
-      console.error("Error adding new offer:", error);
-      toast.error("Failed to add new offer");
+     
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.errors) {
+        // Handle validation errors
+        Object.entries(err.response.data.errors).forEach(([key, value]) => {
+          toast.error(`${value[0]}`);
+        });
+      } else {
+        // Handle other types of errors
+        toast.error("An error occurred. Please try again later.");
+      }
     }
   };
 

@@ -13,12 +13,12 @@ const Roomspics = ({ images }) => {
   return (
     <div className="row">
       {images.map((item, index) => (
-        <div className="col-lg-3 col-md-3 col-sm-3" key={index}>
+        <div className="col-lg-4 col-md-3 col-sm-3" key={index}>
           <div className="review-gallery">
             <SlideshowLightbox>
               <img
                 className="img-fluid"
-                style={{ height: "220px", width: "209px" }}
+           
                 alt={`Gallery item ${index + 1}`}
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${item.image}`}
               />

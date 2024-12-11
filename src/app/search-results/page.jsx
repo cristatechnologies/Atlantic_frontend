@@ -63,21 +63,31 @@ const Search = () => {
       <section className="section-search-results">
         <div className="container">
           {loading ? (
-            <div className="text-center">Loading...</div>
+            <div className="centered">
+              <div className="dot-spinner">
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+                <div className="dot-spinner__dot"></div>
+              </div>
+            </div>
           ) : error ? (
             <div className="alert alert-danger">{error}</div>
           ) : (
             <>
-              <p className="mb-4">
+              <p className="mb-5 mt-5">
                 Search Results for:{" "}
                 <span className="">
-                  "{query} in  {location}"
+                  "{query} in {location}"
                 </span>
-              
               </p>
               {searchResults.length === 0 ? (
-                <div>
-                  <div className="alert alert-info">No results found.</div>
+                <div className="mb-5">
+                  <div className="alert alert-info ">No results found.</div>
                   <Link className="btn btn-primary" href={"/"}>
                     Back to Home
                   </Link>
@@ -104,52 +114,58 @@ const Search = () => {
                                 alt={business.name}
                               />
                             </Link>
-                            {/* <div className="fav-item">
-                              <Link href="#" className="fav-icon">
-                                <i className="feather-heart"></i>
-                              </Link>
-                            </div> */}
                           </div>
                           <div className="bloglist-content">
                             <div className="card-body">
-                              <div className="blogfeaturelink">
-                                {/* <div className="blog-features text-black">
-                                  <span>
-                                    <i className="fa-regular fa-circle-stop"></i>{" "}
-                                    {business.business_category.name}
-                                  </span>
-                                </div> */}
-                              </div>
                               <h6 className="text-black">
-                                <Link href={`/business-details/${business.slug}`}>
+                                <Link
+                                  href={`/business-details/${business.slug}`}
+                                >
                                   {business.name}
                                 </Link>
                               </h6>
-                              <div className="blog-location-details text-black">
+
+                              {/* Address section */}
+                              {(business.business_city?.name ||
+                                business.business_state?.name) && (
                                 <div className="location-info">
                                   <i className="feather-map-pin"></i>{" "}
-                                  {business.address}
+                                  {business.business_city?.name && (
+                                    <>
+                                      {business.business_city.name}
+                                      {business.business_state?.name && ", "}
+                                    </>
+                                  )}
+                                  {business.business_state?.name &&
+                                    business.business_state.name}
                                 </div>
-                                {/* <div className="location-info">
-                                  <i className="fa-solid fa-calendar-days"></i>{" "}
-                                  {new Date(
-                                    business.created_at
-                                  ).toLocaleDateString()}
-                                </div> */}
-                              </div>
-                              <p className="text-black mt-2">
-                                {business.description}
-                              </p>
-                              <div className="blog-location-details text-black">
-                                <div className="location-info">
-                                  <i className="feather-user"></i>{" "}
-                                  {business.contact_person_name}
+                              )}
+
+                              {/* Description section */}
+                              {business.description && (
+                                <p className="text-black mt-2">
+                                  {business.description}
+                                </p>
+                              )}
+
+                              {/* Contact Person */}
+                              {(business.contact_person_name ||
+                                business.contact_person_number) && (
+                                <div className="blog-location-details text-black">
+                                  {business.contact_person_name && (
+                                    <div className="location-info">
+                                      <i className="feather-user"></i>{" "}
+                                      {business.contact_person_name}
+                                    </div>
+                                  )}
+                                  {business.contact_person_number && (
+                                    <div className="location-info">
+                                      <i className="feather-phone"></i>{" "}
+                                      {business.contact_person_number}
+                                    </div>
+                                  )}
                                 </div>
-                                <div className="location-info">
-                                  <i className="feather-phone"></i>{" "}
-                                  {business.contact_person_number}
-                                </div>
-                              </div>
+                              )}
                             </div>
                           </div>
                         </div>

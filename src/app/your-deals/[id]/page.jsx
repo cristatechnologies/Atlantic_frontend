@@ -87,7 +87,20 @@ const EditOfferPage = ({ params }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="centered">
+        <div className="dot-spinner">
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -28,7 +28,20 @@ const Dashboard = () => {
 
   if (userType === null) {
     // Loading state
-    return <div className="mt-lg-5 pt-5">Loading...</div>;
+    return (
+      <div className="centered">
+        <div className="dot-spinner">
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+          <div className="dot-spinner__dot"></div>
+        </div>
+      </div>
+    );
   }
   if (userType === "invalid") {
     toast.error("Invalid user! Please Login Again ");

@@ -26,61 +26,63 @@ import { toast } from "react-toastify";
 import { RWebShare } from "react-web-share";
 import Head from "next/head";
 
-
-const ServiceDetails = ({ data, }) => {
+const ServiceDetails = ({ data, slug }) => {
   const pathname = usePathname();
- const [fullUrl,setFullUrl] = useState("");
+  const [fullUrl, setFullUrl] = useState("");
 
-
-  console.log(pathname)
+  console.log(pathname);
   console.log(data);
-  const [isFavorite, setIsFavorite] = useState(data.like === 1);
+  const [isFavorite, setIsFavorite] = useState(data.like );
   const [totalLikes, setTotalLikes] = useState(data.total_likes);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
-    const [formData, setFormData] = useState({
-      name: "",
-      email: "",
-      message: "",
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [hasReviewed,setHasReviewed] = useState(0)
+  const [authToken, setAuthToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+const [totalViews,setTotalViews]=useState()
+  useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
+    setAuthToken(token);
+
+    const url = token
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}?token=${token}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`;
+    axios.get(url).then((res) => {
+      console.log(res?.data);
+      setHasReviewed(res?.data?.has_reviewed);
+      setTotalViews(res?.data?.views)
+      setIsFavorite(res?.data?.like)
+      
+      
     });
-    const [authToken,setAuthToken] = useState(null)
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
 
-
-
-  useEffect(()=>
-  {
     setFullUrl(window.location.href);
-  })
+  },[]);
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      console.log("Input changed:", name, value); // Debug log
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log("Input changed:", name, value); // Debug log
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-
-console.log(fullUrl)
-
-    useEffect(()=>
-    {
-        const auth = JSON.parse(localStorage.getItem("auth"));
-        const token = auth?.access_token;
-    setAuthToken(token)
-      })
-
+  console.log(fullUrl);
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
     const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.access_token;
-
 
     try {
       const payload = {
@@ -97,6 +99,7 @@ console.log(fullUrl)
       // Clear form after successful submission
       setReview("");
       setRating(0);
+      toast.success("review added successfully");
 
       // You might want to refresh the reviews list here
       // or show a success message
@@ -106,22 +109,19 @@ console.log(fullUrl)
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
     setSuccess(false);
 
-    setFormData
+    setFormData;
 
-    
-    console.log(formData)
-// const payload = JSON.stringify(formData)
+    console.log(formData);
+    // const payload = JSON.stringify(formData)
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/send-contact-message?name=${formData.name}&email=${formData.email}&message=${formData.message}`,
-        
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/send-contact-message?name=${formData.name}&email=${formData.email}&message=${formData.message}`
       );
 
       if (response.data && response.status === 200) {
@@ -130,12 +130,9 @@ console.log(fullUrl)
         setSuccess(true);
         setFormData({ name: "", email: "", message: "" }); // Reset form
         toast.success("Form Submitted Successfully");
-        
+      } else {
+        toast.error(response.status);
       }
-else{
-  toast.error(response.status);
-}
-      
     } catch (error) {
       console.error("Error submitting form:", error);
       setError(error.message);
@@ -184,7 +181,7 @@ else{
                 <nav aria-label="breadcrumb" className="page-breadcrumb">
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <Link href="index.html">Home</Link>
+                      <Link href="/">Home</Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
                       {data.name}
@@ -266,7 +263,7 @@ else{
                   </li>
                   <li>
                     <Link href="#">
-                      <i className="feather-eye" /> {data.views || 0} Views
+                      <i className="feather-eye" /> {totalViews} Views
                     </Link>
                   </li>
 
@@ -383,66 +380,66 @@ else{
 
                       {/* form   */}
 
-                      {authToken ? (
+                      {hasReviewed === 0 ? (
                         <li className="review-box feedbackbox mb-0">
                           <div className="review-details">
                             <h6>
-                              {" "}
                               <i className="feather-message-circle" /> Write a
                               Review
                             </h6>
                           </div>
                           <div className="card-body">
-                            <form onSubmit={handleReviewSubmit}>
-                              <div className="form-group">
-                                <textarea
-                                  rows={4}
-                                  className="form-control"
-                                  placeholder="Write a Review*"
-                                  required
-                                  value={review}
-                                  onChange={(e) => setReview(e.target.value)}
-                                />
-                              </div>
-                              <div className="reviewbox-rating">
-                                <p>
-                                  <span>Rating</span>
-                                  <div className="star-rating">
-                                    <StarRatings
-                                      rating={rating}
-                                      starRatedColor="#FFD700"
-                                      changeRating={(newRating) =>
-                                        setRating(newRating)
-                                      }
-                                      numberOfStars={5}
-                                      name="rating"
-                                      starDimension="20px"
-                                      starSpacing="2px"
-                                    />
-                                  </div>
-                                </p>
-                              </div>
-                              <div className="submit-section">
-                                <button
-                                  className="btn btn-primary submit-btn"
-                                  type="submit"
-                                  disabled={!rating || !review}
-                                >
-                                  Submit Review
-                                </button>
-                              </div>
-                            </form>
+                            {authToken ? (
+                              <form onSubmit={handleReviewSubmit}>
+                                <div className="form-group">
+                                  <textarea
+                                    rows={4}
+                                    className="form-control"
+                                    placeholder="Write a Review*"
+                                    required
+                                    value={review}
+                                    onChange={(e) => setReview(e.target.value)}
+                                  />
+                                </div>
+                                <div className="reviewbox-rating">
+                                  <>
+                                    <span>Rating</span>
+                                    <div className="star-rating">
+                                      <StarRatings
+                                        rating={rating}
+                                        starRatedColor="#FFD700"
+                                        changeRating={(newRating) =>
+                                          setRating(newRating)
+                                        }
+                                        numberOfStars={5}
+                                        name="rating"
+                                        starDimension="20px"
+                                        starSpacing="2px"
+                                      />
+                                    </div>
+                                  </>
+                                </div>
+                                <div className="submit-section">
+                                  <button
+                                    className="btn btn-primary submit-btn"
+                                    type="submit"
+                                    disabled={!rating || !review}
+                                  >
+                                    Submit Review
+                                  </button>
+                                </div>
+                              </form>
+                            ) : (
+                              <h6>
+                                <Link href="/login">
+                                  <mark>Login</mark>
+                                </Link>{" "}
+                                to Add Your Review
+                              </h6>
+                            )}
                           </div>
                         </li>
-                      ) : (
-                        <h6>
-                          {" "}
-                          <Link href="/login">
-                            <mark>Login</mark>
-                          </Link>{" "}
-                          to Add Your Review
-                        </h6>
-                      )}
+                      ) : null}
                     </ul>
                   </div>
                 </div>
@@ -481,67 +478,91 @@ else{
                         )}
                       </div>
                       <ul className="info-list">
-                        <li>
-                          <i className="feather-map-pin" />
-                          {data.address}
-                          <br />
-                        </li>
-                        <li>
-                          <a href={`tel:${data?.contact_person_number}`}>
-                            <i className="feather-phone-call" />
-                            {data.contact_person_number}
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href={`mailto:${data?.contact_person_email}`}
-                            className="text-truncate"
-                          >
-                            <i className="feather-mail " />{" "}
-                            {data.contact_person_email}
-                          </a>
-                        </li>
-                        <li>
-                          <Link
-                            href={`${data?.website}`}
-                            className="text-truncate"
-                          >
-                            <img src="/img/website.svg" alt="website" />{" "}
-                            {data?.website}
-                            {/* www.listee.com */}
-                          </Link>
-                        </li>
-                        <li className="socialicons pb-0">
-                          <Link
-                            href={`https://${data?.facebook}`}
-                            target="_blank"
-                          >
-                            <FontAwesomeIcon icon="fab fa-facebook" />
-                          </Link>
-
-                          <a href={`https://${data?.twitter}`} target="_blank">
-                            <FontAwesomeIcon icon="fab fa-instagram" />
-                          </a>
-
-                          <Link
-                            href={`https://${data?.linkedin}`}
-                            target="_blank"
-                          >
-                            <FontAwesomeIcon icon="fab fa-twitter" />
-                          </Link>
-                          <Link
-                            href={`https://${data?.instagram}`}
-                            target="_blank"
-                          >
-                            <FontAwesomeIcon icon="fab fa-linkedin" />
-                          </Link>
-                          <Link
-                            href={`https://${data?.youtube}`}
-                            target="_blank"
-                          >
-                            <FontAwesomeIcon icon="fab fa-youtube" />
-                          </Link>
-                        </li>
+                        {data.address && (
+                          <li>
+                            <i className="feather-map-pin" />
+                            {data.address}
+                            <br />
+                          </li>
+                        )}
+                        {data.contact_person_number && (
+                          <li>
+                            <a href={`tel:${data.contact_person_number}`}>
+                              <i className="feather-phone-call" />
+                              {data.contact_person_number}
+                            </a>
+                          </li>
+                        )}
+                        {data.contact_person_email && (
+                          <li>
+                            <a
+                              href={`mailto:${data.contact_person_email}`}
+                              className="text-truncate"
+                            >
+                              <i className="feather-mail" />{" "}
+                              {data.contact_person_email}
+                            </a>
+                          </li>
+                        )}
+                        {data.website && (
+                          <li>
+                            <Link
+                              href={`${data.website}`}
+                              className="text-truncate"
+                            >
+                              <img src="/img/website.svg" alt="website" />{" "}
+                              {data.website}
+                            </Link>
+                          </li>
+                        )}
+                        {(data.facebook ||
+                          data.twitter ||
+                          data.linkedin ||
+                          data.instagram ||
+                          data.youtube) && (
+                          <li className="socialicons pb-0">
+                            {data.facebook && (
+                              <Link
+                                href={`https://${data.facebook}`}
+                                target="_blank"
+                              >
+                                <FontAwesomeIcon icon={faFacebookF} />
+                              </Link>
+                            )}
+                            {data.twitter && (
+                              <a
+                                href={`https://${data.twitter}`}
+                                target="_blank"
+                              >
+                                <FontAwesomeIcon icon={faTwitter} />
+                              </a>
+                            )}
+                            {data.instagram && (
+                              <Link
+                                href={`https://${data.instagram}`}
+                                target="_blank"
+                              >
+                                <FontAwesomeIcon icon={faInstagram} />
+                              </Link>
+                            )}
+                            {data.linkedin && (
+                              <Link
+                                href={`https://${data.linkedin}`}
+                                target="_blank"
+                              >
+                                <FontAwesomeIcon icon={faLinkedinIn} />
+                              </Link>
+                            )}
+                            {data.youtube && (
+                              <Link
+                                href={`https://${data.youtube}`}
+                                target="_blank"
+                              >
+                                <FontAwesomeIcon icon="fab fa-youtube" />
+                              </Link>
+                            )}
+                          </li>
+                        )}
                       </ul>
                     </div>
                   </div>

@@ -140,13 +140,15 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                   </span>
                                 </Link>
                               </div>
-                              <div className="blog-author text-end">
-                                <span>
-                                  {" "}
-                                  <MdAppRegistration />
-                                  {item.reg_no}
-                                </span>
-                              </div>
+                              {item.reg_no && (
+                                <div className="blog-author text-end">
+                                  <span>
+                                    {" "}
+                                    <MdAppRegistration />
+                                    {item.reg_no}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                             <h6>
                               <Link href={`business-details/${item.slug}`}>
@@ -154,13 +156,21 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                               </Link>
                             </h6>
                             <div className="blog-location-details">
-                              <div className="location-info">
-                                <>
+                              {(item.business_city?.name ||
+                                item.business_state?.name) && (
+                                <div className="location-info">
                                   <i className="feather-map-pin"></i>{" "}
-                                  {item.business_city?.name},{" "}
-                                  {item.business_state?.name}
-                                </>
-                              </div>
+                                  {item.business_city?.name && (
+                                    <>
+                                      {item.business_city.name}
+                                      {item.business_state?.name && ", "}
+                                    </>
+                                  )}
+                                  {item.business_state?.name &&
+                                    item.business_state.name}
+                                </div>
+                              )}
+
                               {/* <div className="location-info"> */}
                               {/* <i className="fa-regular fa-calendar-days"></i>{" "} */}
                               {/* 06 Oct, 2022

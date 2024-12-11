@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+'use client'
+import React, { useState, useRef, useEffect } from "react";
 
 export default function LocationInput({
   onLocationChange,
@@ -8,6 +9,11 @@ export default function LocationInput({
   const [inputValue, setInputValue] = useState(selectedLocation || "");
   const [isLocationBlocked, setIsLocationBlocked] = useState(false);
   const inputRef = useRef(null);
+
+
+   useEffect(() => {
+     setInputValue(selectedLocation || "");
+   }, [selectedLocation]);
 
   const getUserLocation = () => {
     if ("geolocation" in navigator) {
