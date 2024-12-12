@@ -35,28 +35,13 @@ const FaqComponent = () => {
   return (
     <>
       {/* Breadscrumb Section */}
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Frequently Asked Questions</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="index.html">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    FAQ
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
+
       {/* /Breadscrumb Section */}
       {/* FAQ Section */}
-      <section className="faq-section">
+      <section
+        className="faq-section"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="faq-info">
             <div className="page-title">

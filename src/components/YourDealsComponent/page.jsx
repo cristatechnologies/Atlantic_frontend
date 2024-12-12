@@ -82,7 +82,7 @@ const YourDealsComponent = () => {
   };
   const handleEdit = (id) => {
     router.push({
-      pathname: "/your-deals/[id]",
+      pathname: "/your-offers/[id]",
       query: { id: id },
     });
   };
@@ -149,26 +149,10 @@ const YourDealsComponent = () => {
 
   return (
     <>
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-12">
-              <h2 className="breadcrumb-title">Your Deals</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    your-deals
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="search-btn px-4">
           <button
             className="btn btn-primary w-full sm:w-auto"
@@ -227,7 +211,7 @@ const YourDealsComponent = () => {
                           />
                         </div>
                         <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
-                          <Link href={`/your-deals/${offer.id}`}>
+                          <Link href={`/your-offers/${offer.id}`}>
                             <button className="btn btn-sm btn-primary action-button">
                               <i className="feather-edit" />
                             </button>

@@ -121,7 +121,7 @@ const Header = ({ parms }) => {
                 <Link href="/" className="menu-logo">
                   <img
                     src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                    style={{ maxWidth: "100%", height: "auto" }}
+                    style={{ width: "88px", height: "auto" }}
                     alt="Logo"
                   />
                 </Link>
@@ -206,10 +206,10 @@ const Header = ({ parms }) => {
                         </li>
                         <li>
                           <Link
-                            href="/your-deals"
+                            href="/your-offers"
                             onClick={handleMobileMenuItemClick}
                           >
-                            <i className="fas fa-handshake"></i> Your Deals
+                            <i className="fas fa-handshake"></i> Your Offers
                           </Link>
                         </li>
                       </ul>
@@ -308,12 +308,11 @@ const Header = ({ parms }) => {
                 </span>
               </Link>
               <Link href="/" className="">
-                <Image
+                <img
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                   alt="logo"
-                  width="270"
-                  height="65"
-                  objectFit="scale-down"
+                  className="headerLogo"
+                
                 />
               </Link>
             </div>
@@ -422,10 +421,10 @@ const Header = ({ parms }) => {
                       </Link>
                       <Link
                         className="dropdown-item"
-                        href="/your-deals"
+                        href="/your-offers"
                         onClick={handleMobileMenuItemClick}
                       >
-                        Your Deals{" "}
+                        Your Offers{" "}
                       </Link>
                       <Link
                         className="dropdown-item"

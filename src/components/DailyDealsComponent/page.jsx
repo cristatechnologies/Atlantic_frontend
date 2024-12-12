@@ -48,7 +48,7 @@ const DailyDealsComponent = () => {
 
   return (
     <>
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
@@ -66,7 +66,7 @@ const DailyDealsComponent = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="list-content">
         <div className="container">
           <div className="row row-cols-1 row-cols-md-3 g-4">

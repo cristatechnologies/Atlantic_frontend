@@ -50,7 +50,28 @@ const business = () => {
   const [showMultiCitySelect, setShowMultiCitySelect] = useState(false);
   const [zipCodeValidationError, setZipCodeValidationError] = useState("");
   const [isValidZipCode, setIsValidZipCode] = useState(false);
+const [isCityCustom, setIsCityCustom] = useState(false);
+const [customCityName, setCustomCityName] = useState("");
 
+
+const handleCityChange = (e) => {
+  const inputValue = e.target.value;
+  setcity(inputValue);
+
+  // Check if the input matches any dropdown city
+  const matchedCity = cityDropdown?.find(
+    (item) => item.name.toLowerCase() === inputValue.toLowerCase()
+  );
+
+  if (matchedCity) {
+    // If input matches a dropdown city, use its name
+    setcity(matchedCity.name);
+    setIsCityCustom(false);
+  } else {
+    // If no match, treat as custom city
+    setIsCityCustom(true);
+  }
+};
 
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
@@ -707,22 +728,22 @@ const business = () => {
                     <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
-                          <select
+                          <input
+                            type="text"
                             className="form-control"
+                            placeholder="Select or Enter City"
+                            list="cityList"
                             value={city}
-                            onChange={(e) => setcity(e.target.value)}
-                          >
-                            <option value="">Select City</option>
+                            onChange={handleCityChange}
+                          />
+                          <datalist id="cityList">
                             {cityDropdown?.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.name}
-                              </option>
+                              <option key={item.id} value={item.name} />
                             ))}
-                          </select>
+                          </datalist>
                         </div>
                       </div>
                     </div>
-
                     {/* {showMultiCitySelect && (
                       <div className="col-md-6">
                         <div className="form-group">

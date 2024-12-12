@@ -111,7 +111,7 @@ const AcitveDealsComponent = ({ pathName }) => {
   }
   return (
     <>
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
@@ -132,8 +132,11 @@ const AcitveDealsComponent = ({ pathName }) => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="my-3 sm:my-5">
+      </div> */}
+      <div
+        className="my-3 sm:my-5"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container card">
           <div className="row">
             <div className="col-md-6 h-auto">
@@ -157,7 +160,7 @@ const AcitveDealsComponent = ({ pathName }) => {
                   <ul className="d-flex align-items-center  justify-content-center justify-content-lg-start">
                     <li>
                       <Link className="pe-auto  " href="#">
-                        <div className="d-flex align-items-center justify-content-center w-100" >
+                        <div className="d-flex align-items-center justify-content-center w-100">
                           <RWebShare
                             data={{
                               text: "Look i got a Great Business from IndoAtlantic !!",

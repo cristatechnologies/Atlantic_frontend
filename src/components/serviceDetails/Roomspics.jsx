@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { SlideshowLightbox } from "lightbox.js-react";
-import "lightbox.js-react/dist/index.css";
+
 
 const Roomspics = ({ images }) => {
   // Check if images is defined and an array
@@ -13,14 +13,15 @@ const Roomspics = ({ images }) => {
   return (
     <div className="row">
       {images.map((item, index) => (
-        <div className="col-lg-4 col-md-3 col-sm-3" key={index}>
+        <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
           <div className="review-gallery">
             <SlideshowLightbox>
               <img
-                className="img-fluid"
-           
+                // className="img-fluid"
+                className="gallery-Image"
                 alt={`Gallery item ${index + 1}`}
                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${item.image}`}
+                style={{height:"auto"}}
               />
             </SlideshowLightbox>
             {/* {console.log(

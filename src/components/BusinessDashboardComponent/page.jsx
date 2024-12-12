@@ -75,28 +75,12 @@ const BusinessDashboardComponent = () => {
 
   return (
     <>
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Dashboard</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Dashboard
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
       {/* /Breadscrumb Section */}
       {/* Dashboard Content */}
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="">
             <ul className="dashborad-menus">
@@ -111,8 +95,8 @@ const BusinessDashboardComponent = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/your-deals">
-                  <i className="feather-list" /> <span>Your Deals</span>
+                <Link href="/your-offers">
+                  <i className="feather-list" /> <span>Your Offers</span>
                 </Link>
               </li>
               <li>

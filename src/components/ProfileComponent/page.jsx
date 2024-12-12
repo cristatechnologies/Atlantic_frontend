@@ -339,29 +339,14 @@ const ProfileComponent = () => {
   return (
     <>
       {/* Breadscrumb Section */}
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Profile</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Profile
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
+
       {/* /Breadscrumb Section */}
 
       {/* Profile Content */}
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="profile-content">
             <div className="row dashboard-info">
@@ -525,7 +510,9 @@ const ProfileComponent = () => {
 
                           {/* Line 1 */}
                           <div className="col-md-6 form-group">
-                            <label className="col-form-label">Address Line 1</label>
+                            <label className="col-form-label">
+                              Address Line 1
+                            </label>
                             <div className="pass-group group-img">
                               <span className="lock-icon">
                                 <i className="feather-home" />
@@ -540,7 +527,9 @@ const ProfileComponent = () => {
                           </div>
                           {/* Line 2 */}
                           <div className="col-md-6 form-group">
-                            <label className="col-form-label">Address Line 2</label>
+                            <label className="col-form-label">
+                              Address Line 2
+                            </label>
                             <div className="pass-group group-img">
                               <span className="lock-icon">
                                 <i className="feather-home" />

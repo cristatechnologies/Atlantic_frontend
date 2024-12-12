@@ -94,7 +94,7 @@ const CustomSlugComponent = ({ pathName }) => {
         metaKeyword={metaDetails.meta_keyword}
       />
       {/* Breadcrumb Section */}
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
@@ -112,11 +112,14 @@ const CustomSlugComponent = ({ pathName }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* /Breadcrumb Section */}
 
       {/* Content Section */}
-      <div className="terms-content">
+      <div
+        className="terms-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="row">
             <div className="terms-info">

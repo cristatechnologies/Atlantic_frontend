@@ -14,47 +14,33 @@ const CategoryComponent = () => {
     return (
       <>
         {/* Breadscrumb Section */}
-        <div className="breadcrumb-bar">
-          <div className="container">
-            <div className="row align-items-center text-center">
-              <div className="col-md-12 col-12">
-                <h2 className="breadcrumb-title">Listings-Categories</h2>
-                <nav aria-label="breadcrumb" className="page-breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <Link href="/">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      Categories
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-        <div className="category-section">
+
+        <div
+          className="category-section"
+          style={{ paddingTop: "170px", paddingBottom: "90px" }}
+        >
           <div className="container">
             <div className="row">
               {websiteSetup?.businessCategories &&
                 websiteSetup?.businessCategories.map((item, i) => (
                   <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
-                    <Link href={`/categories/${item.id}`} className="category-links">
+                    <Link
+                      href={`/categories/${item.id}`}
+                      className="category-links"
+                    >
                       <h5>{item.name}</h5>
                       <Image
                         src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
                         alt="icons"
                         height={110}
-                        width={110}     
-                                         />
+                        width={110}
+                      />
                     </Link>
                   </div>
                 ))}
             </div>
           </div>
         </div>
-       
       </>
     );
 }

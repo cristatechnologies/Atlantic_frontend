@@ -173,24 +173,8 @@ const [totalViews,setTotalViews]=useState()
           />
         </div>
       ) : (
-        <div className="breadcrumb-bar">
-          <div className="container">
-            <div className="row align-items-center text-center">
-              <div className="col-md-12 col-12">
-                <h2 className="breadcrumb-title"> {data.name}</h2>
-                <nav aria-label="breadcrumb" className="page-breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <Link href="/">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      {data.name}
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-            </div>
-          </div>
+        <div     style={{ paddingTop: "170px", paddingBottom: "90px" }}>
+          
         </div>
       )}
       {/* {showFancyBox && <PhotoAlbum photos={imagess} layout="rows" />} */}

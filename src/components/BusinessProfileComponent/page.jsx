@@ -32,7 +32,8 @@ const BusinessProfileComponent = () => {
   const [categories, setCategories] = useState([]);
   const [productTags, setProductTags] = useState([]);
   const tagifyRef = useRef(null);
-
+const [customCityName, setCustomCityName] = useState("");
+const [isCityCustom, setIsCityCustom] = useState(false);
   const [tags, setTags] = useState([]);
 
   const handleTagChange = (newTags) => {
@@ -72,6 +73,24 @@ const BusinessProfileComponent = () => {
       setSelectedCity(profileData.city_id);
     }
   }, [profileData]);
+
+
+   const handleCityChange = (e) => {
+     const inputValue = e.target.value;
+
+     // Check if the input matches any dropdown city
+     const matchedCity = cityDropdown.find(
+       (item) => item.name.toLowerCase() === inputValue.toLowerCase()
+     );
+
+     if (matchedCity) {
+       // If input matches a dropdown city, use its ID as city_id
+       setSelectedCity(matchedCity.id.toString());
+     } else {
+       // If no match, use the input value as city_id
+       setSelectedCity(inputValue);
+     }
+   };
 
   useEffect(() => {
     const authData = JSON.parse(localStorage.getItem("auth"));
@@ -122,6 +141,11 @@ const BusinessProfileComponent = () => {
     const formData = new FormData(formRef.current);
 
     formData.append("products", productTags.join(","));
+
+
+     if (selectedCity) {
+       formData.set("city_id", selectedCity);
+     }
 
     const authData = JSON.parse(localStorage.getItem("auth"));
     const token = authData?.access_token;
@@ -240,7 +264,10 @@ const BusinessProfileComponent = () => {
     <>
       {/* ... (keep the breadcrumb section) */}
 
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="profile-content">
             <div className="row dashboard-info">
@@ -398,7 +425,6 @@ const BusinessProfileComponent = () => {
                             ></input>
                           </div>
                         </div>
-
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">
                             Address Line 1
@@ -415,7 +441,6 @@ const BusinessProfileComponent = () => {
                             />
                           </div>
                         </div>
-
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">
                             Address Line 2
@@ -432,7 +457,6 @@ const BusinessProfileComponent = () => {
                             />
                           </div>
                         </div>
-
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">Zip Code</label>
                           <div className="pass-group group-img">
@@ -447,7 +471,6 @@ const BusinessProfileComponent = () => {
                             />
                           </div>
                         </div>
-
                         {/* country */}
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">Country</label>
@@ -496,24 +519,31 @@ const BusinessProfileComponent = () => {
                         {/* city */}
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">City</label>
-                          <div className="pass-group group-img">
+                          <div className="pass-group group-img d-flex align-items-center">
                             <span className="lock-icon">
                               <i className="feather-map-pin" />
                             </span>
-                            <select
+                            <input
+                              type="text"
                               className="form-control"
+                              placeholder="Select or Enter City"
+                              list="cityList"
                               name="city_id"
-                              value={selectedCity}
-                              onChange={(e) => setSelectedCity(e.target.value)}
-                              disabled={!selectedState}
-                            >
-                              <option value="">Select City</option>
+                              value={
+                                selectedCity
+                                  ? cityDropdown.find(
+                                      (city) =>
+                                        city.id.toString() === selectedCity
+                                    )?.name || selectedCity
+                                  : ""
+                              }
+                              onChange={handleCityChange}
+                            />
+                            <datalist id="cityList">
                               {cityDropdown.map((city) => (
-                                <option key={city.id} value={city.id}>
-                                  {city.name}
-                                </option>
+                                <option key={city.id} value={city.name} />
                               ))}
-                            </select>
+                            </datalist>
                           </div>
                         </div>
                         {/* business category */}
@@ -734,7 +764,6 @@ const BusinessProfileComponent = () => {
                             />
                           </div>
                         </div>
-
                         {/* Add more fields as needed */}
                       </div>
 

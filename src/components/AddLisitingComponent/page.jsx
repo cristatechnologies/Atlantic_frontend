@@ -20,7 +20,7 @@ const AddListingComponent = () => {
     <>
       {/* <UserHeader parms={parms}/> */}
       {/* Breadscrumb Section */}
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
@@ -38,7 +38,7 @@ const AddListingComponent = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* /Breadscrumb Section */}
       {/* Profile Content */}
       <div className="dashboard-content">
