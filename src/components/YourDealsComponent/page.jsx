@@ -129,11 +129,10 @@ const YourDealsComponent = () => {
         formData
       );
 
-      console.log(res)
+      console.log(res);
       toast.success(res.data.notification);
       setOffers(res.data.dailyOffers);
       setModalIsOpen(false);
-     
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
         // Handle validation errors
@@ -199,8 +198,13 @@ const YourDealsComponent = () => {
                           />
                         </div>
                         <div className="col-12 col-md-5 mb-3 mb-md-0 text-center text-md-start">
-                          <h5 className="mb-1">{offer.title}</h5>
-                          <p className="mb-0 small">{offer.description}</p>
+                          <Link href={`/active-offers/${offer.slug}`}>
+                            <>
+                              <h5 className="mb-1">{offer.title}</h5>
+
+                              <p className="mb-0 small">{offer.description}</p>
+                            </>
+                          </Link>
                         </div>
                         <div className="col-12 col-md-3 mb-3 mb-md-0 text-center">
                           <Switch

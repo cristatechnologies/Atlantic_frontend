@@ -47,7 +47,10 @@ const ServiceDetails = ({ data, slug }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 const [totalViews,setTotalViews]=useState()
-  useEffect(() => {
+ 
+
+
+useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.access_token;
     setAuthToken(token);
@@ -332,8 +335,10 @@ const [totalViews,setTotalViews]=useState()
                                     review.user.image
                                       ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
                                       : "/img/pngegg.png"
+
                                   }
-                                  className="img-fluid"
+                                  height={70}
+                                  width={70}                                  
                                   alt="Profile"
                                 />
                               </div>

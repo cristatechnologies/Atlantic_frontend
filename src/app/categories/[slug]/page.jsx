@@ -7,18 +7,21 @@ import axios from "axios";
 import categories from "../page";
 
 const CategoryPage = ({ params }) => {
-  const { id } = params;
+  const { slug } = params;
+  console.log(slug)
   const [categoryData, setCategoryData] = useState(null);
 
   useEffect(() => {
-    if (id) {
-      fetchCategoryData(id);
+    if (slug) {
+      fetchCategoryData(slug);
     }
-  }, [id]);
+  }, [slug]);
 
-  const fetchCategoryData = (categoryId) => {
+  const fetchCategoryData = (categorySlug) => {
     axios
-      .get(`https://s1.shopico.in/atlantic/api/category-list/${categoryId}`)
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/category-list/${categorySlug}`
+      )
       .then((response) => {
         setCategoryData(response.data);
         console.log("API response:", response.data);
@@ -29,7 +32,23 @@ const CategoryPage = ({ params }) => {
   };
 
   if (!categoryData) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {" "}
+        <div className="centered">
+          <div className="dot-spinner">
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+            <div className="dot-spinner__dot"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -59,7 +78,7 @@ const CategoryPage = ({ params }) => {
                   categoryData.children.map((item, i) => (
                     <div className="col-lg-3 col-md-4" key={i}>
                       <Link
-                        href={`/categories/${item.id}`}
+                        href={`/categories/${item.slug}`}
                         className="category-links"
                       >
                         <h5>{item.name}</h5>
@@ -163,7 +182,7 @@ const CategoryPage = ({ params }) => {
               </div>
             </>
           ) : (
-            <p>No business Found</p>
+            <p className="no-Data-custom">No Businesses Found</p>
           )}
         </div>
       </section>

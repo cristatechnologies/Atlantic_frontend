@@ -54,6 +54,27 @@ Version      : 1.0
 -----------------------*/
 /* From Uiverse.io by abrahamcalsin */ 
 
+
+@media(max-width:450px)
+{
+
+  .display-screen-size{
+    display:none;
+  }
+}
+
+
+.no-Data-custom
+{
+  height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:40px;
+  
+}
+
 .headerLogo
 {
   
@@ -61,11 +82,17 @@ Version      : 1.0
 
 }
 
-@media (min-width: 768px) {
+@media (min-width: 850px) {
   .headerLogo {
      width: 600px;
   }
 }
+@media (min-width: 600px) {
+  .headerLogo {
+     width: 350px;
+  }
+}
+
 
 
 

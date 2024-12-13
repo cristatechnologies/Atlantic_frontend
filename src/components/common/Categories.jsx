@@ -57,7 +57,7 @@ const Categories = ({ activeMenu }) => {
         >
           {websiteData?.businessCategories.map((item, index) => (
             <li key={index}>
-              <Link onClick={handleItemClick} href={`/categories/${item.id}`}>
+              <Link onClick={handleItemClick} href={`/categories/${item.slug}`}>
                 {item.name}
               </Link>
             </li>

@@ -25,7 +25,7 @@ const CategoryComponent = () => {
                 websiteSetup?.businessCategories.map((item, i) => (
                   <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
                     <Link
-                      href={`/categories/${item.id}`}
+                      href={`/categories/${item.slug}`}
                       className="category-links"
                     >
                       <h5>{item.name}</h5>

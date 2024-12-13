@@ -8,8 +8,6 @@ import { MdAppRegistration } from "react-icons/md";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
-
 export default function Carousel({ businessData, color, textColor, Heading }) {
   const [error, setError] = useState(null);
 
@@ -38,16 +36,15 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
       {
         breakpoint: 768, // At screen width of 768px and below
         settings: {
-          slidesToShow: 2, // Show 1 slide
+          slidesToShow: 3, // Show 1 slide
         },
       },
       {
         breakpoint: 450, // At screen width of 768px and below
         settings: {
-          slidesToShow: 1, // Show 1 slide
+          slidesToShow: 2, // Show 1 slide
         },
       },
-      
     ],
   };
 
@@ -131,7 +128,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                   alt="author"
                                 />
                               </div>
-                              <div className="blog-features">
+                              <div className="blog-features display-screen-size">
                                 <Link href={`business-details/${item.slug}`}>
                                   <span>
                                     {" "}
@@ -140,15 +137,17 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                   </span>
                                 </Link>
                               </div>
-                              {item.reg_no && (
-                                <div className="blog-author text-end">
-                                  <span>
-                                    {" "}
-                                    <MdAppRegistration />
-                                    {item.reg_no}
-                                  </span>
-                                </div>
-                              )}
+                              <div className="display-screen-size">
+                                {item.reg_no && (
+                                  <div className="blog-author text-end ">
+                                    <span>
+                                      {" "}
+                                      <MdAppRegistration />
+                                      {item.reg_no}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                             <h6>
                               <Link href={`business-details/${item.slug}`}>

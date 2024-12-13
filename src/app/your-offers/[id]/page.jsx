@@ -104,7 +104,7 @@ const EditOfferPage = ({ params }) => {
   }
 
   return (
-    <div className="container mt-3">
+    <div className="container mt-3" style={{paddingTop:"170px",paddingBottom:"90px"}}>
       <h1 className="mb-4">Edit Offer</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

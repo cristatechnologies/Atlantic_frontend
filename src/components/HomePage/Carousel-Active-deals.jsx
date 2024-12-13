@@ -41,13 +41,13 @@ export default function CarouselActiveDeals({
       {
         breakpoint: 768, // At screen width of 768px and below
         settings: {
-          slidesToShow: 2, // Show 1 slide
+          slidesToShow: 3, // Show 1 slide
         },
       },
       {
         breakpoint: 490, // At screen width of 768px and below
         settings: {
-          slidesToShow: 1, // Show 1 slide
+          slidesToShow: 2, // Show 1 slide
         },
       }
     ],
