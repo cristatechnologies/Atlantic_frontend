@@ -65,6 +65,8 @@ const Header = ({ parms }) => {
   const handleMobileMenuItemClick = () => {
     // Close both mobile dropdown and main mobile menu
     onhandleCloseMenu();
+
+    handleDropdownItemClick();
   };
   const onhandleCloseMenu = () => {
     var root = document.getElementsByTagName("html")[0];
@@ -77,6 +79,10 @@ const Header = ({ parms }) => {
   const [menu, setMenu] = useState(false);
   const toggleMobileMenu = () => {
     setMenu(!menu);
+  };
+
+  const handleDropdownItemClick = () => {
+    setDrops(false); // Close the dropdown
   };
 
   const handleLogout = async (e) => {
@@ -312,7 +318,6 @@ const Header = ({ parms }) => {
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                   alt="logo"
                   className="headerLogo"
-                
                 />
               </Link>
             </div>
@@ -428,6 +433,13 @@ const Header = ({ parms }) => {
                       </Link>
                       <Link
                         className="dropdown-item"
+                        href="/change-password"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Change Password{" "}
+                      </Link>
+                      <Link
+                        className="dropdown-item"
                         href="#"
                         onClick={handleLogout}
                       >
@@ -478,6 +490,13 @@ const Header = ({ parms }) => {
                         onClick={handleMobileMenuItemClick}
                       >
                         Profile Settings
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/change-passsword"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Change Password 
                       </Link>
                       <Link
                         className="dropdown-item"

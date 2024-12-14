@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { MultiSelect } from "react-multi-select-component";
-
+import FcmTokenComp from "@/lib/firebaseForeground";
 
 
 const business = () => {
@@ -162,6 +162,8 @@ const handleCityChange = (e) => {
 
   const doSignUp = async () => {
     try {
+      const fcmToken = localStorage.getItem("fcmToken");
+      const token = fcmToken;
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
         {
@@ -172,6 +174,7 @@ const handleCityChange = (e) => {
           business_category_id: selectedCategoryId,
           // address: address,
           state_id: state,
+          fcm_token:token,
           // display_name: dname,
            reg_no: regno,
           city_id: city,
@@ -327,7 +330,7 @@ const handleCityChange = (e) => {
       </div> */}
       {/* /Breadscrumb Section */}
       {/* Login Section */}
-
+      <FcmTokenComp />
       <div
         className="login-content"
         style={{

@@ -23,7 +23,7 @@ export default function CarouselActiveDeals({
     infinite: true,
     lazyLoad: true,
     speed: 1000,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     responsive: [
       {
@@ -107,7 +107,7 @@ export default function CarouselActiveDeals({
                     <div className="card aos" data-aos="fade-up " key={index}>
                       <div className="blog-widget">
                         <Link href={`/active-offers/${offer.slug}`}>
-                          <div className="blog-img">
+                          <div className="blog-img d-flex justify-content-center">
                             <img
                               src={`${
                                 process.env.NEXT_PUBLIC_BASE_URL + offer.image

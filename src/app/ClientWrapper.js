@@ -3,8 +3,16 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setupAction } from "@/store/websiteSetup";
+import { FirebaseError } from "firebase/app";
+import { getMessaging, onMessage } from "firebase/messaging";
+import FcmTokenComp from "../lib/firebaseForeground";
+
+
 export default function ClientWrapper({ children }) {
   const dispatch = useDispatch();
+
+
+
 
   useEffect(() => {
     console.log(`${process.env.NEXT_PUBLIC_BASE_URL}api/website-setup`)

@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
 import { SuccessImg } from "@/components/imagepath";
-
+import FcmTokenComp from "@/lib/firebaseForeground";
 
 
 
@@ -169,7 +169,9 @@ const router = useRouter();
   };
    const doSignUp = async () => {
      try {
-       const response = await axios.post(
+       const fcmToken = localStorage.getItem("fcmToken");
+       const token = fcmToken;
+      await axios.post(
          `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
          {
            name: fname,
@@ -189,6 +191,7 @@ const router = useRouter();
            country_id: 43,       
            origin_country_id: originCountry,
            origin_state_id: originState,
+           fcm_token:token,
          }
        ).then((res)=>
       {
@@ -293,6 +296,7 @@ const router = useRouter();
           padding: "20px 0",
         }}
       > */}
+      <FcmTokenComp />
       <div
         className="login-content"
         style={{

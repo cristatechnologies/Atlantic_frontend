@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const LetUsKnow = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -12,7 +13,7 @@ const LetUsKnow = () => {
     link: "",
     screenshot: null,
   });
-  const [toast, setToast] = useState({ show: false, message: "", type: "" });
+
 
   const handleReasonChange = (e) => {
     const value = e.target.value;
@@ -30,10 +31,7 @@ const LetUsKnow = () => {
     setFormData((prev) => ({ ...prev, screenshot: file }));
   };
 
-  const showToast = (message, type) => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: "", type: "" }), 3000);
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +56,10 @@ const LetUsKnow = () => {
       const data = await response.json();
 
       if (response.ok) {
-        showToast("Your message has been sent successfully!", "success");
+
+        console.log(data)
+        toast.success(data.notification)
+    // (response.data?.notification);
         // Reset form
         setFormData({
           reason: "",
@@ -74,7 +75,8 @@ const LetUsKnow = () => {
         throw new Error(data.message || "Something went wrong");
       }
     } catch (error) {
-      showToast(error.message, "danger");
+      console.log(error);
+  toast.error("error",error)
     } finally {
       setIsSubmitting(false);
     }
@@ -86,27 +88,13 @@ const LetUsKnow = () => {
   return (
     <>
       <div
-        className="container py-5"
-        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+        className="container "
+        style={{ paddingTop: "200px", paddingBottom: "90px" }}
       >
         <div className="row justify-content-center">
           <div className="col-md-8">
             {/* Toast Notification */}
-            {toast.show && (
-              <div
-                className={`alert alert-${toast.type} alert-dismissible fade show`}
-                role="alert"
-              >
-                {toast.message}
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() =>
-                    setToast({ show: false, message: "", type: "" })
-                  }
-                ></button>
-              </div>
-            )}
+          
 
             {/* Form */}
             <form

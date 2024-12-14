@@ -5,6 +5,9 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import FcmTokenComp from "@/lib/firebaseForeground";
+
+
 
 const LoginComponent = () => {
   const [passwordType, setPasswordType] = useState("password");
@@ -86,9 +89,12 @@ const LoginComponent = () => {
    setError("");
 
    try {
+     const fcmToken = localStorage.getItem("fcmToken");
+     const token = fcmToken;
      const response = await axios.post(
        `${process.env.NEXT_PUBLIC_BASE_URL}api/store-login`,
        {
+        fcm_token: token,
          email: email,
          password: passwordInput,
        }
@@ -137,6 +143,7 @@ const LoginComponent = () => {
 
       {/* /Breadscrumb Section */}
       {/* Login Section */}
+      <FcmTokenComp />
       <div
         className="login-content"
         style={{ paddingTop: "170px", paddingBottom: "90px" }}

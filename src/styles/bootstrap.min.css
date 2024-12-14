@@ -550,23 +550,23 @@ progress {
 
 }
 .img-fluid-custom {
-  max-width: auto;
-  height: 300px;
+  width:220px !important;
+  height: auto;
 
 }
 @media(max-width:800px)
 {
   .img-fluid-custom {
-  max-width: auto;
-  height: 300px;
+  height: auto;
+   width: 250px;
 
 }
 }
 @media(max-width:450px)
 {
   .img-fluid-custom {
-  max-width: auto;
-  height: 150px;
+  max-width: 100px ;
+  height: auto;
 
 }
 }

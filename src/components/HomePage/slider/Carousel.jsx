@@ -18,7 +18,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
     infinite: true,
     lazyLoad: true,
     speed: 1000,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     responsive: [
       {
@@ -52,8 +52,8 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
   const slider = useRef();
   return (
     <section
-      className="featured-section"
-      style={{ backgroundColor: `${color}` }}
+      className="featured-section-one"
+      style={{ backgroundColor: `${color}`}}
     >
       <div className="container">
         <div className="row align-items-center">
@@ -99,7 +99,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                   businessData.map((item, index) => (
                     <div className="card aos" data-aos="fade-up " key={index}>
                       <div className="blog-widget">
-                        <div className="blog-img">
+                        <div className="blog-img d-flex justify-content-center ">
                           <Link href={`business-details/${item.slug}`}>
                             <img
                               src={`${
@@ -119,15 +119,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                         <div className="bloglist-content pe-auto">
                           <div className="card-body">
                             <div className="blogfeaturelink">
-                              <div className="grid-author">
-                                <img
-                                  src={`${
-                                    process.env.NEXT_PUBLIC_BASE_URL +
-                                    item.image
-                                  }`}
-                                  alt="author"
-                                />
-                              </div>
+                             
                               <div className="blog-features display-screen-size">
                                 <Link href={`business-details/${item.slug}`}>
                                   <span>
@@ -137,7 +129,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                   </span>
                                 </Link>
                               </div>
-                              <div className="display-screen-size">
+                              {/* <div className="display-screen-size">
                                 {item.reg_no && (
                                   <div className="blog-author text-end ">
                                     <span>
@@ -147,7 +139,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                     </span>
                                   </div>
                                 )}
-                              </div>
+                              </div> */}
                             </div>
                             <h6>
                               <Link href={`business-details/${item.slug}`}>

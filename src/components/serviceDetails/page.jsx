@@ -25,6 +25,10 @@ import AnimatedHeart from "./AnimatedHeart";
 import { toast } from "react-toastify";
 import { RWebShare } from "react-web-share";
 import Head from "next/head";
+import ServiceDetailCarousel from "./serviceDetailCaruousel";
+
+
+
 
 const ServiceDetails = ({ data, slug }) => {
   const pathname = usePathname();
@@ -312,7 +316,8 @@ useEffect(() => {
                 <div className="card-body">
                   <div className="gallery-content">
                     {console.log("business_gallery:", data.business_gallery)}
-                    <Roomspics images={data.business_gallery} />
+                    <ServiceDetailCarousel data={data.business_gallery} />
+                    {/* <Roomspics images={data.business_gallery} /> */}
                   </div>
                 </div>
               </div>

@@ -428,8 +428,8 @@ const fetchCityName = async (latitude, longitude) => {
       {/* Popular Location Section */}
       <CarouselActiveDeals
         dailyOffers={dailyOffers}
-        color={"#c10037"}
-        textColor={`#ffffff`}
+        color={`#ffff`}
+        textColor={`${websiteData?.setting?.secondary_color}`}
         Heading={" Active Offers"}
       />
       {/* Popular Location Section */}
