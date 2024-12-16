@@ -48,7 +48,7 @@ const [confirmPasswordType, setConfirmPasswordType] = useState("password");
   const [originStateDropdown, setOriginStateDropdown] = useState([]);
  
 
-
+ const [isAgreed, setIsAgreed] = useState(false);
 
    const togglePasswordVisibility = (field) => {
      if (field === "password") {
@@ -76,6 +76,9 @@ const [confirmPasswordType, setConfirmPasswordType] = useState("password");
       }, []);
 
      
+      const handleCheckboxChange = (e) => {
+        setIsAgreed(e.target.checked);
+      };
         
      
       
@@ -493,6 +496,35 @@ const router = useRouter();
                         }`}
                       />
                     </button>
+                  </div>
+                  <div className="col-md-12 mt-3">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        id="termsCheckbox"
+                        className="form-check-input"
+                        checked={isAgreed}
+                        onChange={handleCheckboxChange}
+                      />
+                      <label
+                        htmlFor="termsCheckbox"
+                        className="form-check-label"
+                      >
+                        I agree to the{" "}
+                        <a
+                          href="/terms-and-condition"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms and Conditions
+                        </a>
+                      </label>
+                    </div>
+                    {/* {!isAgreed && (
+                        <span className="text-sm mt-1 text-qred">
+                          You must agree to the terms and conditions.
+                        </span>
+                      )} */}
                   </div>
 
                   {/* Optional Fields Section */}

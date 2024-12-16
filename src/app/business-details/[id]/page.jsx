@@ -5,9 +5,9 @@ import ServiceDetails from "@/components/serviceDetails/page";
 async function getBusinessData(id, token ) {
 
   
-  const url = token
-    ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}?token=${token}`
-    : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${id}`;
+  const url = 
+     `${process.env.NEXT_PUBLIC_BASE_URL}api/business-for-web/${id} `
+    
 
   const res = await fetch(url,{ 
   

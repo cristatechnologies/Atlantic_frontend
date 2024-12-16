@@ -86,7 +86,7 @@ const BusinessDashboardComponent = () => {
             <ul className="dashborad-menus">
               <li className="active">
                 <Link href="/user/dashboard">
-                  <i className="feather-grid" /> <span>Dashboard</span>
+                  <i className="feather-grid" /> <span>Reviews</span>
                 </Link>
               </li>
               <li>
@@ -101,7 +101,7 @@ const BusinessDashboardComponent = () => {
               </li>
               <li>
                 <Link href={`/business-details/${slug}`}>
-                  <i className="feather-list" /> <span>Your Page</span>
+                  <i className="feather-list" /> <span>My Account</span>
                 </Link>
               </li>
               <li>
@@ -286,7 +286,7 @@ const BusinessDashboardComponent = () => {
                   <div className="card-body">
                     {reviews.length > 0 ? (
                       <ul className="review-list">
-                        {reviews.map((review) => (
+                        {reviews.slice(0,5).map((review) => (
                           <li key={review.id} className="review-box">
                             <div className="review-profile">
                               <div className="review-img">

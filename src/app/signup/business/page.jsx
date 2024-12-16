@@ -52,6 +52,8 @@ const business = () => {
   const [isValidZipCode, setIsValidZipCode] = useState(false);
 const [isCityCustom, setIsCityCustom] = useState(false);
 const [customCityName, setCustomCityName] = useState("");
+ const [isAgreed, setIsAgreed] = useState(false);
+ const router = useRouter();
 
 
 const handleCityChange = (e) => {
@@ -73,10 +75,19 @@ const handleCityChange = (e) => {
   }
 };
 
+
+
+
+const handleCheckboxChange = (e) => {
+  setIsAgreed(e.target.checked);
+};
+
+
+
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
   };
-  const router = useRouter();
+ 
   const togglePassword = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -259,6 +270,15 @@ const handleCityChange = (e) => {
   };
 
 
+   const handleFormSubmit = (e) => {
+     e.preventDefault();
+     if (!isAgreed) {
+       alert("You must agree to the terms and conditions before submitting.");
+       return;
+     }
+     doSignUp();
+   };
+
 
    useEffect(() => {
      setState(null);
@@ -308,27 +328,6 @@ const handleCityChange = (e) => {
 
   return (
     <>
-      {/* Breadscrumb Section */}
-      {/* <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Create an Account</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Register
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div> */}
-      {/* /Breadscrumb Section */}
       {/* Login Section */}
       <FcmTokenComp />
       <div
@@ -356,7 +355,7 @@ const handleCityChange = (e) => {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    doSignUp();
+                    handleFormSubmit();
                   }}
                 >
                   <div className="row">
@@ -390,36 +389,7 @@ const handleCityChange = (e) => {
                         </div>
                       </div>
                     </div>
-                    {/*Display name */}
-                    {/* <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <i>
-                            <FaRegBuilding />
-                          </i>
-                          <input
-                            type="text"
-                            mandatory={true}
-                            name="Display Name"
-                            value={dname}
-                            label="fullName"
-                            className="form-control"
-                            placeholder="Display Name"
-                            onChange={(e) => {
-                              setDname(e.target.value);
-                              setErrors({ ...errors, name: [null] });
-                            }}
-                          />
-                          {errors && Object.hasOwn(errors, "name") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.name[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                    </div> */}
+
                     {/*Email address */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -542,33 +512,7 @@ const handleCityChange = (e) => {
                         )}
                       </div>
                     </div>
-                    {/*long description */}
-                    {/* <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <input
-                            type="text"
-                            mandatory={true}
-                            name="Long Description"
-                            value={longDesc}
-                            label="Long Description"
-                            className="form-control"
-                            placeholder="Long Description"
-                            onChange={(e) => {
-                              setLongDesc(e.target.value);
-                              setErrors({ ...errors, name: [null] });
-                            }}
-                          />
-                          {errors && Object.hasOwn(errors, "name") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.name[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                    </div> */}
+
                     {/*short description */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -597,32 +541,7 @@ const handleCityChange = (e) => {
                       </div>
                     </div>
                     {/* Address */}
-                    {/* <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <input
-                            type="text"
-                            mandatory={true}
-                            name="Address  "
-                            value={address}
-                            label="Address"
-                            className="form-control"
-                            placeholder="Address"
-                            onChange={(e) => {
-                              setAddress(e.target.value);
-                              setErrors({ ...errors, name: [null] });
-                            }}
-                          />
-                          {errors && Object.hasOwn(errors, "name") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.name[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                    </div> */}
+
                     <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
@@ -761,57 +680,9 @@ const handleCityChange = (e) => {
                       </div>
                     )} */}
                     {/* Contact Person Name */}
-                    {/* <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <i className="feather-user" />
-                          <input
-                            type="text"
-                            mandatory={true}
-                            name="Contact Person Name"
-                            value={contactPersonName}
-                            className="form-control"
-                            placeholder="Contact Person Name"
-                            onChange={(e) => {
-                              setContactPersonName(e.target.value);
-                              setErrors({ ...errors, contactPersonName: null });
-                            }}
-                          />
-                          {errors && errors.contactPersonName && (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.contactPersonName}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div> */}
+
                     {/* Language */}
-                    {/* <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
-                          <select
-                            className="form-control"
-                            value={selectedLanguage}
-                            onChange={(e) =>
-                              setSelectedLanguage(e.target.value)
-                            }
-                          >
-                            <option value="">Select Language</option>
-                            {languagesInAsia.map((language, index) => (
-                              <option key={index} value={language.name}>
-                                {language.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {errors && errors.language && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.language[0]}
-                          </span>
-                        )}
-                      </div>
-                    </div> */}
+
                     {/*Password*/}
                     <div className="col-md-6">
                       <div className="form-group">
@@ -888,10 +759,41 @@ const handleCityChange = (e) => {
                         </div>
                       </div>
                     </div>
+                    <div className="col-md-12 mt-3">
+                      <div className="form-check">
+                        <input
+                          type="checkbox"
+                          id="termsCheckbox"
+                          className="form-check-input"
+                          checked={isAgreed}
+                          onChange={handleCheckboxChange}
+                        />
+                        <label
+                          htmlFor="termsCheckbox"
+                          className="form-check-label"
+                        >
+                          I agree to the{" "}
+                          <a
+                            href="/terms-and-conditions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Terms and Conditions
+                          </a>
+                        </label>
+                      </div>
+                      {/* {!isAgreed && (
+                        <span className="text-sm mt-1 text-qred">
+                          You must agree to the terms and conditions.
+                        </span>
+                      )} */}
+                    </div>
                   </div>
+
                   <button
                     className="btn btn-primary w-100 login-btn"
                     type="submit"
+                    disabled={!isAgreed}
                   >
                     Create Account
                   </button>
@@ -903,30 +805,6 @@ const handleCityChange = (e) => {
                       </Link>
                     </p>
                   </div>
-                  {/* <div className="login-or">
-                    <span className="or-line" />
-                    <span className="span-or">
-                      Sign in with Social Media Accounts
-                    </span>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-apple w-100">
-                      <img src={apple} className="me-1" alt="img" />
-                      Sign in with Apple
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-google w-100">
-                      <img src={google} className="me-1" alt="img" />
-                      Sign in with Google
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-facebook w-100 mb-0">
-                      <img src={facebook} className="me-2" alt="img" />
-                      Continue with Facebook
-                    </Link>
-                  </div> */}
                 </form>
                 {/* /Login Form */}
               </div>

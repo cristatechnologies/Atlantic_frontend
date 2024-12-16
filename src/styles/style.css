@@ -54,7 +54,15 @@ Version      : 1.0
 -----------------------*/
 /* From Uiverse.io by abrahamcalsin */ 
 
-
+.div-container{
+  width: 100%;
+    height: auto; /* Full viewport height, adjust as needed */
+    background-image: url('https://s1.shopico.in/atlantic/uploads/custom-images/slider-2024-11-26-07-30-57-6595.jpg');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
 
 
 

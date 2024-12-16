@@ -27,7 +27,7 @@ import { RWebShare } from "react-web-share";
 import Head from "next/head";
 import ServiceDetailCarousel from "./serviceDetailCaruousel";
 
-
+import { useRef } from "react";
 
 
 const ServiceDetails = ({ data, slug }) => {
@@ -51,28 +51,43 @@ const ServiceDetails = ({ data, slug }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 const [totalViews,setTotalViews]=useState()
- 
+ const isFetching = useRef(false);
 
 
 useEffect(() => {
-    const auth = JSON.parse(localStorage.getItem("auth"));
-    const token = auth?.access_token;
-    setAuthToken(token);
+  if (!slug) return; // Prevent fetch if slug is not yet available
 
-    const url = token
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}?token=${token}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`;
-    axios.get(url).then((res) => {
-      console.log(res?.data);
-      setHasReviewed(res?.data?.has_reviewed);
-      setTotalViews(res?.data?.views)
-      setIsFavorite(res?.data?.like)
-      
-      
-    });
+  async function fetchData() {
+    if (isFetching.current) return; // Prevent duplicate fetches
+    isFetching.current = true;
 
-    setFullUrl(window.location.href);
-  },[]);
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`
+      ).then((res)=>
+      {
+          setHasReviewed(res?.data?.has_reviewed);
+          setTotalViews(res?.data?.views);
+          setIsFavorite(res?.data?.like);
+      
+      });
+      const result = await res.json();
+      setData(result);
+    } catch (err) {
+      console.error("Failed to fetch data", err);
+    } finally {
+      isFetching.current = false; // Reset fetch state
+    }
+  }
+
+  fetchData();
+}, [slug]);
+
+useEffect(() => {
+  console.log("ServiceDetails mounted");
+  return () => console.log("ServiceDetails unmounted");
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -180,9 +195,7 @@ useEffect(() => {
           />
         </div>
       ) : (
-        <div     style={{ paddingTop: "170px", paddingBottom: "90px" }}>
-          
-        </div>
+        <div style={{ paddingTop: "170px", paddingBottom: "90px" }}></div>
       )}
       {/* {showFancyBox && <PhotoAlbum photos={imagess} layout="rows" />} */}
 
@@ -340,10 +353,9 @@ useEffect(() => {
                                     review.user.image
                                       ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
                                       : "/img/pngegg.png"
-
                                   }
                                   height={70}
-                                  width={70}                                  
+                                  width={70}
                                   alt="Profile"
                                 />
                               </div>
@@ -438,8 +450,24 @@ useEffect(() => {
                   </div>
                 </div>
               </div>
+
+              <div className="card gallery-section ">
+                <div className="card-header ">
+                  <img src="/img/galleryicon.svg" alt="gallery" />
+                  <h4>Gallery</h4>
+                </div>
+                <div className="card-body">
+                  <div className="gallery-content">
+                    {console.log("business_gallery:", data.business_gallery)}
+                    <ServiceDetailCarousel data={data.business_offers} />
+                    {/* <Roomspics images={data.business_gallery} /> */}
+                  </div>
+                </div>
+              </div>
+
               {/*/Review Section*/}
             </div>
+
             <div className="col-lg-3 theiaStickySidebar">
               <StickyBox>
                 <div className="rightsidebar">

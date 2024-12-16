@@ -67,6 +67,9 @@ const ServiceDetailCarousel = ({ data }) => {
                   alt={`Gallery image ${index + 1}`}
                   className={styles.image}
                 />
+                {item.title && item.description && {
+                  
+                }}
               </div>
             </div>
           ))}
