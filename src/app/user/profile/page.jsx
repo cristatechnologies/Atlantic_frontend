@@ -43,8 +43,8 @@ console.log(typeof(1));
       </div>
     );
   }
-  if (userType === "invalid") {F
-    return <div>Invalid User Type</div>;
+  if (userType === "invalid") {
+    return <div style={{marginTop:"50vh",marginBottom:"50vh", textAlign:"center", fontWeight:"800",fontSize:"25px"}}>Invalid User Type</div>;
   }
   return userType === "individual" ? (
     <ProfileComponent />

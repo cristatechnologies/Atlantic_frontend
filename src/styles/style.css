@@ -51,8 +51,87 @@ Version      : 1.0
 
 /*-----------------
      Custom Classes 
------------------------*/
+     
+/* Default Styles */
+@media (max-width:450px){
+.flexColSm{
+flex-direction:column;
+}
+}
+
+
+.rating-container {
+  width: 100%;
+  max-width: 300px; /* Optional: Restrict maximum width */
+  margin: 0 auto; /* Center container */
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Adjust star size on smaller screens */
+@media (max-width: 768px) {
+  .rating-container .rating {
+    flex-direction: column; /* Stack stars vertically on small screens */
+  }
+
+  .rating-container .average-rating {
+    margin-top: 5px; /* Space between stars and rating text */
+  }
+
+  .rating-container .submit-button {
+    margin-top: 10px; /* Space between stars and button */
+  }
+
+  /* Make stars smaller */
+  .rating-container .rating svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .rating-container .rating svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .rating-container .submit-button {
+    font-size: 14px; /* Smaller button text */
+    padding: 5px 10px;
+  }
+}
+
+
+
 /* From Uiverse.io by abrahamcalsin */ 
+.home-banner-image{
+
+  height:70vh;
+  width:100%;
+}
+@media(max-width: 790px)
+{
+
+  .home-banner-image{
+    margin-top:70px;
+  height:50dvh;
+  width:100%;
+}
+}
+
+@media(max-width: 450px)
+{
+
+  .home-banner-image{
+    margin-top:70px;
+  height:20vh;
+  width:100%;
+}
+}
 
 .div-container{
   width: 100%;

@@ -512,7 +512,7 @@ const router = useRouter();
                       >
                         I agree to the{" "}
                         <a
-                          href="/terms-and-condition"
+                          href="/pages/terms-and-condition"
                           target="_blank"
                           rel="noopener noreferrer"
                         >

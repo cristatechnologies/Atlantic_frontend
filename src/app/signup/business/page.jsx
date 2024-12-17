@@ -135,8 +135,8 @@ const handleCheckboxChange = (e) => {
       // Check if response has data
       if (response.data && response.data.city) {
         // Set state and city based on API response as suggestions
-        setState(response.data.city.country_state.id);
-        setcity(response.data.city.id);
+        setState(response.data.city.country_state.name);
+        setcity(response.data.city.name);
         setIsValidZipCode(true);
 
         // Fetch states and cities to update dropdowns
@@ -195,7 +195,7 @@ const handleCheckboxChange = (e) => {
           address_line_two: addressLineTwo, // New field
           zip_code: zipCode, // New field
           name: bname,
-          country_id: 43,
+          country_id: "Canada",
           other_locations: selectedCities.map((city) => city.value),
           password: passwordInput,
           password_confirmation: confirmPassword,
@@ -271,7 +271,7 @@ const handleCheckboxChange = (e) => {
 
 
    const handleFormSubmit = (e) => {
-     e.preventDefault();
+
      if (!isAgreed) {
        alert("You must agree to the terms and conditions before submitting.");
        return;
@@ -773,13 +773,9 @@ const handleCheckboxChange = (e) => {
                           className="form-check-label"
                         >
                           I agree to the{" "}
-                          <a
-                            href="/terms-and-conditions"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <Link href={`/pages/terms-and-condition`}>
                             Terms and Conditions
-                          </a>
+                          </Link>
                         </label>
                       </div>
                       {/* {!isAgreed && (
@@ -800,7 +796,7 @@ const handleCheckboxChange = (e) => {
                   <div className="register-link text-center">
                     <p>
                       Already have an account?{" "}
-                      <Link className="forgot-link" href="/login">
+                      <Link className="forgot-link" href="/login" replace>
                         Sign In
                       </Link>
                     </p>

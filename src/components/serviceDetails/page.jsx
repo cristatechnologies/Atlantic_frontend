@@ -25,10 +25,9 @@ import AnimatedHeart from "./AnimatedHeart";
 import { toast } from "react-toastify";
 import { RWebShare } from "react-web-share";
 import Head from "next/head";
-import ServiceDetailCarousel from "./serviceDetailCaruousel";
-
+import ServiceDetailActiveDealsCaruousel from "./ServiceDetailActiveDealsCaruousel";
+import ServiceDetailCaruouselGallery from "./ServiceDetailCaruouselGallery";
 import { useRef } from "react";
-
 
 const ServiceDetails = ({ data, slug }) => {
   const pathname = usePathname();
@@ -36,7 +35,7 @@ const ServiceDetails = ({ data, slug }) => {
 
   console.log(pathname);
   console.log(data);
-  const [isFavorite, setIsFavorite] = useState(data.like );
+  const [isFavorite, setIsFavorite] = useState(data.like);
   const [totalLikes, setTotalLikes] = useState(data.total_likes);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
@@ -45,49 +44,57 @@ const ServiceDetails = ({ data, slug }) => {
     email: "",
     message: "",
   });
-  const [hasReviewed,setHasReviewed] = useState(0)
+  const [completeData, setCompleteData] = useState([]);
+  const [hasReviewed, setHasReviewed] = useState(0);
   const [authToken, setAuthToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-const [totalViews,setTotalViews]=useState()
- const isFetching = useRef(false);
+  const [totalViews, setTotalViews] = useState();
+  const isFetching = useRef(false);
+  const [activeDeals, setActiveDeals] = useState([]);
 
+  const [replyText, setReplyText] = useState({});
+  const [businessReviews, setBusinessReviews] = useState([]);
 
-useEffect(() => {
-  if (!slug) return; // Prevent fetch if slug is not yet available
+  const [auth, setAuth] = useState(null);
+  const [businessProfile, setBusinessProfile] = useState(null);
+  
+  useEffect(() => {
+    if (!slug) return; // Prevent fetch if slug is not yet available
 
-  async function fetchData() {
-    if (isFetching.current) return; // Prevent duplicate fetches
-    isFetching.current = true;
+    async function fetchData() {
+      if (isFetching.current) return; // Prevent duplicate fetches
+      isFetching.current = true;
 
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`
-      ).then((res)=>
-      {
-          setHasReviewed(res?.data?.has_reviewed);
-          setTotalViews(res?.data?.views);
-          setIsFavorite(res?.data?.like);
-      
-      });
-      const result = await res.json();
-      setData(result);
-    } catch (err) {
-      console.error("Failed to fetch data", err);
-    } finally {
-      isFetching.current = false; // Reset fetch state
+      try {
+        const res = await axios
+          .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`)
+          .then((res) => {
+            setHasReviewed(res?.data?.has_reviewed);
+            setTotalViews(res?.data?.views);
+            setIsFavorite(res?.data?.like);
+            setActiveDeals(res?.data?.business_offers);
+            setBusinessReviews(res?.data?.business_review || []);
+          });
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      } finally {
+        isFetching.current = false; // Reset fetch state
+      }
     }
-  }
 
-  fetchData();
-}, [slug]);
+    fetchData();
+  }, [slug]);
 
-useEffect(() => {
-  console.log("ServiceDetails mounted");
-  return () => console.log("ServiceDetails unmounted");
-}, []);
-
+  useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
+    setAuth(auth?.user?.business?.id);
+    setBusinessProfile(auth?.user?.business);
+    console.log("ServiceDetails mounted");
+    return () => console.log("ServiceDetails unmounted");
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,9 +132,49 @@ useEffect(() => {
 
       // You might want to refresh the reviews list here
       // or show a success message
+      fetchBusinessReviews();
     } catch (error) {
       console.error("Error submitting review:", error);
       // Handle error - maybe show an error message to user
+    }
+  };
+  const fetchBusinessReviews = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`
+      );
+      setBusinessReviews(res?.data?.business_review || []);
+    } catch (err) {
+      console.error("Failed to fetch reviews", err);
+    }
+  };
+
+  const handleReplySubmit = async (reviewId) => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
+    setAuth(auth?.user?.id);
+
+    try {
+      // Ensure reply is not empty and business ID exists
+      if (!replyText[reviewId] || !auth) return;
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/post-reply/${reviewId}?token=${token}`,
+        {
+          reply: replyText[reviewId],
+        }
+      );
+
+      // Refresh reviews after successful reply
+      fetchBusinessReviews();
+
+      // Clear the reply text for this specific review
+      setReplyText((prev) => ({ ...prev, [reviewId]: "" }));
+
+      toast.success("Reply submitted successfully");
+    } catch (error) {
+      console.error("Error submitting reply", error);
+      toast.error("Failed to submit reply");
     }
   };
 
@@ -162,6 +209,14 @@ useEffect(() => {
       setIsLoading(false);
     }
   };
+
+  const handleReplyChange = (reviewId, value) => {
+    setReplyText((prev) => ({
+      ...prev,
+      [reviewId]: value,
+    }));
+  };
+
   const toggleFavorite = async () => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.access_token;
@@ -180,6 +235,15 @@ useEffect(() => {
       console.error("Error toggling favorite:", error);
     }
   };
+
+  const isBusinessOwner = (review) => {
+    return (
+      businessProfile &&
+      businessProfile.id === review.business_id &&
+      review.reply === null
+    );
+  };
+
   return (
     <>
       {/* <Header /> */}
@@ -329,7 +393,9 @@ useEffect(() => {
                 <div className="card-body">
                   <div className="gallery-content">
                     {console.log("business_gallery:", data.business_gallery)}
-                    <ServiceDetailCarousel data={data.business_gallery} />
+                    <ServiceDetailCaruouselGallery
+                      data={data.business_gallery}
+                    />
                     {/* <Roomspics images={data.business_gallery} /> */}
                   </div>
                 </div>
@@ -340,130 +406,133 @@ useEffect(() => {
                   <i className="feather-message-circle" />
                   <h4>Review</h4>
                 </div>
-                <div className="card-body">
-                  <div className="review-list">
-                    <ul className="">
-                      {data.business_review &&
-                        data.business_review.map((review) => (
-                          <li key={review.id} className="review-box">
-                            <div className="review-profile">
-                              <div className="review-img">
-                                <img
-                                  src={
-                                    review.user.image
-                                      ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
-                                      : "/img/pngegg.png"
-                                  }
-                                  height={70}
-                                  width={70}
-                                  alt="Profile"
-                                />
-                              </div>
+                <div className="container-fluid px-4">
+                  <div className="reviews-section">
+                    {businessReviews.map((review) => (
+                      <div key={review.id} className="card mb-3 shadow-sm">
+                        <div className="card-body">
+                          <div className="d-flex align-items-center mb-3">
+                            <img
+                              src={
+                                review.user.image
+                                  ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
+                                  : "/img/pngegg.png"
+                              }
+                              alt={review.user.name}
+                              className="rounded-circle me-3"
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <div>
+                              <h6 className="mb-1">{review.user.name}</h6>
+                              <StarRatings
+                                rating={review.rating}
+                                starRatedColor="#FFD700"
+                                starDimension="18px"
+                                starSpacing="-28px"
+                                numberOfStars={5}
+                              />
                             </div>
-                            <div className="review-details">
-                              <h6>{review.user.name}</h6>
-                              <div className="rating">
+                          </div>
+
+                          <p className="card-text">{review.reviews}</p>
+
+                          {/* Business Reply */}
+                          {review.reply && (
+                            <div className="bg-light px-4 py-2 rounded mt-2">
+                              {/* <strong className="text-muted">
+                                Business Reply:
+                              </strong> */}
+                              <p className="text-muted">{review.reply}</p>
+                            </div>
+                          )}
+
+                          {/* Reply functionality for business owner */}
+                          {isBusinessOwner(review) && (
+                            <div className="mt-3">
+                              <textarea
+                                rows={2}
+                                className="form-control mb-2"
+                                placeholder="Write your reply"
+                                value={replyText[review.id] || ""}
+                                onChange={(e) =>
+                                  handleReplyChange(review.id, e.target.value)
+                                }
+                              />
+                              <button
+                                className="btn btn-primary btn-sm"
+                                onClick={() => handleReplySubmit(review.id)}
+                                disabled={!replyText[review.id]}
+                              >
+                                Submit Reply
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Review Submission Form */}
+                    {hasReviewed === 0 && businessProfile?.slug !== slug && (
+                      <div className="card">
+                        <div className="card-body">
+                          <form onSubmit={handleReviewSubmit}>
+                            <div className="mb-3">
+                              <textarea
+                                rows={4}
+                                className="form-control"
+                                placeholder="Write a Review*"
+                                value={review}
+                                onChange={(e) => setReview(e.target.value)}
+                                required
+                              />
+                            </div>
+                            <div className="d-flex flexColSm justify-content-between  align-items-center">
+                              <div className="rating-section">
                                 <StarRatings
-                                  rating={review.rating}
+                                  rating={rating}
                                   starRatedColor="#FFD700"
-                                  starDimension="18px"
-                                  starSpacing="-28px"
+                                  changeRating={(newRating) =>
+                                    setRating(newRating)
+                                  }
                                   numberOfStars={5}
+                                  name="rating"
                                 />
-
-                                {/* <div>
-                                  <i className="fa-sharp fa-solid fa-calendar-days" />{" "}
-                                  {new Date(
-                                    review.created_at
-                                  ).toLocaleDateString()}
-                                </div> */}
-                                {/* <div>by: {review.user.name}</div> */}
                               </div>
-                              <p>{review.reviews}</p>
+                              <button
+                                type="submit"
+                                className="btn btn-primary"
+                                disabled={!rating || !review}
+                              >
+                                Submit Review
+                              </button>
                             </div>
-                          </li>
-                        ))}
-
-                      {/* form   */}
-
-                      {hasReviewed === 0 ? (
-                        <li className="review-box feedbackbox mb-0">
-                          <div className="review-details">
-                            <h6>
-                              <i className="feather-message-circle" /> Write a
-                              Review
-                            </h6>
-                          </div>
-                          <div className="card-body">
-                            {authToken ? (
-                              <form onSubmit={handleReviewSubmit}>
-                                <div className="form-group">
-                                  <textarea
-                                    rows={4}
-                                    className="form-control"
-                                    placeholder="Write a Review*"
-                                    required
-                                    value={review}
-                                    onChange={(e) => setReview(e.target.value)}
-                                  />
-                                </div>
-                                <div className="reviewbox-rating">
-                                  <>
-                                    <span>Rating</span>
-                                    <div className="star-rating">
-                                      <StarRatings
-                                        rating={rating}
-                                        starRatedColor="#FFD700"
-                                        changeRating={(newRating) =>
-                                          setRating(newRating)
-                                        }
-                                        numberOfStars={5}
-                                        name="rating"
-                                        starDimension="20px"
-                                        starSpacing="2px"
-                                      />
-                                    </div>
-                                  </>
-                                </div>
-                                <div className="submit-section">
-                                  <button
-                                    className="btn btn-primary submit-btn"
-                                    type="submit"
-                                    disabled={!rating || !review}
-                                  >
-                                    Submit Review
-                                  </button>
-                                </div>
-                              </form>
-                            ) : (
-                              <h6>
-                                <Link href="/login">
-                                  <mark>Login</mark>
-                                </Link>{" "}
-                                to Add Your Review
-                              </h6>
-                            )}
-                          </div>
-                        </li>
-                      ) : null}
-                    </ul>
+                          </form>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <div className="card gallery-section ">
-                <div className="card-header ">
-                  <img src="/img/galleryicon.svg" alt="gallery" />
-                  <h4>Gallery</h4>
-                </div>
-                <div className="card-body">
-                  <div className="gallery-content">
-                    {console.log("business_gallery:", data.business_gallery)}
-                    <ServiceDetailCarousel data={data.business_offers} />
-                    {/* <Roomspics images={data.business_gallery} /> */}
+              {activeDeals.length > 0 ? (
+                <div className="card gallery-section ">
+                  <div className="card-header ">
+                    <img src="/img/galleryicon.svg" alt="gallery" />
+                    <h4>Active Deals</h4>
+                  </div>
+                  <div className="card-body">
+                    <div className="gallery-content">
+                      {console.log("nudsiness_active:", activeDeals)}
+                      <ServiceDetailActiveDealsCaruousel data={activeDeals} />
+                      {/* <Roomspics images={data.business_gallery} /> */}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : null}
 
               {/*/Review Section*/}
             </div>

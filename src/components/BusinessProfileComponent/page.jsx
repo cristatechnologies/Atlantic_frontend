@@ -85,7 +85,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
 
      if (matchedCity) {
        // If input matches a dropdown city, use its ID as city_id
-       setSelectedCity(matchedCity.id.toString());
+       setSelectedCity(matchedCity.name.toString());
      } else {
        // If no match, use the input value as city_id
        setSelectedCity(inputValue);
@@ -222,10 +222,10 @@ const [isCityCustom, setIsCityCustom] = useState(false);
       .catch((err) => console.log(err));
   };
 
-  const getState = (countryId) => {
+  const getState = (countryName) => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/?name=${countryName}`
       )
       .then((res) => {
         setStateDropdown(res.data?.states || []);
@@ -233,10 +233,10 @@ const [isCityCustom, setIsCityCustom] = useState(false);
       .catch((err) => console.log(err));
   };
 
-  const getCity = (stateId) => {
+  const getCity = (stateName) => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/?name=${stateName}`
       )
       .then((res) => {
         setCityDropdown(res.data?.cities || []);
@@ -245,18 +245,18 @@ const [isCityCustom, setIsCityCustom] = useState(false);
   };
 
   const handleCountryChange = (e) => {
-    const countryId = e.target.value;
-    setSelectedCountry(countryId);
+    const countryName = e.target.value;
+    setSelectedCountry(countryName);
     setSelectedState("");
     setSelectedCity("");
-    getState(countryId);
+    getState(countryName);
   };
 
   const handleStateChange = (e) => {
-    const stateId = e.target.value;
-    setSelectedState(stateId);
+    const stateName = e.target.value;
+    setSelectedState(stateName);
     setSelectedCity("");
-    getCity(stateId);
+    getCity(stateName);
   };
   // ... (keep other functions like getState, getCity, etc.)
 
@@ -486,7 +486,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                             >
                               <option value="">Select Country</option>
                               {countryDropdown.map((country) => (
-                                <option key={country.id} value={country.id}>
+                                <option key={country.id} value={country.name}>
                                   {country.name}
                                 </option>
                               ))}
@@ -509,7 +509,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                             >
                               <option value="">Select State</option>
                               {stateDropdown.map((state) => (
-                                <option key={state.id} value={state.id}>
+                                <option key={state.id} value={state.name}>
                                   {state.name}
                                 </option>
                               ))}
@@ -533,7 +533,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                                 selectedCity
                                   ? cityDropdown.find(
                                       (city) =>
-                                        city.id.toString() === selectedCity
+                                        city.name.toString() === selectedCity
                                     )?.name || selectedCity
                                   : ""
                               }

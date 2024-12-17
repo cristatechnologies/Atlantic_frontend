@@ -1,10 +1,10 @@
 import Head from "next/head";
 import React from "react";
 
-function PageHead(props) {
-  const { title } = props;
+function PageHead({title,metaDes}) {
+  // const { title } = props;
 //   const { favicon } = settings();
-  const { metaDes } = props;
+  // const { metaDes } = props;
   return (
     <Head>
       <title>{title}</title>

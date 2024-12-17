@@ -82,7 +82,7 @@ const BusinessDashboardComponent = () => {
         style={{ paddingTop: "170px", paddingBottom: "90px" }}
       >
         <div className="container">
-          <div className="">
+          {/* <div className="">
             <ul className="dashborad-menus">
               <li className="active">
                 <Link href="/user/dashboard">
@@ -111,7 +111,7 @@ const BusinessDashboardComponent = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
           <div className="dashboard-details">
             {/* <div className="row">
                 <div className="col-lg-3 col-md-3">

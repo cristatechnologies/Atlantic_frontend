@@ -297,20 +297,14 @@ const fetchCityName = async (latitude, longitude) => {
     <>
       {/* Banner Section */}
 
-      <section
-        className="banner-section position-relative banner-customMade banner-container"
-        style={{
-          backgroundImage: `url(${bgImageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          // Default to cover for larger screens
-
-          backgroundRepeat: "no-repeat",
-
-          height: "auto",
-          overflow: "hidden",
-        }}
-      ></section>
+      <div className="bannergallery-section mt-lg-5 ">
+        {/* <Rooms /> */}
+        <img
+          src={`${bgImageUrl}`}
+          alt="Home Banner"
+          className="home-banner-image"
+        />
+      </div>
 
       {/* Mobile Search Section - Rendered below the banner */}
       {/* d-lg-none */}

@@ -5,7 +5,10 @@ import UserDashboardComponent from "@/components/UserDashboardComponent/page";
 import BusinessDashboardComponent from "@/components/BusinessDashboardComponent/page";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-const Dashboard = () => {
+
+
+
+const Review  = () => {
   const router = useRouter();
   const [userType, setUserType] = useState(null);
 
@@ -55,4 +58,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Review;

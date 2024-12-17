@@ -18,6 +18,7 @@ const Header = ({ parms }) => {
   const router = useRouter();
   const [logo, setLogo] = useState("");
   const [mobileDropdown, setMobileDropdown] = useState(false);
+  const [slug, setSlug] = useState("");
   // useEffect(() => {
   //   const settings = localStorage.getItem("settings");
   //   setLogo(JSON.parse(settings?.logo));
@@ -26,6 +27,9 @@ const Header = ({ parms }) => {
   // });
 
   useEffect(() => {
+     const auth = JSON.parse(localStorage.getItem("auth"));
+     const token = auth?.access_token;
+     setSlug(auth?.user?.business?.slug);
     const settings = localStorage.getItem("settings");
     if (settings) {
       const settingsData = JSON.parse(settings);
@@ -127,8 +131,9 @@ const Header = ({ parms }) => {
                 <Link href="/" className="menu-logo">
                   <img
                     src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                    style={{ width: "88px", height: "auto" }}
+                    style={{ width: "170px", height: "auto" }}
                     alt="Logo"
+                    className=""
                   />
                 </Link>
                 <Link
@@ -196,10 +201,10 @@ const Header = ({ parms }) => {
                       >
                         <li>
                           <Link
-                            href="/user/dashboard"
+                            href="/user/review"
                             onClick={handleMobileMenuItemClick}
                           >
-                            <i className="fas fa-columns"></i> Dashboard
+                            <i className="fas fa-columns"></i> Reviews
                           </Link>
                         </li>
                         <li>
@@ -212,10 +217,34 @@ const Header = ({ parms }) => {
                         </li>
                         <li>
                           <Link
-                            href="/your-offers"
+                            href="/user/your-offers"
                             onClick={handleMobileMenuItemClick}
                           >
-                            <i className="fas fa-handshake"></i> Your Offers
+                            <i className="fas fa-user-cog"></i> Your Offers
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/business-gallery"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> Your Gallery
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={`/business-details/${slug}`}
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> My Account
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/change-password"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-handshake"></i> Change Password
                           </Link>
                         </li>
                       </ul>
@@ -260,10 +289,10 @@ const Header = ({ parms }) => {
                       >
                         <li>
                           <Link
-                            href="/user/dashboard"
+                            href="/user/review"
                             onClick={handleMobileMenuItemClick}
                           >
-                            <i className="fas fa-columns"></i> Dashboard
+                            <i className="fas fa-columns"></i> Reviews
                           </Link>
                         </li>
                         <li>
@@ -412,10 +441,10 @@ const Header = ({ parms }) => {
                     <div className="dropdown-menu dropdown-menu-end">
                       <Link
                         className="dropdown-item"
-                        href="/user/dashboard"
+                        href="/user/review"
                         onClick={handleMobileMenuItemClick}
                       >
-                        Dashboard
+                        Review
                       </Link>
                       <Link
                         className="dropdown-item"
@@ -430,6 +459,20 @@ const Header = ({ parms }) => {
                         onClick={handleMobileMenuItemClick}
                       >
                         Your Offers{" "}
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/your-gallery"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Your Gallery{" "}
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href={`/business-details/${slug}`}
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        My Account{" "}
                       </Link>
                       <Link
                         className="dropdown-item"
@@ -479,10 +522,10 @@ const Header = ({ parms }) => {
                     <div className="dropdown-menu dropdown-menu-end">
                       <Link
                         className="dropdown-item"
-                        href="/user/dashboard"
+                        href="/user/review"
                         onClick={handleMobileMenuItemClick}
                       >
-                        Dashboard
+                        Review
                       </Link>
                       <Link
                         className="dropdown-item"
@@ -496,7 +539,7 @@ const Header = ({ parms }) => {
                         href="/change-passsword"
                         onClick={handleMobileMenuItemClick}
                       >
-                        Change Password 
+                        Change Password
                       </Link>
                       <Link
                         className="dropdown-item"
