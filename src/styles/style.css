@@ -53,6 +53,15 @@ Version      : 1.0
      Custom Classes 
      
 /* Default Styles */
+
+@media (min-width:1024px)
+{
+  .colorBlack{
+color: black !important;
+  }
+}
+
+
 @media (max-width:450px){
 .flexColSm{
 flex-direction:column;
@@ -110,14 +119,14 @@ flex-direction:column;
 /* From Uiverse.io by abrahamcalsin */ 
 .home-banner-image{
 
-  height:70vh;
+  height:68vh;
   width:100%;
 }
 @media(max-width: 790px)
 {
 
   .home-banner-image{
-    margin-top:70px;
+    margin-top:68px;
   height:50dvh;
   width:100%;
 }
@@ -127,8 +136,8 @@ flex-direction:column;
 {
 
   .home-banner-image{
-    margin-top:70px;
-  height:20vh;
+    margin-top:64px;
+  height:18vh;
   width:100%;
 }
 }
@@ -1561,7 +1570,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 -----------------------*/
 
 .header {
-  background: var(--secondary-color);
+  background:#fbd89e;
   position: fixed;
   box-shadow: 0px 10px 40px rgba(202, 202, 202, 0.2);
   left: 0;
@@ -18359,6 +18368,8 @@ section.advertisement {
   }
   .header-navbar-rht > li {
     padding-right: 15px;
+    display:none;
+
   }
   .main-nav {
     padding: 0;
@@ -19732,6 +19743,10 @@ section.advertisement {
   .mynav1 {
     margin-bottom: 20px;
   }
+    .mynav2{
+      display:flex;
+      justify-content:end;
+    }
   .mynav1 {
     margin-bottom: 0;
   }

@@ -408,7 +408,7 @@ const ServiceDetails = ({ data, slug }) => {
                 </div>
                 <div className="container-fluid px-4">
                   <div className="reviews-section">
-                    {businessReviews.map((review) => (
+                    {businessReviews.length > 0 ?  businessReviews.map((review) => (
                       <div key={review.id} className="card mb-3 shadow-sm">
                         <div className="card-body">
                           <div className="d-flex align-items-center mb-3">
@@ -473,7 +473,11 @@ const ServiceDetails = ({ data, slug }) => {
                           )}
                         </div>
                       </div>
-                    ))}
+                    )): <p>
+
+                      no Reviews
+                    </p>
+                     }
 
                     {/* Review Submission Form */}
                     {hasReviewed === 0 && businessProfile?.slug !== slug && (
@@ -522,7 +526,7 @@ const ServiceDetails = ({ data, slug }) => {
                 <div className="card gallery-section ">
                   <div className="card-header ">
                     <img src="/img/galleryicon.svg" alt="gallery" />
-                    <h4>Active Deals</h4>
+                    <h4>Active Offers</h4>
                   </div>
                   <div className="card-body">
                     <div className="gallery-content">

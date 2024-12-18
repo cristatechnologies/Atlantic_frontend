@@ -452,12 +452,7 @@ const ProfileComponent = () => {
                                 value={country}
                                 onChange={handleCountryChange}
                               >
-                                <option value="">Select Country</option>
-                                {countryDropdown.map((item) => (
-                                  <option key={item.id} value={item.id}>
-                                    {item.name}
-                                  </option>
-                                ))}
+                                <option value="Canada">Canada</option>
                               </select>
                             </div>
                           </div>

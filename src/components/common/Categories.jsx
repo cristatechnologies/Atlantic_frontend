@@ -40,7 +40,7 @@ const Categories = ({ activeMenu }) => {
     <>
       <li className="has-submenu">
         <a
-          className="mobile-user-menu profile-userlink"
+          className="mobile-user-menu profile-userlink cocolorBlacklor"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

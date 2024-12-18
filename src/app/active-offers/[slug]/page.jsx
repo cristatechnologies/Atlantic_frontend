@@ -62,3 +62,5 @@ export default async function ActiveDealsPage({ params }) {
 
   return <AcitveDealsComponent pathName={`/active-offers/${slug}`} />;
 }
+
+

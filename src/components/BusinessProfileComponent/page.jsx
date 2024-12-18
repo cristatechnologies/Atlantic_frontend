@@ -68,7 +68,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
 
   useEffect(() => {
     if (profileData) {
-      setSelectedCountry(profileData.country_id);
+      setSelectedCountry("Canada");
       setSelectedState(profileData.state_id);
       setSelectedCity(profileData.city_id);
     }
@@ -246,7 +246,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
 
   const handleCountryChange = (e) => {
     const countryName = e.target.value;
-    setSelectedCountry(countryName);
+    setSelectedCountry("Canada");
     setSelectedState("");
     setSelectedCity("");
     getState(countryName);
@@ -481,15 +481,14 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                             <select
                               className="form-control"
                               name="country_id"
-                              value={selectedCountry}
-                              onChange={handleCountryChange}
+                             
                             >
                               <option value="">Select Country</option>
-                              {countryDropdown.map((country) => (
-                                <option key={country.id} value={country.name}>
-                                  {country.name}
+                            
+                                <option  value="Canada">
+                                  Canada
                                 </option>
-                              ))}
+                            
                             </select>
                           </div>
                         </div>

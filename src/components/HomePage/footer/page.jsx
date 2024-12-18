@@ -128,18 +128,27 @@ const Footer = () => {
                 width={150}
               />
             </div>
-            <div className="col-lg-6 col-md-6">
+            <div className="col-lg-6 col-md-12">
               <div className="footer-copyright">
-                <p
+                <div
                   className="text-white mb-0 footer-image"
                   style={{
                     fontSize: "15px",
                     display: "flex",
                     justifyContent: "center",
+                    flexDirection:"column",
+                    alignItems:"center"
                   }}
                 >
-                  {websiteData?.footer?.copyright}
-                </p>
+      <p style={{marginBottom:"0px"}}>
+
+                  {websiteData?.footer?.about_us}
+      </p>
+        <p>
+          
+                   {websiteData?.footer?.copyright}
+          </p> 
+                </div>
               </div>
             </div>
           </div>

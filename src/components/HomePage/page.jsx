@@ -361,57 +361,12 @@ const fetchCityName = async (latitude, longitude) => {
           </div>
         </div>
       </section>
-      {/* Banner Section */}
-      {/* Banner Section */}
-      {/* Category Section */}
-      {/* <section className="category-section">
-        <div className="container">
-          <div className="section-heading">
-            <div className="row align-items-center">
-              <div
-                className="col-md-6 aos aos-init aos-animate"
-                data-aos="fade-up"
-              >
-                <h2>
-                  Our <span className="title-left magentaCircle">Cat</span>
-                  egory
-                </h2>
-                <p>Buy and Sell Everything from Used Our Top Category</p>
-              </div>
-              <div
-                className="col-md-6 text-md-end aos aos-init aos-animate"
-                data-aos="fade-up"
-              >
-                <Link href="/categories" className="btn  btn-view">
-                  View All
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            {websiteData?.businessCategories &&
-              websiteData?.businessCategories.map((item, i) => (
-                <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
-                  <Link
-                    href={`/categories/${item.id}`}
-                    className="category-links"
-                  >
-                    <h5>{item.name}</h5>
 
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
-                      alt="icons"
-                    />
-                  </Link>
-                </div>
-              ))}
-          </div>
-        </div>
-      </section> */}
       {/* Category Section */}
       {/* Featured Ads Section */}
       <Carousel
         businessData={businessData}
+        textColor={`${websiteData?.setting?.secondary_color}`}
         Heading={
           userLocation
             ? `Businesses Near ${userLocation.city}`

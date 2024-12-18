@@ -10,6 +10,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { setupAction } from "@/store/websiteSetup";
 import Image from "next/image";
 import Categories from "../../common/Categories";
+import { useRef } from "react";
+
+
+export const useClickOutside = (handler) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const checkIfClickedOutside = (event) => {
+      // If the dropdown is open and the click is outside
+      if (ref.current && !ref.current.contains(event.target)) {
+        handler();
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("mousedown", checkIfClickedOutside);
+
+    // Cleanup the event listener
+    return () => {
+      document.removeEventListener("mousedown", checkIfClickedOutside);
+    };
+  }, [handler]);
+
+  return ref;
+};
 const Header = ({ parms }) => {
   const [authData, setAuthData] = useState(null);
   const [drops, setDrops] = useState(false);
@@ -25,18 +50,20 @@ const Header = ({ parms }) => {
   //   console.log(settings.logo);
   //   console.log("log of the logo is ", settings.logo);
   // });
+  const dropdownRef = useClickOutside(() => {
+    setDrops(false);
+  });
 
   useEffect(() => {
-     const auth = JSON.parse(localStorage.getItem("auth"));
-     const token = auth?.access_token;
-     setSlug(auth?.user?.business?.slug);
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
+    setSlug(auth?.user?.business?.slug);
     const settings = localStorage.getItem("settings");
     if (settings) {
       const settingsData = JSON.parse(settings);
       setLogo(settingsData?.logo);
     }
   });
-
 
   const handleDropdownClick = (e) => {
     e.preventDefault();
@@ -102,7 +129,7 @@ const Header = ({ parms }) => {
         setIsLoggedIn(false);
         setUserType(null);
         router.push("/login");
-         onhandleCloseMenu();
+        onhandleCloseMenu();
       } catch (error) {
         console.error("Logout failed:", error);
       }
@@ -121,6 +148,39 @@ const Header = ({ parms }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [mobileDropdown]);
+
+  // Function to handle clicks outside of dropdown
+ useEffect(() => {
+   // Ensure this code runs only on the client side (browser)
+   if (typeof window !== "undefined") {
+     const handleDropdownOutsideClick = () => {
+       const dropdownMenu = document.querySelector(
+         ".dropdown-menu.dropdown-menu-end"
+       );
+
+       document.addEventListener("click", (event) => {
+         if (!dropdownMenu) return;
+
+         const isDropdownOpen = dropdownMenu.classList.contains("show");
+         const isClickInsideDropdown = dropdownMenu.contains(event.target);
+
+         if (isDropdownOpen && !isClickInsideDropdown) {
+           dropdownMenu.classList.remove("show");
+         }
+       });
+     };
+
+     handleDropdownOutsideClick();
+
+     // Cleanup the event listener on component unmount
+     return () => {
+       document.removeEventListener("click", handleDropdownOutsideClick);
+     };
+   }
+ }, []); 
+
+  // Call the function to set up the event listener
+
   return (
     <header className="header w-full" onClick={(value) => toggleMobileMenu()}>
       <div className="" style={{ marginLeft: "3px", marginRight: "10px" }}>
@@ -155,13 +215,15 @@ const Header = ({ parms }) => {
 
                 <li>
                   <Link
+                  
                     href="/active-offers"
                     onClick={handleMobileMenuItemClick}
+                    
                   >
                     Active Offers{" "}
                   </Link>
                 </li>
-
+                {/*mobile  business */}
                 {isLoggedIn && userType === 1 && (
                   <>
                     <li className="d-lg-none has-submenu">
@@ -199,38 +261,14 @@ const Header = ({ parms }) => {
                           setMobileDropdown(false);
                         }}
                       >
-                        <li>
+                        {/* <li>
                           <Link
                             href="/user/review"
                             onClick={handleMobileMenuItemClick}
                           >
                             <i className="fas fa-columns"></i> Reviews
                           </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/user/profile"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Profile Settings
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/user/your-offers"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Your Offers
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/user/business-gallery"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Your Gallery
-                          </Link>
-                        </li>
+                        </li> */}
                         <li>
                           <Link
                             href={`/business-details/${slug}`}
@@ -241,19 +279,60 @@ const Header = ({ parms }) => {
                         </li>
                         <li>
                           <Link
+                            href="/business-gallery"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i>Gallery
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/my-offers"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> My Offers
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/profile"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
                             href="/change-password"
                             onClick={handleMobileMenuItemClick}
                           >
                             <i className="fas fa-handshake"></i> Change Password
                           </Link>
                         </li>
+                        {/* <li>
+                          <Link
+                            href="/user/notifications"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-handshake"></i> Notifications
+                          </Link>
+                        </li> */}
+                        {/* <li>
+                          <Link
+                            href="/user/delete-account"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-handshake"></i> Delete Account
+                          </Link>
+                        </li> */}
                       </ul>
                     </li>
                   </>
                 )}
+                {/*mobile user */}
                 {isLoggedIn && userType === 2 && (
                   <>
-                    <li className="d-lg-none has-submenu">
+                    <li className="d-lg-none has-submenu" ref={dropdownRef}>
                       <a
                         href="#"
                         className="mobile-user-menu profile-userlink"
@@ -289,18 +368,34 @@ const Header = ({ parms }) => {
                       >
                         <li>
                           <Link
-                            href="/user/review"
+                            href="/user/profile"
                             onClick={handleMobileMenuItemClick}
                           >
-                            <i className="fas fa-columns"></i> Reviews
+                            <i className="fas fa-user-cog"></i> Profile
                           </Link>
                         </li>
                         <li>
                           <Link
-                            href="/user/profile"
+                            href="/change-password"
                             onClick={handleMobileMenuItemClick}
                           >
-                            <i className="fas fa-user-cog"></i> Profile Settings
+                            <i className="fas fa-user-cog"></i> Change Password
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/notifications"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> Notifications
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/user/delete-account"
+                            onClick={handleMobileMenuItemClick}
+                          >
+                            <i className="fas fa-user-cog"></i> Delete Account
                           </Link>
                         </li>
                       </ul>
@@ -309,12 +404,12 @@ const Header = ({ parms }) => {
                 )}
                 {!isLoggedIn && (
                   <>
-                    <li className="login-link">
+                    <li className="d-lg-none">
                       <Link href="/signup" onClick={handleMobileMenuItemClick}>
                         Sign Up
                       </Link>
                     </li>
-                    <li className="login-link">
+                    <li className="d-lg-none">
                       <Link href="/login" onClick={handleMobileMenuItemClick}>
                         Sign In
                       </Link>
@@ -322,9 +417,9 @@ const Header = ({ parms }) => {
                   </>
                 )}
                 {isLoggedIn && (
-                  <li className="login-link">
+                  <li className="d-lg-none">
                     <Link onClick={handleLogout} href="#">
-                      Logout
+                      Signout
                     </Link>
                   </li>
                 )}
@@ -350,39 +445,11 @@ const Header = ({ parms }) => {
                 />
               </Link>
             </div>
-            {/* <div class="btn-group">
-            <button type="button" class="btn btn-danger">
-              Action
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger dropdown-toggle dropdown-toggle-split"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">
-                Action
-              </a>
-              <a class="dropdown-item" href="#">
-                Another action
-              </a>
-              <a class="dropdown-item" href="#">
-                Something else here
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">
-                Separated link
-              </a>
-            </div>
-          </div> */}
+
             <ul className="nav header-navbar-rht">
               {!isLoggedIn ? (
                 <>
-                  <li className="nav-item">
+                  <li>
                     <Link
                       className="nav-link header-reg"
                       href="/signup"
@@ -391,7 +458,7 @@ const Header = ({ parms }) => {
                       Sign Up
                     </Link>
                   </li>
-                  <li className="nav-item">
+                  <li>
                     <Link
                       className="nav-link header-login"
                       href="/login"
@@ -403,29 +470,23 @@ const Header = ({ parms }) => {
                 </>
               ) : (
                 <></>
-                // <li className="nav-item">
-                //   <a
-                //     className="nav-link header-login"
-                //     href="#"
-                //     onClick={handleLogout}
-                //   >
-                //     Logout
-                //   </a>
-                // </li>
               )}
+              {/*business desktop */}
               {isLoggedIn && userType === 1 && (
                 <>
-                  <li className="nav-item dropdown has-arrow logged-item">
+                  <li
+                    className="nav-item dropdown has-arrow logged-item "
+                    ref={dropdownRef}
+                  >
                     <Link
                       href="#"
-                      className={`${
-                        drops === true
-                          ? "dropdown-toggle profile-userlink show "
-                          : "dropdown-toggle profile-userlink"
+                      className={`dropdown-toggle profile-userlink ${
+                        drops ? "show" : ""
                       }`}
+                      onClick={() => setDrops(!drops)}
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
-                      onClick={() => setDrops(!drops)}
+
                       // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                     >
                       <img
@@ -438,35 +499,15 @@ const Header = ({ parms }) => {
 
                       <span>{authData.user?.business?.name}</span>
                     </Link>
-                    <div className="dropdown-menu dropdown-menu-end">
-                      <Link
+                    <div className="dropdown-menu dropdown-menu-end show">
+                      {/* <Link
                         className="dropdown-item"
                         href="/user/review"
                         onClick={handleMobileMenuItemClick}
                       >
                         Review
-                      </Link>
-                      <Link
-                        className="dropdown-item"
-                        href="/user/profile"
-                        onClick={handleMobileMenuItemClick}
-                      >
-                        Profile Settings
-                      </Link>
-                      <Link
-                        className="dropdown-item"
-                        href="/your-offers"
-                        onClick={handleMobileMenuItemClick}
-                      >
-                        Your Offers{" "}
-                      </Link>
-                      <Link
-                        className="dropdown-item"
-                        href="/your-gallery"
-                        onClick={handleMobileMenuItemClick}
-                      >
-                        Your Gallery{" "}
-                      </Link>
+                      </Link> */}
+
                       <Link
                         className="dropdown-item"
                         href={`/business-details/${slug}`}
@@ -474,6 +515,28 @@ const Header = ({ parms }) => {
                       >
                         My Account{" "}
                       </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/business-gallery"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Gallery{" "}
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/my-offers"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        My Offers{" "}
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="/user/profile"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                        Profile
+                      </Link>
+
                       <Link
                         className="dropdown-item"
                         href="/change-password"
@@ -486,27 +549,25 @@ const Header = ({ parms }) => {
                         href="#"
                         onClick={handleLogout}
                       >
-                        Logout{" "}
+                        Signout{" "}
                       </Link>
                     </div>
                   </li>
                 </>
               )}
-
+              {/*user desktop */}
               {isLoggedIn && userType === 2 && (
                 <>
-                  <li className="nav-item dropdown has-arrow logged-item">
+                  <li
+                    className="nav-item dropdown has-arrow logged-item"
+                    ref={dropdownRef}
+                  >
                     <Link
                       href="#"
-                      className={`${
-                        drops === true
-                          ? "dropdown-toggle profile-userlink show "
-                          : "dropdown-toggle profile-userlink"
+                      className={`dropdown-toggle profile-userlink ${
+                        drops ? "show" : ""
                       }`}
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
                       onClick={() => setDrops(!drops)}
-                      // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                     >
                       <img
                         src={
@@ -516,37 +577,43 @@ const Header = ({ parms }) => {
                         }
                         alt="User profile"
                       />
-
                       <span>{authData.user?.name}</span>
                     </Link>
-                    <div className="dropdown-menu dropdown-menu-end">
-                      <Link
-                        className="dropdown-item"
-                        href="/user/review"
-                        onClick={handleMobileMenuItemClick}
-                      >
-                        Review
-                      </Link>
+                    <div className="dropdown-menu dropdown-menu-end show">
                       <Link
                         className="dropdown-item"
                         href="/user/profile"
                         onClick={handleMobileMenuItemClick}
                       >
-                        Profile Settings
+                        Profile 
                       </Link>
                       <Link
                         className="dropdown-item"
-                        href="/change-passsword"
+                        href="/change-password"
                         onClick={handleMobileMenuItemClick}
                       >
                         Change Password
                       </Link>
                       <Link
                         className="dropdown-item"
+                        href="/user/notifications"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                      Notifications
+                      </Link>{" "}
+                      <Link
+                        className="dropdown-item"
+                        href="/user/delete-account"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                      Delete Account
+                      </Link>{" "}
+                      <Link
+                        className="dropdown-item"
                         href="#"
                         onClick={handleLogout}
                       >
-                        Logout
+                        Signout
                       </Link>
                     </div>
                   </li>

@@ -82,7 +82,7 @@ const YourDealsComponent = () => {
   };
   const handleEdit = (id) => {
     router.push({
-      pathname: "/your-offers/[id]",
+      pathname: "/my-offers/[id]",
       query: { id: id },
     });
   };
@@ -165,7 +165,7 @@ const YourDealsComponent = () => {
             <div className="col-12">
               <div className="card dash-cards">
                 <div className="card-header">
-                  <h4>Your Daily Offers</h4>
+                  <h4>My Offers</h4>
                 </div>
                 <div className="card-body">
                   <div className="offer-header d-none d-md-flex align-items-center mb-3">
@@ -215,7 +215,7 @@ const YourDealsComponent = () => {
                           />
                         </div>
                         <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
-                          <Link href={`/your-offers/${offer.id}`}>
+                          <Link href={`/my-offers/${offer.id}`}>
                             <button className="btn btn-sm btn-primary action-button">
                               <i className="feather-edit" />
                             </button>

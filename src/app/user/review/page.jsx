@@ -5,13 +5,34 @@ import UserDashboardComponent from "@/components/UserDashboardComponent/page";
 import BusinessDashboardComponent from "@/components/BusinessDashboardComponent/page";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-
+import axios from "axios";
 
 
 const Review  = () => {
   const router = useRouter();
   const [userType, setUserType] = useState(null);
 
+
+
+  
+  const handleLogout = async () => {
+    
+    const authJson = localStorage.getItem("auth");
+    if (authJson) {
+      const auth = JSON.parse(authJson);
+      try {
+        await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/logout?token=${auth.access_token}`
+        );
+        localStorage.removeItem("auth");
+        setIsLoggedIn(false);
+        setUserType(null);
+        router.push("/login");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+    }
+  };
   useEffect(() => {
     const authData = JSON.parse(localStorage.getItem("auth"));
 
@@ -46,13 +67,13 @@ const Review  = () => {
       </div>
     );
   }
-  if (userType === "invalid") {
+  if (userType === "invalid" || userType === "individual") {
     toast.error("Invalid user! Please Login Again ");
-    router.push("/login");
+  handleLogout();
     return <div>Invalid User Type</div>;
   }
   return userType === "individual" ? (
-    <UserDashboardComponent />
+    <></>
   ) : (
     <BusinessDashboardComponent />
   );

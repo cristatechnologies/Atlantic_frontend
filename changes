@@ -29,10 +29,38 @@
 16- After login redirect to home page                               ->already working
 17- in business details display latest 4 active deals               ->done
 18- display map automatically when business registers pick address   ->done
-19- make home page images smaller                                     ->done
-20- Add Agree terms & Conditions check box in both registration ->done                                       
- 
+19- make home page images smaller                                       ->done
+20- Add Agree terms & Conditions check box in both registration         ->done      
 
+17th Dec
+21- REmove the margin between header and banner (SM)                    -> done 
+22- BG Stretched in SM                                                  -> done                                                           
+23-  change the near by business title color to yellow                     -> done  
+24- move slider arrow to line end or remove it                          
+25- change color of the header                                             -> done  
+26-  add the tag line in footer above copyright                              -> done  
+27- form fix                                                                     -> done  
+28- Fix the Dropdown Order                                                  -> done    
+        My Account 
+        Gallery (and not your gallery)
+        My Offers (and not your offers)
+        Profile
+        Change Password
+        Sign out                        
+29- change Sign IN Sign Out - > Login Logout                                   -> done    
+30- on click dropdown close                                                      -> done  
+31- review removed from user follow the flow of the dropdown                       -> done   
+        This does not need Review
+
+        Keep below options for personal users
+
+        Profile     
+        Change Password
+        Notifications ----- notification Page ?                                             -> done   
+        Delete account ---- direct api fire ??                                              -> done   
+        Logout/Signout                                                                      
+32- Delete-account in dropdown user                                                         -> done   
+33- dashboard removed from user                                                                 -> done   
 
 
 

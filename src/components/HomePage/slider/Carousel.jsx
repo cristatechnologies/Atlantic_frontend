@@ -53,7 +53,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
   return (
     <section
       className="featured-section-one"
-      style={{ backgroundColor: `${color}`}}
+      style={{ backgroundColor: `${color}` }}
     >
       <div className="container">
         <div className="row align-items-center">
@@ -63,7 +63,10 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
               {/* <p>Checkout these latest coo ads from our members</p> */}
             </div>
           </div>
-          <div className="col-md-6 text-md-end aos" data-aos="fade-up">
+          <div
+            className="col-md-6 text-md-end  aos"
+            data-aos="fade-up"
+          >
             <div className="owl-nav mynav2">
               <button
                 type="button"
@@ -119,7 +122,6 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                         <div className="bloglist-content pe-auto">
                           <div className="card-body">
                             <div className="blogfeaturelink">
-                             
                               <div className="blog-features display-screen-size">
                                 <Link href={`business-details/${item.slug}`}>
                                   <span>

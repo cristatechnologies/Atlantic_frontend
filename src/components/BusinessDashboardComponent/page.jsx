@@ -95,7 +95,7 @@ const BusinessDashboardComponent = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/your-offers">
+                <Link href="/my-offers">
                   <i className="feather-list" /> <span>Your Offers</span>
                 </Link>
               </li>
