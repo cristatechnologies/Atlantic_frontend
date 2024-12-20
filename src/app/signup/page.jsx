@@ -7,9 +7,9 @@ const signup = () => {
     <div
       style={{
         backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "repeat",
+        // backgroundSize: "cover",
+        // backgroundPosition: "center",
+        // backgroundRepeat: "repeat",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

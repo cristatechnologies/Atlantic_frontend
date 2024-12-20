@@ -16,6 +16,8 @@ const ProfileComponent = () => {
   //  useAuth();
 
   // const isAuthenticated = useAuth();
+
+
   const router = useRouter();
   const [profileData, setProfileData] = useState([]);
   const [passwordType, setPasswordType] = useState("password");
@@ -36,12 +38,31 @@ const ProfileComponent = () => {
     const [originState, setOriginState] = useState("");
     const [languageTags, setLanguageTags] = useState([]);
   // Function to handle password input change
-
+const [isCityCustom, setIsCityCustom] = useState(false);
   const formRef = useRef(null);
 
   {
     console.log("test");
   }
+
+   const handleCityChange = (e) => {
+     const inputValue = e.target.value;
+     setCity(inputValue);
+
+     // Check if the input matches any dropdown city
+     const matchedCity = cityDropdown?.find(
+       (item) => item.name.toLowerCase() === inputValue.toLowerCase()
+     );
+
+     if (matchedCity) {
+       // If input matches a dropdown city, use its name
+       setCity(matchedCity.name);
+       setIsCityCustom(false);
+     } else {
+       // If no match, treat as custom city
+       setIsCityCustom(true);
+     }
+   };
 
    const handleLanguageTagChange = (tags) => {
      setLanguageTags(tags);
@@ -141,7 +162,7 @@ const ProfileComponent = () => {
       // If country_id exists, fetch states
       if (profile?.country_id) {
         const statesResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${profile.country_id}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country?name=${profile.country_id}`
         );
         setStateDropdown(statesResponse.data.states || []);
       }
@@ -149,7 +170,7 @@ const ProfileComponent = () => {
       // If state_id exists, fetch cities
       if (profile?.state_id) {
         const citiesResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${profile.state_id}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state?name=${profile.state_id}`
         );
         setCityDropdown(citiesResponse.data.cities || []);
       }
@@ -273,7 +294,7 @@ const ProfileComponent = () => {
     if (countryId) {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country?name=${countryId}`
         );
         setStateDropdown(response.data?.states || []);
       } catch (error) {
@@ -295,7 +316,7 @@ const ProfileComponent = () => {
     if (stateId) {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/?name=${stateId}`
         );
         setCityDropdown(response.data?.cities || []);
       } catch (error) {
@@ -332,9 +353,9 @@ const ProfileComponent = () => {
     }
   };
 
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
-  };
+  // const handleCityChange = (e) => {
+  //   setCity(e.target.value);
+  // };
 
   return (
     <>
@@ -472,7 +493,7 @@ const ProfileComponent = () => {
                               >
                                 <option value="">Select State</option>
                                 {stateDropdown.map((item) => (
-                                  <option key={item.id} value={item.id}>
+                                  <option key={item.id} value={item.name}>
                                     {item.name}
                                   </option>
                                 ))}
@@ -481,7 +502,7 @@ const ProfileComponent = () => {
                           </div>
 
                           {/* Update the City dropdown */}
-                          <div className="col-md-6 form-group">
+                          {/* <div className="col-md-6 form-group">
                             <label className="col-form-label">City</label>
                             <div className="pass-group group-img">
                               <span className="lock-icon">
@@ -495,11 +516,33 @@ const ProfileComponent = () => {
                               >
                                 <option value="">Select City</option>
                                 {cityDropdown.map((item) => (
-                                  <option key={item.id} value={item.id}>
+                                  <option key={item.id} value={item.name}>
                                     {item.name}
                                   </option>
                                 ))}
                               </select>
+                            </div>
+                          </div> */}
+
+                          <div className="col-md-6 form-group">
+                            <label className="col-form-label">City</label>
+                            <div className="pass-group group-img">
+                              <span className="lock-icon">
+                                <i className="feather-map-pin" />
+                              </span>
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Select or Enter City"
+                                list="cityList"
+                                value={city}
+                                onChange={handleCityChange}
+                              />
+                              <datalist id="cityList">
+                                {cityDropdown?.map((item) => (
+                                  <option key={item.id} value={item.name} />
+                                ))}
+                              </datalist>
                             </div>
                           </div>
 
@@ -605,7 +648,7 @@ const ProfileComponent = () => {
                               >
                                 <option value="">Select Origin Country</option>
                                 {countryDropdown.map((item) => (
-                                  <option key={item.id} value={item.id}>
+                                  <option key={item.id} value={item.name}>
                                     {item.name}
                                   </option>
                                 ))}
@@ -622,7 +665,13 @@ const ProfileComponent = () => {
                               <span className="lock-icon">
                                 <i className="feather-map" />
                               </span>
-                              <select
+                              <input
+                                className="form-control"
+                                value={originState}
+                                type="text"
+                                onChange={(e) => setOriginState(e.target.value)}
+                              />
+                              {/* <select
                                 className="form-control"
                                 value={originState}
                                 onChange={(e) => setOriginState(e.target.value)}
@@ -630,11 +679,11 @@ const ProfileComponent = () => {
                               >
                                 <option value="">Select Origin State</option>
                                 {stateDropdown.map((item) => (
-                                  <option key={item.id} value={item.id}>
+                                  <option key={item.id} value={item.name}>
                                     {item.name}
                                   </option>
                                 ))}
-                              </select>
+                              </select> */}
                             </div>
                           </div>
 

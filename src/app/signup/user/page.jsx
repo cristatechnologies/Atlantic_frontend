@@ -43,13 +43,37 @@ const [confirmPasswordType, setConfirmPasswordType] = useState("password");
  const [country, setCountry] = useState("");
  const [state, setState] = useState("");
  const [city, setCity] = useState("");
+   const [isCityCustom, setIsCityCustom] = useState(false);
+   const [customCityName, setCustomCityName] = useState("");
+
+
 
   const [originCountryDropdown, setOriginCountryDropdown] = useState([]);
   const [originStateDropdown, setOriginStateDropdown] = useState([]);
- 
 
  const [isAgreed, setIsAgreed] = useState(false);
 
+
+
+
+ const handleCityChange = (e) => {
+   const inputValue = e.target.value;
+   setCity(inputValue);
+
+   // Check if the input matches any dropdown city
+   const matchedCity = cityDropdown?.find(
+     (item) => item.name.toLowerCase() === inputValue.toLowerCase()
+   );
+
+   if (matchedCity) {
+     // If input matches a dropdown city, use its name
+     setCity(matchedCity.name);
+     setIsCityCustom(false);
+   } else {
+     // If no match, treat as custom city
+     setIsCityCustom(true);
+   }
+ };
    const togglePasswordVisibility = (field) => {
      if (field === "password") {
        setPasswordType(passwordType === "password" ? "text" : "password");
@@ -137,7 +161,7 @@ const [confirmPasswordType, setConfirmPasswordType] = useState("password");
         if (stateId) {
           axios
             .get(
-              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state?name=${stateId}`
             )
             .then((res) => {
               setCityDropdown(res.data && res.data.cities);
@@ -170,6 +194,10 @@ const router = useRouter();
     }
     setPasswordType("password");
   };
+
+
+
+
    const doSignUp = async () => {
      try {
        const fcmToken = localStorage.getItem("fcmToken");
@@ -191,7 +219,7 @@ const router = useRouter();
            zip_code: postalCode,
            city_id: city,
            state_id: state,
-           country_id: 43,       
+           country_id: "Canada",       
            origin_country_id: originCountry,
            origin_state_id: originState,
            fcm_token:token,
@@ -304,9 +332,9 @@ const router = useRouter();
         className="login-content"
         style={{
           backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "repeat",
+          // backgroundSize: "cover",
+          // backgroundPosition: "center",
+          // backgroundRepeat: "repeat",
         }}
       >
         <div className="container">
@@ -619,38 +647,48 @@ const router = useRouter();
                       </div> */}
 
                       {/* State Dropdown */}
-                      <div className="form-group group-img">
-                        <select
-                          className="form-control"
-                          value={state}
-                          onChange={handleStateChange}
-                        >
-                          <option value="">Select Province</option>
-                          {stateDropdown &&
-                            stateDropdown.map((s) => (
-                              <option key={s.id} value={s.id}>
-                                {s.name}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
+                   
+                        <div className="form-group group-img">
+                          <div className="select-wrapper d-flex align-items-center">
+                            <select
+                              className="form-control"
+                              value={state}
+                              onChange={(e) => {
+                                setState(e.target.value);
+                                // Fetch cities for the selected state
+                                getcity(e.target.value);
+                              }}
+                            >
+                              <option value="">Select Province</option>
+                              {stateDropdown?.map((item) => (
+                                <option key={item.id} value={item.value}>
+                                  {item.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                    
                       {/* City Dropdown */}
-                      <div className="form-group group-img">
-                        <select
-                          className="form-control"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                          disabled={!state}
-                        >
-                          <option value="">Select City</option>
-                          {cityDropdown &&
-                            cityDropdown.map((c) => (
-                              <option key={c.id} value={c.id}>
-                                {c.name}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
+            
+                        <div className="form-group group-img">
+                          <div className="select-wrapper d-flex align-items-center">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Select or Enter City"
+                              list="cityList"
+                              value={city}
+                              onChange={handleCityChange}
+                            />
+                            <datalist id="cityList">
+                              {cityDropdown?.map((item) => (
+                                <option key={item.id} value={item.name} />
+                              ))}
+                            </datalist>
+                          </div>
+                        </div>
+                     
 
                       {/* Postal Code */}
                       <div className="form-group group-img">
@@ -672,7 +710,7 @@ const router = useRouter();
                         >
                           <option value="">Select Origin Country</option>
                           {originCountryDropdown.map((c) => (
-                            <option key={c.id} value={c.id}>
+                            <option key={c.id} value={c.name}>
                               {c.name}
                             </option>
                           ))}
@@ -680,20 +718,12 @@ const router = useRouter();
                       </div>
                       {/* Origin State Dropdown */}
                       <div className="form-group group-img">
-                        <select
+                        <input
                           className="form-control"
-                          value={originState}
+                          placeholder={originState}
+                          type="text"
                           onChange={(e) => setOriginState(e.target.value)}
-                          disabled={!originCountry}
-                        >
-                          <option value="">Select Origin State/Province</option>
-                          {originStateDropdown &&
-                            originStateDropdown.map((s) => (
-                              <option key={s.id} value={s.id}>
-                                {s.name}
-                              </option>
-                            ))}
-                        </select>
+                        />
                       </div>
                     </div>
                   )}

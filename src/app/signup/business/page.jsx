@@ -334,9 +334,9 @@ const handleCheckboxChange = (e) => {
         className="login-content"
         style={{
           backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          backgroundRepeat: "repeat",
+          // backgroundSize: "contain",
+          // backgroundPosition: "center",
+          // backgroundRepeat: "repeat",
         }}
       >
         <div className="container">
@@ -666,7 +666,7 @@ const handleCheckboxChange = (e) => {
                         </div>
                       </div>
                     </div>
-                    {/* {showMultiCitySelect && (
+                    {/* {showMultiCitySelect && (   
                       <div className="col-md-6">
                         <div className="form-group">
                           <label>Select Multiple Cities</label>
