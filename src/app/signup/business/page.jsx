@@ -54,25 +54,14 @@ const [isCityCustom, setIsCityCustom] = useState(false);
 const [customCityName, setCustomCityName] = useState("");
  const [isAgreed, setIsAgreed] = useState(false);
  const router = useRouter();
-
+ const [error, setError] = useState("");
 
 const handleCityChange = (e) => {
   const inputValue = e.target.value;
-  setcity(inputValue);
+  setcity(inputValue); // Now storing the city name directly
 
   // Check if the input matches any dropdown city
-  const matchedCity = cityDropdown?.find(
-    (item) => item.name.toLowerCase() === inputValue.toLowerCase()
-  );
-
-  if (matchedCity) {
-    // If input matches a dropdown city, use its name
-    setcity(matchedCity.name);
-    setIsCityCustom(false);
-  } else {
-    // If no match, treat as custom city
-    setIsCityCustom(true);
-  }
+ 
 };
 
 
@@ -173,6 +162,14 @@ const handleCheckboxChange = (e) => {
 
   const doSignUp = async () => {
     try {
+      //  if (!city || city.trim() === "") {
+      //    toast.error("Please select a city.");
+      //    setError("Please select a valid city.");
+      //    return; // Stop submission if validation fails
+      //  }
+      //  else(
+      //   setError(" ")
+      //  )
       const fcmToken = localStorage.getItem("fcmToken");
       const token = fcmToken;
       const response = await axios.post(
@@ -305,7 +302,7 @@ const handleCheckboxChange = (e) => {
   };
 
   const getcity = (stateId) => {
-    setcity(null);
+   
     if (stateId) {
       axios
         .get(
@@ -320,11 +317,7 @@ const handleCheckboxChange = (e) => {
     }
   };
 
-  const selectCity = (value) => {
-    if (value) {
-      setcity(value.id);
-    }
-  };
+  
 
   return (
     <>
@@ -435,15 +428,11 @@ const handleCheckboxChange = (e) => {
                             error={!!(errors && Object.hasOwn(errors, "phone"))}
                             patternValidation={"[1-9]{1}[0-9]{9}"}
                             onChange={(e) => {
-                              e.target.value.length <= 10 &&
+                           
                                 setPhone(e.target.value);
                             }}
                           />
-                          {phone && phone.length < 10 && (
-                            <span className="text-sm mt-1 text-red">
-                              Please enter phone number 10 digit
-                            </span>
-                          )}
+
                           {errors && Object.hasOwn(errors, "phone") ? (
                             <span className="text-sm mt-1 text-red  ">
                               {errors.phone[0]}
@@ -648,6 +637,7 @@ const handleCheckboxChange = (e) => {
 
                     {/* City Field */}
                     <div className="col-md-6">
+                     
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
                           <input

@@ -28,7 +28,7 @@ const EditOfferPage = ({ params }) => {
           const token = auth?.access_token;
           
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers/${id}?token=${token}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/user/business/daily-offers/${id}?token=${token}`
           );
           setOffer(response.data);
           setImagePreview(

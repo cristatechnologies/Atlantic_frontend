@@ -59,3 +59,21 @@
   padding: 0 10px;
   box-sizing: border-box;
 }
+
+
+
+
+/* Add to ServiceDetailActive-deals.module.css */
+.noImagesFound {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.noImagesFound p {
+  margin: 0;
+  font-size: 16px;
+  color: #6c757d;
+}

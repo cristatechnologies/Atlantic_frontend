@@ -29,7 +29,8 @@ import ServiceDetailActiveDealsCaruousel from "./ServiceDetailActiveDealsCaruous
 import ServiceDetailCaruouselGallery from "./ServiceDetailCaruouselGallery";
 import { useRef } from "react";
 
-const ServiceDetails = ({ data, slug }) => {
+const 
+ServiceDetails = ({ data, slug }) => {
   const pathname = usePathname();
   const [fullUrl, setFullUrl] = useState("");
 
@@ -190,7 +191,7 @@ const ServiceDetails = ({ data, slug }) => {
     // const payload = JSON.stringify(formData)
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/send-contact-message?name=${formData.name}&email=${formData.email}&message=${formData.message}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/send-contact-message/${slug}?name=${formData.name}&email=${formData.email}&message=${formData.message}`
       );
 
       if (response.data && response.status === 200) {
@@ -385,7 +386,7 @@ const ServiceDetails = ({ data, slug }) => {
                 </div>
               </div>
 
-              <div className="card gallery-section ">
+             {data.business_gallery.length > 0 ? <div className="card gallery-section ">
                 <div className="card-header ">
                   <img src="/img/galleryicon.svg" alt="gallery" />
                   <h4>Gallery</h4>
@@ -399,7 +400,22 @@ const ServiceDetails = ({ data, slug }) => {
                     {/* <Roomspics images={data.business_gallery} /> */}
                   </div>
                 </div>
-              </div>
+              </div> :  null}
+
+              {activeDeals.length > 0 ? (
+                <div className="card gallery-section ">
+                  <div className="card-header ">
+                    <img src="/img/galleryicon.svg" alt="gallery" />
+                    <h4>Active Offers</h4>
+                  </div>
+                  <div className="card-body">
+                    <div className="gallery-content">
+                      {console.log("nudsiness_active:", activeDeals)}
+                      <ServiceDetailActiveDealsCaruousel data={activeDeals} />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               <div className="card review-sec  mb-0" id="review-sec">
                 <div className="card-header  align-items-center">
@@ -408,76 +424,76 @@ const ServiceDetails = ({ data, slug }) => {
                 </div>
                 <div className="container-fluid px-4">
                   <div className="reviews-section">
-                    {businessReviews.length > 0 ?  businessReviews.map((review) => (
-                      <div key={review.id} className="card mb-3 shadow-sm">
-                        <div className="card-body">
-                          <div className="d-flex align-items-center mb-3">
-                            <img
-                              src={
-                                review.user.image
-                                  ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
-                                  : "/img/pngegg.png"
-                              }
-                              alt={review.user.name}
-                              className="rounded-circle me-3"
-                              style={{
-                                width: "50px",
-                                height: "50px",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <div>
-                              <h6 className="mb-1">{review.user.name}</h6>
-                              <StarRatings
-                                rating={review.rating}
-                                starRatedColor="#FFD700"
-                                starDimension="18px"
-                                starSpacing="-28px"
-                                numberOfStars={5}
+                    {businessReviews.length > 0 ? (
+                      businessReviews.map((review) => (
+                        <div key={review.id} className="card mb-3 shadow-sm">
+                          <div className="card-body">
+                            <div className="d-flex align-items-center mb-3">
+                              <img
+                                src={
+                                  review.user.image
+                                    ? `${process.env.NEXT_PUBLIC_BASE_URL}${review.user.image}`
+                                    : "/img/pngegg.png"
+                                }
+                                alt={review.user.name}
+                                className="rounded-circle me-3"
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  objectFit: "cover",
+                                }}
                               />
+                              <div>
+                                <h6 className="mb-1">{review.user.name}</h6>
+                                <StarRatings
+                                  rating={review.rating}
+                                  starRatedColor="#FFD700"
+                                  starDimension="18px"
+                                  starSpacing="-28px"
+                                  numberOfStars={5}
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                          <p className="card-text">{review.reviews}</p>
+                            <p className="card-text">{review.reviews}</p>
 
-                          {/* Business Reply */}
-                          {review.reply && (
-                            <div className="bg-light px-4 py-2 rounded mt-2">
-                              {/* <strong className="text-muted">
+                            {/* Business Reply */}
+                            {review.reply && (
+                              <div className="bg-light px-4 py-2 rounded mt-2">
+                                {/* <strong className="text-muted">
                                 Business Reply:
                               </strong> */}
-                              <p className="text-muted">{review.reply}</p>
-                            </div>
-                          )}
+                                <p className="text-muted">{review.reply}</p>
+                              </div>
+                            )}
 
-                          {/* Reply functionality for business owner */}
-                          {isBusinessOwner(review) && (
-                            <div className="mt-3">
-                              <textarea
-                                rows={2}
-                                className="form-control mb-2"
-                                placeholder="Write your reply"
-                                value={replyText[review.id] || ""}
-                                onChange={(e) =>
-                                  handleReplyChange(review.id, e.target.value)
-                                }
-                              />
-                              <button
-                                className="btn btn-primary btn-sm"
-                                onClick={() => handleReplySubmit(review.id)}
-                                disabled={!replyText[review.id]}
-                              >
-                                Submit Reply
-                              </button>
-                            </div>
-                          )}
+                            {/* Reply functionality for business owner */}
+                            {isBusinessOwner(review) && (
+                              <div className="mt-3">
+                                <textarea
+                                  rows={2}
+                                  className="form-control mb-2"
+                                  placeholder="Write your reply"
+                                  value={replyText[review.id] || ""}
+                                  onChange={(e) =>
+                                    handleReplyChange(review.id, e.target.value)
+                                  }
+                                />
+                                <button
+                                  className="btn btn-primary btn-sm"
+                                  onClick={() => handleReplySubmit(review.id)}
+                                  disabled={!replyText[review.id]}
+                                >
+                                  Submit Reply
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )): <p>
-
-                      no Reviews
-                    </p>
-                     }
+                      ))
+                    ) : (
+                      <p>No Reviews</p>
+                    )}
 
                     {/* Review Submission Form */}
                     {hasReviewed === 0 && businessProfile?.slug !== slug && (
@@ -521,22 +537,6 @@ const ServiceDetails = ({ data, slug }) => {
                   </div>
                 </div>
               </div>
-
-              {activeDeals.length > 0 ? (
-                <div className="card gallery-section ">
-                  <div className="card-header ">
-                    <img src="/img/galleryicon.svg" alt="gallery" />
-                    <h4>Active Offers</h4>
-                  </div>
-                  <div className="card-body">
-                    <div className="gallery-content">
-                      {console.log("nudsiness_active:", activeDeals)}
-                      <ServiceDetailActiveDealsCaruousel data={activeDeals} />
-                      {/* <Roomspics images={data.business_gallery} /> */}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
 
               {/*/Review Section*/}
             </div>

@@ -478,23 +478,14 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                             <span className="lock-icon">
                               <i className="feather-globe" />
                             </span>
-                            <select
-                              className="form-control"
-                              name="country_id"
-                             
-                            >
-                              <option value="">Select Country</option>
-                            
-                                <option  value="Canada">
-                                  Canada
-                                </option>
-                            
+                            <select className="form-control" name="country_id">
+                              <option value="Canada">Canada</option>
                             </select>
                           </div>
                         </div>
                         {/* state */}
                         <div className="col-md-6 form-group">
-                          <label className="col-form-label">State</label>
+                          <label className="col-form-label">Province </label>
                           <div className="pass-group group-img">
                             <span className="lock-icon">
                               <i className="feather-map" />
@@ -506,7 +497,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                               onChange={handleStateChange}
                               disabled={!selectedCountry}
                             >
-                              <option value="">Select State</option>
+                              <option value="">Select Province</option>
                               {stateDropdown.map((state) => (
                                 <option key={state.id} value={state.name}>
                                   {state.name}

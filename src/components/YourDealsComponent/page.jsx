@@ -45,7 +45,7 @@ const YourDealsComponent = () => {
         const auth = JSON.parse(localStorage.getItem("auth"));
         const token = auth?.access_token;
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/business/daily-offers?token=${token}`
         );
         setOffers(response.data);
       } catch (error) {
@@ -54,7 +54,7 @@ const YourDealsComponent = () => {
       }
     };
 
-    fetchOffers();
+    fetchOffers()
   }, []);
 
   const handleStatusToggle = async (id, currentStatus) => {
@@ -146,6 +146,9 @@ const YourDealsComponent = () => {
     }
   };
 
+
+  console.log(offers)
+
   return (
     <>
       <div
@@ -160,81 +163,88 @@ const YourDealsComponent = () => {
             Add New
           </button>
         </div>
-        <div className="container px-4">
-          <div className="row">
-            <div className="col-12">
-              <div className="card dash-cards">
-                <div className="card-header">
-                  <h4>My Offers</h4>
-                </div>
-                <div className="card-body">
-                  <div className="offer-header d-none d-md-flex align-items-center mb-3">
-                    <div className="col-md-1">
-                      <strong>Image</strong>
-                    </div>
-                    <div className="col-md-5">
-                      <strong>Name</strong>
-                    </div>
-                    <div className="col-md-3">
-                      <strong>Status</strong>
-                    </div>
-                    <div className="col-md-3">
-                      <strong>Action</strong>
-                    </div>
+
+        {offers.length > 0 ? (
+          <div className="container px-4">
+            <div className="row">
+              <div className="col-12">
+                <div className="card dash-cards">
+                  <div className="card-header">
+                    <h4>My Offers</h4>
                   </div>
-
-                  {offers.map((offer) => (
-                    <div
-                      key={offer.id}
-                      className="offer-item mb-4 p-3 border rounded"
-                    >
-                      <div className="d-flex flex-column flex-md-row align-items-center">
-                        <div className="col-12 col-md-1 mb-3 mb-md-0">
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
-                            alt={offer.title}
-                            className="img-fluid rounded"
-                            style={{ width: "50px", height: "50px" }}
-                          />
-                        </div>
-                        <div className="col-12 col-md-5 mb-3 mb-md-0 text-center text-md-start">
-                          <Link href={`/active-offers/${offer.slug}`}>
-                            <>
-                              <h5 className="mb-1">{offer.title}</h5>
-
-                              <p className="mb-0 small">{offer.description}</p>
-                            </>
-                          </Link>
-                        </div>
-                        <div className="col-12 col-md-3 mb-3 mb-md-0 text-center">
-                          <Switch
-                            checked={offer.status === 1}
-                            onChange={() =>
-                              handleStatusToggle(offer.id, offer.status)
-                            }
-                          />
-                        </div>
-                        <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
-                          <Link href={`/my-offers/${offer.id}`}>
-                            <button className="btn btn-sm btn-primary action-button">
-                              <i className="feather-edit" />
-                            </button>
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(offer.id)}
-                            className="btn btn-sm btn-danger action-button"
-                          >
-                            <i className="feather-trash-2" />
-                          </button>
-                        </div>
+                  <div className="card-body">
+                    <div className="offer-header d-none d-md-flex align-items-center mb-3">
+                      <div className="col-md-1">
+                        <strong>Image</strong>
+                      </div>
+                      <div className="col-md-5">
+                        <strong>Name</strong>
+                      </div>
+                      <div className="col-md-3">
+                        <strong>Status</strong>
+                      </div>
+                      <div className="col-md-3">
+                        <strong>Action</strong>
                       </div>
                     </div>
-                  ))}
+
+                    {offers.map((offer) => (
+                      <div
+                        key={offer.id}
+                        className="offer-item mb-4 p-3 border rounded"
+                      >
+                        <div className="d-flex flex-column flex-md-row align-items-center">
+                          <div className="col-12 col-md-1 mb-3 mb-md-0">
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
+                              alt={offer.title}
+                              className="img-fluid rounded"
+                              style={{ width: "50px", height: "50px" }}
+                            />
+                          </div>
+                          <div className="col-12 col-md-5 mb-3 mb-md-0 text-center text-md-start">
+                            <Link href={`/active-offers/${offer.slug}`}>
+                              <>
+                                <h5 className="mb-1">{offer.title}</h5>
+
+                                <p className="mb-0 small">
+                                  {offer.description}
+                                </p>
+                              </>
+                            </Link>
+                          </div>
+                          <div className="col-12 col-md-3 mb-3 mb-md-0 text-center">
+                            <Switch
+                              checked={offer.status === 1}
+                              onChange={() =>
+                                handleStatusToggle(offer.id, offer.status)
+                              }
+                            />
+                          </div>
+                          <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
+                            <Link href={`/my-offers/${offer.id}`}>
+                              <button className="btn btn-sm btn-primary action-button">
+                                <i className="feather-edit" />
+                              </button>
+                            </Link>
+                            <button
+                              onClick={() => handleDelete(offer.id)}
+                              className="btn btn-sm btn-danger action-button"
+                            >
+                              <i className="feather-trash-2" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <h3 className="text-center " style={{height:"100vh", paddingTop:"50px"}}>No Active Offers</h3>
+        )}
       </div>
 
       <Modal

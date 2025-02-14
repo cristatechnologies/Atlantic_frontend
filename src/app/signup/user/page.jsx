@@ -1,5 +1,5 @@
 "use client";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { languagesInAsia } from "@/constant/languageinAsia";
 import axios from "axios";
@@ -11,182 +11,147 @@ import "react-tagsinput/react-tagsinput.css";
 import { SuccessImg } from "@/components/imagepath";
 import FcmTokenComp from "@/lib/firebaseForeground";
 
-
-
 const user = () => {
-   const [fname, setFname] = useState("");
-   const [lname, setLname] = useState("")
-   const [email, setEmail] = useState("");
-   const [phone, setPhone] = useState("");
-    const [selectedLanguage, setSelectedLanguage] = useState("");
-   const [region,setRegion] = useState("");
-   const [originState, setOriginState] = useState("")
-   const [originCountry,setOriginCountry] = useState("");
-   const [confirmPassword, setConfirmPassword] = useState("");
-   const [checked, setCheck] = useState(false);
-    const [errors, setErrors] = useState(null);
-     const [isValidEmail, setIsValidEmail] = useState(true);
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [region, setRegion] = useState("");
+  const [originState, setOriginState] = useState("");
+  const [originCountry, setOriginCountry] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [checked, setCheck] = useState(false);
+  const [errors, setErrors] = useState(null);
+  const [isValidEmail, setIsValidEmail] = useState(true);
   const [passwordType, setPasswordType] = useState("password");
   const [passwordInput, setPasswordInput] = useState("");
   const [languageTags, setLanguageTags] = useState([]);
-   const [showOptionalFields, setShowOptionalFields] = useState(false);
- const [line1, setLine1] = useState("");
- const [line2, setLine2] = useState("");
- const [postalCode, setPostalCode] = useState("");
-const [confirmPasswordType, setConfirmPasswordType] = useState("password");
- // Dropdown state variables
- const [countryDropdown, setCountryDropdown] = useState([]);
- const [stateDropdown, setStateDropdown] = useState([]);
- const [cityDropdown, setCityDropdown] = useState([]);
+  const [showOptionalFields, setShowOptionalFields] = useState(false);
+  const [line1, setLine1] = useState("");
+  const [line2, setLine2] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+  // Dropdown state variables
+  const [countryDropdown, setCountryDropdown] = useState([]);
+  const [stateDropdown, setStateDropdown] = useState([]);
+  const [cityDropdown, setCityDropdown] = useState([]);
 
- // Selected dropdown values
- const [country, setCountry] = useState("");
- const [state, setState] = useState("");
- const [city, setCity] = useState("");
-   const [isCityCustom, setIsCityCustom] = useState(false);
-   const [customCityName, setCustomCityName] = useState("");
-
-
+  // Selected dropdown values
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [isCityCustom, setIsCityCustom] = useState(false);
+  const [customCityName, setCustomCityName] = useState("");
+  const [error, setError] = useState("");
 
   const [originCountryDropdown, setOriginCountryDropdown] = useState([]);
   const [originStateDropdown, setOriginStateDropdown] = useState([]);
 
- const [isAgreed, setIsAgreed] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
 
+  const handleCityChange = (e) => {
+    const inputValue = e.target.value;
+    setCity(inputValue);
 
-
-
- const handleCityChange = (e) => {
-   const inputValue = e.target.value;
-   setCity(inputValue);
-
-   // Check if the input matches any dropdown city
-   const matchedCity = cityDropdown?.find(
-     (item) => item.name.toLowerCase() === inputValue.toLowerCase()
-   );
-
-   if (matchedCity) {
-     // If input matches a dropdown city, use its name
-     setCity(matchedCity.name);
-     setIsCityCustom(false);
-   } else {
-     // If no match, treat as custom city
-     setIsCityCustom(true);
-   }
- };
-   const togglePasswordVisibility = (field) => {
-     if (field === "password") {
-       setPasswordType(passwordType === "password" ? "text" : "password");
-     } else if (field === "confirmPassword") {
-       setConfirmPasswordType(
-         confirmPasswordType === "password" ? "text" : "password"
-       );
-     }
-   };
-
-      useEffect(() => {
-        // Fetch countries for both current address and origin
-        axios
-          .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/address/create`)
-          .then((res) => {
-            if (res.data) {
-              setCountryDropdown(res.data.countries);
-              setOriginCountryDropdown(res.data.countries);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }, []);
-
-     
-      const handleCheckboxChange = (e) => {
-        setIsAgreed(e.target.checked);
-      };
-        
-     
-      
-
-      const handleOriginCountryChange = (e) => {
-        const selectedCountryId = e.target.value;
-        setOriginCountry(selectedCountryId);
-        getOriginState(selectedCountryId);
-      };
-
-      useEffect(()=>
-      {
-        setState(null);
-        setCityDropdown(null);
-     
-          axios
-            .get(
-              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${43}`
-            )
-            .then((res) => {
-              setStateDropdown(res.data && res.data.states);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        },[]
+    // Check if the input matches any dropdown city
+  };
+  const togglePasswordVisibility = (field) => {
+    if (field === "password") {
+      setPasswordType(passwordType === "password" ? "text" : "password");
+    } else if (field === "confirmPassword") {
+      setConfirmPasswordType(
+        confirmPasswordType === "password" ? "text" : "password"
       );
+    }
+  };
 
-
-  
-
-      const getOriginState = (countryId) => {
-        setOriginState(null);
-        if (countryId) {
-          axios
-            .get(
-              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
-            )
-            .then((res) => {
-              setOriginStateDropdown(res.data && res.data.states);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+  useEffect(() => {
+    // Fetch countries for both current address and origin
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/address/create`)
+      .then((res) => {
+        if (res.data) {
+          setCountryDropdown(res.data.countries);
+          setOriginCountryDropdown(res.data.countries);
         }
-      };
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-      const handleStateChange = (e) => {
-        const selectedStateId = e.target.value;
-        setState(selectedStateId);
-        getcity(selectedStateId);
-      };
+  const handleCheckboxChange = (e) => {
+    setIsAgreed(e.target.checked);
+  };
 
-      const getcity = (stateId) => {
-        setCity(null);
-        if (stateId) {
-          axios
-            .get(
-              `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state?name=${stateId}`
-            )
-            .then((res) => {
-              setCityDropdown(res.data && res.data.cities);
-            })
-            .catch((err) => {
-              console.log(err.response);
-            });
-        }
-      };
+  const handleOriginCountryChange = (e) => {
+    const selectedCountryId = e.target.value;
+    setOriginCountry(selectedCountryId);
+    getOriginState(selectedCountryId);
+  };
 
+  useEffect(() => {
+    setState(null);
+    setCityDropdown(null);
 
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${43}`)
+      .then((res) => {
+        setStateDropdown(res.data && res.data.states);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
+  const getOriginState = (countryId) => {
+    setOriginState(null);
+    if (countryId) {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
+        )
+        .then((res) => {
+          setOriginStateDropdown(res.data && res.data.states);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
+  const handleStateChange = (e) => {
+    const selectedStateId = e.target.value;
+    setState(selectedStateId);
+    getcity(selectedStateId);
+  };
 
-     const handleLanguageTagChange = (tags) => {
-       setLanguageTags(tags);
-       console.log("Updated language tags (comma-separated):", tags.join(","));
-     };
+  const getcity = (stateId) => {
 
+    if (stateId) {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state?name=${stateId}`
+        )
+        .then((res) => {
+          setCityDropdown(res.data && res.data.cities);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    }
+  };
 
+  const handleLanguageTagChange = (tags) => {
+    setLanguageTags(tags);
+    console.log("Updated language tags (comma-separated):", tags.join(","));
+  };
 
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
   };
-const router = useRouter();
+  const router = useRouter();
   const togglePassword = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -195,100 +160,94 @@ const router = useRouter();
     setPasswordType("password");
   };
 
+  const doSignUp = async () => {
+    try {
+      //  if (!city || city.trim() === "") {
+      //    toast.error("Please select a city.");
+      //      setError("Please select a valid city.");
+      //    return; // Stop submission if validation fails
+      //  }
+      const fcmToken = localStorage.getItem("fcmToken");
+      const token = fcmToken;
+      await axios
+        .post(`${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`, {
+          name: fname,
+          email: email,
+          password: passwordInput,
+          password_confirmation: confirmPassword,
+          agree: 1,
+          language: languageTags.length > 0 ? languageTags.join(",") : null,
+          phone: phone ? phone : "",
+          user_type: 2,
+          region: region,
+          address_line_one: line1,
+          address_line_two: line2,
+          zip_code: postalCode,
+          city_id: city,
+          state_id: state,
+          country_id: "Canada",
+          origin_country_id: originCountry,
+          origin_state_id: originState,
+          fcm_token: token,
+        })
+        .then((res) => {
+          setFname("");
+          setEmail("");
+          setPasswordInput("");
+          setConfirmPassword("");
+          setCheck(false);
+          setRegion("");
+          setLine1("");
+          setLine2("");
+          setPostalCode("");
+          setCity("");
+          setState("");
+          setCountry("");
+          setOriginCountry("");
+          setOriginState("");
+          setLanguageTags([]);
+console.log("response in do sign up :",res.data.notification)
+          toast.success(res.data.notification);
+          router.push(`/verification-page?email=${encodeURIComponent(email)}`);
+        });
 
+      // Reset form fields
+    } catch (err) {
+      if (
+        err.response &&
+        err.response.data.errors &&
+        err.response.data.errors.email
+      ) {
+        toast.error(err.response.data.errors.email[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        console.error(err);
+        toast.error("An error occurred. Please try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+    }
+  };
 
-
-   const doSignUp = async () => {
-     try {
-       const fcmToken = localStorage.getItem("fcmToken");
-       const token = fcmToken;
-      await axios.post(
-         `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
-         {
-           name: fname,
-           email: email,
-           password: passwordInput,
-           password_confirmation: confirmPassword,
-           agree: 1,
-           language: languageTags.length > 0 ? languageTags.join(",") : null,
-           phone: phone ? phone : "",
-           user_type: 2,
-           region: region,
-           address_line_one: line1,
-           address_line_two: line2,
-           zip_code: postalCode,
-           city_id: city,
-           state_id: state,
-           country_id: "Canada",       
-           origin_country_id: originCountry,
-           origin_state_id: originState,
-           fcm_token:token,
-         }
-       ).then((res)=>
-      {
-         setFname("");
-         setEmail("");
-         setPasswordInput("");
-         setConfirmPassword("");
-         setCheck(false);
-         setRegion("");
-         setLine1("");
-         setLine2("");
-         setPostalCode("");
-         setCity("");
-         setState("");
-         setCountry("");
-         setOriginCountry("");
-         setOriginState("");
-         setLanguageTags([]);
-
-
-         toast.success(res.notification)
-         router.push(`/verification-page?email=${encodeURIComponent(email)}`);
-
-      });
-
-       // Reset form fields
-      
-     } catch (err) {
-       if (
-         err.response &&
-         err.response.data.errors &&
-         err.response.data.errors.email
-       ) {
-         toast.error(err.response.data.errors.email[0], {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-         });
-
-         router.push("/login");
-       } else {
-         console.error(err);
-         toast.error("An error occurred. Please try again.", {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-         });
-       }
-     }
-   };
-
-
-    const handleInputChange = (emailValue) => {
-      const inputEmail = emailValue;
-      setEmail(inputEmail);
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const isValid = emailPattern.test(inputEmail);
-      setIsValidEmail(isValid);
-      setErrors({ ...errors, email: [null] });
-    };
+  const handleInputChange = (emailValue) => {
+    const inputEmail = emailValue;
+    setEmail(inputEmail);
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailPattern.test(inputEmail);
+    setIsValidEmail(isValid);
+    setErrors({ ...errors, email: [null] });
+  };
   return (
     <>
       {/* Breadscrumb Section */}
@@ -419,15 +378,11 @@ const router = useRouter();
                         error={!!(errors && Object.hasOwn(errors, "phone"))}
                         patternValidation={"[1-9]{1}[0-9]{9}"}
                         onChange={(e) => {
-                          e.target.value.length <= 10 &&
+                          
                             setPhone(e.target.value);
                         }}
                       />
-                      {phone && phone.length < 10 && (
-                        <span className="text-sm mt-1 text-red">
-                          Please enter phone number 10 digit
-                        </span>
-                      )}
+                    
                       {errors && Object.hasOwn(errors, "phone") ? (
                         <span className="text-sm mt-1 text-red  ">
                           {errors.phone[0]}
@@ -647,48 +602,50 @@ const router = useRouter();
                       </div> */}
 
                       {/* State Dropdown */}
-                   
-                        <div className="form-group group-img">
-                          <div className="select-wrapper d-flex align-items-center">
-                            <select
-                              className="form-control"
-                              value={state}
-                              onChange={(e) => {
-                                setState(e.target.value);
-                                // Fetch cities for the selected state
-                                getcity(e.target.value);
-                              }}
-                            >
-                              <option value="">Select Province</option>
-                              {stateDropdown?.map((item) => (
-                                <option key={item.id} value={item.value}>
-                                  {item.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+
+                      <div className="form-group group-img">
+                        <div className="select-wrapper d-flex align-items-center">
+                          <select
+                            className="form-control"
+                            value={state}
+                            onChange={(e) => {
+                              setState(e.target.value);
+                              // Fetch cities for the selected state
+                              getcity(e.target.value);
+                            }}
+                          >
+                            <option value="">Select Province</option>
+                            {stateDropdown?.map((item) => (
+                              <option key={item.id} value={item.value}>
+                                {item.name}
+                              </option>
+                            ))}
+                          </select>
                         </div>
-                    
+                      </div>
+
                       {/* City Dropdown */}
-            
-                        <div className="form-group group-img">
-                          <div className="select-wrapper d-flex align-items-center">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Select or Enter City"
-                              list="cityList"
-                              value={city}
-                              onChange={handleCityChange}
-                            />
-                            <datalist id="cityList">
-                              {cityDropdown?.map((item) => (
-                                <option key={item.id} value={item.name} />
-                              ))}
-                            </datalist>
-                          </div>
+
+                      <div className="form-group group-img">
+                        {/* {error && (
+                          <div className="text-red-500 mb-2">{error}</div>
+                        )} */}
+                        <div className="select-wrapper d-flex align-items-center">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Select or Enter City"
+                            list="cityList"
+                            value={city}
+                            onChange={handleCityChange}
+                          />
+                          <datalist id="cityList">
+                            {cityDropdown?.map((item) => (
+                              <option key={item.id} value={item.name} />
+                            ))}
+                          </datalist>
                         </div>
-                     
+                      </div>
 
                       {/* Postal Code */}
                       <div className="form-group group-img">

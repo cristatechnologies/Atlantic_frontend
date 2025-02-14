@@ -25,43 +25,45 @@ const AcitveDealsComponent = ({ pathName }) => {
    const toggleFavorite = async () => {
      const auth = JSON.parse(localStorage.getItem("auth"));
      const token = auth?.access_token;
-     try {
-       const payload = {
-        
-         daily_offer_id: apiData.id, // Changed from data.id to apiData.id
-       };
-       const res = await axios.post(
-         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers/post-like?token=${token}`,
-         payload
-       );
-       console.log(res.data.total_likes);
-       setTotalLikes(res.data.total_likes);
-       setIsFavorite(!isFavorite);
-     } catch (error) {
-       console.error("Error toggling favorite:", error);
-       toast.error("Failed to like the deal");
+     if(!token)
+     {
+      toast.error("You need to SignIn to like the Deal")
      }
+     else{
+      try {
+        const payload = {
+          daily_offer_id: apiData.id, // Changed from data.id to apiData.id
+        };
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers/post-like?token=${token}`,
+          payload
+        );
+        console.log(res.data.total_likes);
+        setTotalLikes(res.data.total_likes);
+        setIsFavorite(!isFavorite);
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
+        toast.error("Failed to like the deal");
+      }
+
+     }
+     
    };
   useEffect(() => {
     // Authentication check
     const auth = JSON.parse(localStorage.getItem("auth") || "null");
     const token = auth?.access_token;
-
-    if (!token) {
-      toast.error("Please log in.");
-      router.push("/login");
-      return;
-    }
-
-
-  
-
     // Fetch data after authentication
     const fetchDailyOffersBySlug = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers-slug/${slug}?token=${token}`
-        );
+         
+
+    const url = token
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers-slug/${slug}?token=${token}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers-slug/${slug}`;
+       
+      const response = await fetch(url);
+        
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -69,6 +71,8 @@ const AcitveDealsComponent = ({ pathName }) => {
 
         const data = await response.json();
         setApiData(data);
+
+        console.log("errorroreoreeroe")
         setTotalLikes(data.total_likes); // Initialize total likes
         setIsFavorite(data.is_liked); // Initialize favorite status
         setIsLoading(false);
@@ -80,7 +84,7 @@ const AcitveDealsComponent = ({ pathName }) => {
     };
 
     fetchDailyOffersBySlug();
-  }, [slug, router]);
+  }, [slug]);
 
   useEffect(() => {
     // This will work only on the client-side
@@ -157,7 +161,7 @@ const AcitveDealsComponent = ({ pathName }) => {
               <div>
                 <h3 className="deal-title">{apiData?.title}</h3>
                 <div className="descriptionlinks">
-                  <ul className="d-flex align-items-center  justify-content-center justify-content-lg-start">
+                  <ul className="d-flex align-items-center  justify-content-between justify-content-lg-start">
                     <li>
                       <Link className="pe-auto  " href="#">
                         <div className="d-flex align-items-center justify-content-center w-100">
@@ -189,10 +193,15 @@ const AcitveDealsComponent = ({ pathName }) => {
                       onClick={toggleFavorite}
                       totalLikes={totalLikes}
                     />
-
-                    <Link href="#">
+<li>
+  
+                      <Link className="pe-auto  " href="#">
+                      
                       <i className="feather-eye" /> {apiData.views || 0} Views
+                    
                     </Link>
+</li>
+
                   </ul>
                 </div>
                 <p className="mb-4">{apiData?.description}</p>

@@ -5,23 +5,27 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Modal, Button } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { setLoginStatus } from "@/store/auth-reducer";
+
 
 const DeleteAccount = () => {
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const token = auth?.access_token;
-
-    if (token) {
-      if (auth?.user?.user_type !== 2) {
+console.log(token)
+    if (!token) {
+     
         router.push("/");
-        toast.error("User Type not Valid");
+        toast.error("Please Login ");
       } else {
         setShowModal(true);
       }
-    }
+    
   }, [router]);
 
   const handleDelete = () => {
@@ -38,8 +42,17 @@ const DeleteAccount = () => {
         .then(() => {
           toast.success("Account deleted successfully");
           localStorage.removeItem("auth");
-          router.push("/login");
-          localStorage.removeItem("auth");
+          localStorage.setItem("redirectedFromDelete", "true");
+          router.refresh()
+       
+
+            router.push("/login");
+
+         
+          
+
+
+        
         })
         .catch((err) => {
           console.error(err);

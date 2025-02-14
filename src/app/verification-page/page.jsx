@@ -164,7 +164,8 @@ const VerificationPage = () => {
                 <i className="bi bi-shield-check fs-4"></i>
               </div>
             </div>
-            <h5 className="text-center mb-4">Enter OTP Code</h5>
+            <h5 className="text-center mb-4">OTP will be sent to your email</h5>
+
             <Form onSubmit={handleSubmit}>
               <Row className="gx-2 mb-4">
                 {otp.map((digit, index) => (

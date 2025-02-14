@@ -24,13 +24,13 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
       {
         breakpoint: 1200, // At screen width of 1200px and below
         settings: {
-          slidesToShow: 3, // Show 3 slides
+          slidesToShow: 4, // Show 3 slides
         },
       },
       {
         breakpoint: 992, // At screen width of 992px and below
         settings: {
-          slidesToShow: 2, // Show 2 slides
+          slidesToShow: 4, // Show 2 slides
         },
       },
       {

@@ -565,7 +565,7 @@ progress {
 @media(max-width:450px)
 {
   .img-fluid-custom {
-  max-width: 100px ;
+  width: 100px ;
   height: auto;
 
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 
 import { useEffect } from "react";
@@ -11,6 +11,8 @@ import { setupAction } from "@/store/websiteSetup";
 import Image from "next/image";
 import Categories from "../../common/Categories";
 import { useRef } from "react";
+import DeleteConfirmationModal from "../DeleteConfirmationModal";
+import { toast } from "react-toastify";
 
 
 export const useClickOutside = (handler) => {
@@ -36,6 +38,9 @@ export const useClickOutside = (handler) => {
   return ref;
 };
 const Header = ({ parms }) => {
+
+    const menuRef = useRef(null);
+
   const [authData, setAuthData] = useState(null);
   const [drops, setDrops] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -44,6 +49,8 @@ const Header = ({ parms }) => {
   const [logo, setLogo] = useState("");
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [slug, setSlug] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // useEffect(() => {
   //   const settings = localStorage.getItem("settings");
   //   setLogo(JSON.parse(settings?.logo));
@@ -52,7 +59,30 @@ const Header = ({ parms }) => {
   // });
   const dropdownRef = useClickOutside(() => {
     setDrops(false);
+    setMobileDropdown(false);
   });
+
+
+const handleModalClose = useCallback(() => {
+  setShowDeleteModal(false);
+}, []);
+
+useEffect(() => {
+  const handleEscapeKey = (event) => {
+    if (event.key === "Escape") {
+      handleModalClose();
+    }
+  };
+
+  if (showDeleteModal) {
+    document.addEventListener("keydown", handleEscapeKey);
+  }
+
+  return () => {
+    document.removeEventListener("keydown", handleEscapeKey);
+  };
+}, [showDeleteModal, handleModalClose]);
+
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
@@ -63,7 +93,35 @@ const Header = ({ parms }) => {
       const settingsData = JSON.parse(settings);
       setLogo(settingsData?.logo);
     }
-  });
+  }, []);
+
+
+  const handleDeleteAccount = async () => {
+     const auth = JSON.parse(localStorage.getItem("auth"));
+     const token = auth?.access_token;
+
+     if (token) {
+       axios
+         .delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/remove-account`, {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         })
+         .then(() => {
+           toast.success("Account deleted successfully");
+           localStorage.removeItem("auth");
+          setIsLoggedIn(false);
+          setUserType(null);
+ setShowDeleteModal(false); 
+           router.push("/login");
+         })
+         .catch((err) => {
+           console.error(err);
+           toast.error("Failed to delete account");
+            setShowDeleteModal(false); 
+         });
+     }
+  };
 
   const handleDropdownClick = (e) => {
     e.preventDefault();
@@ -88,10 +146,10 @@ const Header = ({ parms }) => {
     setIsLoggedIn(!!user);
   }, []);
 
-  const onHandleMobileMenu = () => {
-    var root = document.getElementsByTagName("html")[0];
-    root.classList.add("menu-opened");
-  };
+  // const onHandleMobileMenu = () => {
+  //   var root = document.getElementsByTagName("html")[0];
+  //   root.classList.add("menu-opened");
+  // };
 
   const handleMobileMenuItemClick = () => {
     // Close both mobile dropdown and main mobile menu
@@ -99,13 +157,13 @@ const Header = ({ parms }) => {
 
     handleDropdownItemClick();
   };
-  const onhandleCloseMenu = () => {
-    var root = document.getElementsByTagName("html")[0];
-    root.classList.remove("menu-opened");
-    // Reset menu state
-    setMenu(false);
-    setMobileDropdown(false);
-  };
+  // const onhandleCloseMenu = () => {
+  //   var root = document.getElementsByTagName("html")[0];
+  //   root.classList.remove("menu-opened");
+  //   // Reset menu state
+  //   setMenu(false);
+  //   setMobileDropdown(false);
+  // };
 
   const [menu, setMenu] = useState(false);
   const toggleMobileMenu = () => {
@@ -136,18 +194,34 @@ const Header = ({ parms }) => {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (mobileDropdown && !event.target.closest(".has-submenu")) {
-        setMobileDropdown(false);
-      }
-    };
+ useEffect(() => {
+   const handleClickOutside = (event) => {
+     // Check if we clicked outside the menu wrapper
+     if (
+       document.documentElement.classList.contains("menu-opened") && // Check if menu is open
+       menuRef.current &&
+       !menuRef.current.contains(event.target) &&
+       !event.target.closest("#mobile_btn") // Exclude the mobile menu button
+     ) {
+       onhandleCloseMenu();
+     }
+   };
 
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [mobileDropdown]);
+   // Add both mouse and touch events
+   document.addEventListener("mousedown", handleClickOutside);
+   document.addEventListener("touchstart", handleClickOutside);
+
+   return () => {
+     // Clean up
+     document.removeEventListener("mousedown", handleClickOutside);
+     document.removeEventListener("touchstart", handleClickOutside);
+   };
+ }, []);
+
+//  const onHandleMobileMenu = () => {
+//    setIsMenuOpen(!isMenuOpen);
+//    toggleMobileMenu(!isMenuOpen);
+//  };
 
   // Function to handle clicks outside of dropdown
  useEffect(() => {
@@ -179,6 +253,22 @@ const Header = ({ parms }) => {
    }
  }, []); 
 
+
+ const onHandleMobileMenu = (e) => {
+   e?.preventDefault();
+   var root = document.documentElement;
+   if (!root.classList.contains("menu-opened")) {
+     root.classList.add("menu-opened");
+   }
+ };
+
+ const onhandleCloseMenu = () => {
+   var root = document.documentElement;
+   root.classList.remove("menu-opened");
+   setMobileDropdown(false);
+ };
+
+
   // Call the function to set up the event listener
 
   return (
@@ -186,7 +276,7 @@ const Header = ({ parms }) => {
       <div className="" style={{ marginLeft: "3px", marginRight: "10px" }}>
         <div className=" w-full">
           <nav className="navbar navbar-expand-lg header-nav w-full">
-            <div className="main-menu-wrapper">
+            <div className="main-menu-wrapper" ref={menuRef}>
               <div className="menu-header">
                 <Link href="/" className="menu-logo">
                   <img
@@ -215,10 +305,8 @@ const Header = ({ parms }) => {
 
                 <li>
                   <Link
-                  
                     href="/active-offers"
                     onClick={handleMobileMenuItemClick}
-                    
                   >
                     Active Offers{" "}
                   </Link>
@@ -287,7 +375,7 @@ const Header = ({ parms }) => {
                         </li>
                         <li>
                           <Link
-                            href="/user/my-offers"
+                            href="/my-offers"
                             onClick={handleMobileMenuItemClick}
                           >
                             <i className="fas fa-user-cog"></i> My Offers
@@ -307,6 +395,18 @@ const Header = ({ parms }) => {
                             onClick={handleMobileMenuItemClick}
                           >
                             <i className="fas fa-handshake"></i> Change Password
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setShowDeleteModal(true);
+                              handleMobileMenuItemClick();
+                            }}
+                          >
+                            <i className="fas fa-user-cog"></i> Delete Account
                           </Link>
                         </li>
                         {/* <li>
@@ -346,8 +446,9 @@ const Header = ({ parms }) => {
                           <div className="user-info-left">
                             <img
                               src={
-                                `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}` ||
-                                "/img/pngegg.png"
+                                authData.user.image
+                                  ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
+                                  : "/img/pngegg.png"
                               }
                               alt="User profile"
                             />
@@ -390,10 +491,15 @@ const Header = ({ parms }) => {
                             <i className="fas fa-user-cog"></i> Notifications
                           </Link>
                         </li>
+
                         <li>
                           <Link
-                            href="/user/delete-account"
-                            onClick={handleMobileMenuItemClick}
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setShowDeleteModal(true);
+                              handleMobileMenuItemClick();
+                            }}
                           >
                             <i className="fas fa-user-cog"></i> Delete Account
                           </Link>
@@ -547,6 +653,17 @@ const Header = ({ parms }) => {
                       <Link
                         className="dropdown-item"
                         href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setShowDeleteModal(true);
+                          handleDropdownItemClick();
+                        }}
+                      >
+                        Delete Account
+                      </Link>
+                      <Link
+                        className="dropdown-item"
+                        href="#"
                         onClick={handleLogout}
                       >
                         Signout{" "}
@@ -585,7 +702,7 @@ const Header = ({ parms }) => {
                         href="/user/profile"
                         onClick={handleMobileMenuItemClick}
                       >
-                        Profile 
+                        Profile
                       </Link>
                       <Link
                         className="dropdown-item"
@@ -599,15 +716,19 @@ const Header = ({ parms }) => {
                         href="/user/notifications"
                         onClick={handleMobileMenuItemClick}
                       >
-                      Notifications
+                        Notifications
                       </Link>{" "}
                       <Link
                         className="dropdown-item"
-                        href="/user/delete-account"
-                        onClick={handleMobileMenuItemClick}
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setShowDeleteModal(true);
+                          handleDropdownItemClick();
+                        }}
                       >
-                      Delete Account
-                      </Link>{" "}
+                        Delete Account
+                      </Link>
                       <Link
                         className="dropdown-item"
                         href="#"
@@ -623,6 +744,11 @@ const Header = ({ parms }) => {
           </nav>
         </div>
       </div>
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccount}
+      />
     </header>
   );
 };
