@@ -547,7 +547,30 @@ progress {
 .img-fluid {
   max-width: 100%;
   height: auto;
+
 }
+.img-fluid-custom {
+  width:220px !important;
+  height: auto;
+
+}
+@media(max-width:800px)
+{
+  .img-fluid-custom {
+  height: auto;
+   width: 250px;
+
+}
+}
+@media(max-width:450px)
+{
+  .img-fluid-custom {
+  width: 100px ;
+  height: auto;
+
+}
+}
+
 .img-thumbnail {
   padding: 0.25rem;
   background-color: #fff;

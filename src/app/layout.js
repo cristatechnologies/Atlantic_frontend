@@ -1,4 +1,3 @@
-"use client";
 import "../styles/bootstrap-datetimepicker.min.css";
 import "../styles/feather.css";
 import "../styles/owl.theme.default.min.css";
@@ -16,57 +15,74 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import NProgress from "nprogress";
-import { usePathname } from "next/navigation";
+
+
+
 library.add(fab);
 
+
+
+
+
+
+// export const metadata = {
+//   openGraph: {
+//     title: "Next.js",
+//     description: "The React Framework for the Web",
+//     url: "https://nextjs.org",
+//     siteName: "Next.js",
+//     images: [
+//       {
+//         url: "https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png",
+//         width: 800,
+//         height: 600,
+//       },
+//       {
+//         url: "https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png",
+//         width: 1800,
+//         height: 1600,
+//         alt: "My custom alt",
+//       },
+//     ],
+//     locale: "en_US",
+//     type: "website",
+//   },
+// };
+
+
 export default function RootLayout({ children }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleStart = () => NProgress.start();
-    const handleStop = () => NProgress.done();
-
-    
-  }, [router]);
-
-
-
-  NProgress.configure({
-    easing: "ease",
-    speed: 500,
-color:"red"
-  });
+  
 
   return (
-    <html lang="en">
-      <Providers>
-        <body>
-          <div className="main-wrapper">
-            <ClientWrapper>
-              <Header />
+    <>
+      
+      <html lang="en">
+        <Providers>
+          <body>
+            <div className="main-wrapper">
+              <ClientWrapper>
+                <Header />
 
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                stacked
-              />
-              {children}
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={true}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  stacked
+                />
+                {children}
 
-              <Footer />
-            </ClientWrapper>
-          </div>
-        </body>
-      </Providers>
-    </html>
+                <Footer />
+              </ClientWrapper>
+            </div>
+          </body>
+        </Providers>
+      </html>
+    </>
   );
 }

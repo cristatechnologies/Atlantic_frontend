@@ -36,28 +36,12 @@ const UserDashboardComponent = () => {
 
   return (
     <>
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Dashboard</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Dashboard
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
       {/* /Breadscrumb Section */}
       {/* Dashboard Content */}
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="">
             <ul className="dashborad-menus">
@@ -72,15 +56,15 @@ const UserDashboardComponent = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/active-deals">
+                <Link href="/active-offers">
                   <i className="feather-list" /> <span>Active Deals</span>
                 </Link>
               </li>
 
               <li>
                 <Link href="/login">
-                  <i className="feather-power" />{" "}
-                  <a onClick={handleLogout}>Logout</a>
+                  <i className="feather-power" />
+                  <span onClick={handleLogout}>Logout</span>
                 </Link>
               </li>
             </ul>

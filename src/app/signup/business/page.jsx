@@ -9,6 +9,9 @@ import { MdAppRegistration } from "react-icons/md";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import { MultiSelect } from "react-multi-select-component";
+import FcmTokenComp from "@/lib/firebaseForeground";
+
 
 const business = () => {
   const websiteData = useSelector((state) => state.websiteSetup.data);
@@ -23,6 +26,7 @@ const business = () => {
   const [short, setShortDesc] = useState("");
   const [address, setAddress] = useState("");
   const [longDesc, setLongDesc] = useState("");
+
   const [countryDropdown, setCountryDropdown] = useState(null);
   const [stateDropdown, setStateDropdown] = useState(null);
   const [cityDropdown, setCityDropdown] = useState(null);
@@ -30,7 +34,7 @@ const business = () => {
   const [country, setCountry] = useState();
   const [city, setcity] = useState(null);
   const [contactPersonName, setContactPersonName] = useState("");
-   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [checked, setCheck] = useState(false);
   const [errors, setErrors] = useState(null);
@@ -38,10 +42,41 @@ const business = () => {
   const [passwordType, setPasswordType] = useState("password");
   const [passwordInput, setPasswordInput] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [ConfirmPasswordType, setConfirmPasswordType] = useState("password");
+  const [addressLineOne, setAddressLineOne] = useState(""); // New state for address line 1
+  const [addressLineTwo, setAddressLineTwo] = useState(""); // New state for address line 2
+  const [zipCode, setZipCode] = useState(""); // New state f
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [showMultiCitySelect, setShowMultiCitySelect] = useState(false);
+  const [zipCodeValidationError, setZipCodeValidationError] = useState("");
+  const [isValidZipCode, setIsValidZipCode] = useState(false);
+const [isCityCustom, setIsCityCustom] = useState(false);
+const [customCityName, setCustomCityName] = useState("");
+ const [isAgreed, setIsAgreed] = useState(false);
+ const router = useRouter();
+ const [error, setError] = useState("");
+
+const handleCityChange = (e) => {
+  const inputValue = e.target.value;
+  setcity(inputValue); // Now storing the city name directly
+
+  // Check if the input matches any dropdown city
+ 
+};
+
+
+
+
+const handleCheckboxChange = (e) => {
+  setIsAgreed(e.target.checked);
+};
+
+
+
   const handlePasswordChange = (evnt) => {
     setPasswordInput(evnt.target.value);
   };
-  const router = useRouter();
+ 
   const togglePassword = () => {
     if (passwordType === "password") {
       setPasswordType("text");
@@ -49,25 +84,116 @@ const business = () => {
     }
     setPasswordType("password");
   };
+
+  const toggleConfirmPassword = () => {
+    if (ConfirmPasswordType === "password") {
+      setConfirmPasswordType("text");
+      return;
+    }
+    setConfirmPasswordType("password");
+  };
+   const handleAddMoreCities = () => {
+     setShowMultiCitySelect(!showMultiCitySelect);
+   };
+
+   const prepareMultiCityOptions = () => {
+     return (
+       cityDropdown?.map((item) => ({
+         label: item.name,
+         value: item.name,
+       })) || []
+     );
+   };
+
+
+
+  const validateZipCode = async (postalCode) => {
+    try {
+      // Reset previous validation states
+      setZipCodeValidationError("");
+      setIsValidZipCode(false);
+
+      // If zip code is empty, return early
+      if (!postalCode) return;
+
+      // Call zip code validation API
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/zipcode-validation/${postalCode}`
+      );
+
+      // Check if response has data
+      if (response.data && response.data.city) {
+        // Set state and city based on API response as suggestions
+        setState(response.data.city.country_state.name);
+        setcity(response.data.city.name);
+        setIsValidZipCode(true);
+
+        // Fetch states and cities to update dropdowns
+        const statesResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/43`
+        );
+        setStateDropdown(statesResponse.data && statesResponse.data.states);
+
+        const citiesResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${response.data.city.country_state.id}`
+        );
+        setCityDropdown(citiesResponse.data && citiesResponse.data.cities);
+      } else {
+        // If no data found, set error
+        setZipCodeValidationError(" ");
+      }
+    } catch (error) {
+      console.error("Zip code validation error:", error);
+      setZipCodeValidationError("Error validating Postal Code");
+    }
+  };
+
+  // Modify zip code input handler to trigger validation
+  const handleZipCodeChange = (e) => {
+    const postalCode = e.target.value;
+    setZipCode(postalCode);
+
+    // Validate zip code if it meets a minimum length (e.g., 6 characters)
+    if (postalCode.length >= 3) {
+      validateZipCode(postalCode);
+    }
+  };
+   
+
   const doSignUp = async () => {
     try {
+      //  if (!city || city.trim() === "") {
+      //    toast.error("Please select a city.");
+      //    setError("Please select a valid city.");
+      //    return; // Stop submission if validation fails
+      //  }
+      //  else(
+      //   setError(" ")
+      //  )
+      const fcmToken = localStorage.getItem("fcmToken");
+      const token = fcmToken;
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
         {
           user_type: 1,
           business_name: bname,
-          display_name: dname,
-          reg_no: regno,
-          business_category_id: selectedCategoryId,
-          description: short,
-          long_description: longDesc,
-          address: address,
-          phone: phone ? phone : "",
-          name: contactPersonName,
-          country_id: country,
-          state_id: state,
-          city_id: city,
           email: email,
+          phone: phone ? phone : "",
+          business_category_id: selectedCategoryId,
+          // address: address,
+          state_id: state,
+          fcm_token:token,
+          // display_name: dname,
+           reg_no: regno,
+          city_id: city,
+           description: short,
+          // long_description: longDesc,
+          address_line_one: addressLineOne, // New field
+          address_line_two: addressLineTwo, // New field
+          zip_code: zipCode, // New field
+          name: bname,
+          country_id: "Canada",
+          other_locations: selectedCities.map((city) => city.value),
           password: passwordInput,
           password_confirmation: confirmPassword,
           agree: 1,
@@ -78,19 +204,21 @@ const business = () => {
       if (response.data && response.data.notification) {
         // Reset form fields
         setBname("");
-        setDname("");
-        setRegNo("");
+    
+         setAddressLineOne(""); // Reset new fields
+         setAddressLineTwo(""); // Reset new fields
+         setZipCode(""); 
         setEmail("");
         setPasswordInput("");
         setConfirmPassword("");
-        setLongDesc("");
+      
         setCheck(false);
 
         // Show success message
         toast.success(response.data.notification);
 
         // Redirect to verification page
-        router.push("/VerificationPage");
+        router.push("/verification-page");
       } else {
         // Handle unexpected response structure
         console.error("Unexpected response structure:", response);
@@ -102,7 +230,7 @@ const business = () => {
       if (err.response && err.response.data && err.response.data.errors) {
         // Handle validation errors
         Object.entries(err.response.data.errors).forEach(([key, value]) => {
-          toast.error(`${key}: ${value[0]}`);
+          toast.error(`${value[0]}`);
         });
       } else {
         // Handle other types of errors
@@ -135,24 +263,37 @@ const business = () => {
   const handleCountryChange = (e) => {
     const selectedCountryId = e.target.value;
     setCountry(selectedCountryId);
-    getState(selectedCountryId);
+   
   };
-  const getState = (countryId) => {
-    setState(null);
-    setCityDropdown(null);
-    if (countryId) {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
-        )
-        .then((res) => {
-          setStateDropdown(res.data && res.data.states);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
+
+
+   const handleFormSubmit = (e) => {
+
+     if (!isAgreed) {
+       alert("You must agree to the terms and conditions before submitting.");
+       return;
+     }
+     doSignUp();
+   };
+
+
+   useEffect(() => {
+     setState(null);
+     setCityDropdown(null);
+
+     axios
+       .get(
+         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${43}`
+       )
+       .then((res) => {
+         setStateDropdown(res.data && res.data.states);
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+   }, []);
+
+
 
   const handleStateChange = (e) => {
     const selectedStateId = e.target.value;
@@ -161,7 +302,7 @@ const business = () => {
   };
 
   const getcity = (stateId) => {
-    setcity(null);
+   
     if (stateId) {
       axios
         .get(
@@ -176,38 +317,21 @@ const business = () => {
     }
   };
 
-  const selectCity = (value) => {
-    if (value) {
-      setcity(value.id);
-    }
-  };
+  
 
   return (
     <>
-      {/* Breadscrumb Section */}
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Create an Account</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Register
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* /Breadscrumb Section */}
       {/* Login Section */}
-
-      <div className="login-content">
+      <FcmTokenComp />
+      <div
+        className="login-content"
+        style={{
+          backgroundImage: 'url("/img/atlantic-bg-image.png")', // Replace with your actual image path
+          // backgroundSize: "contain",
+          // backgroundPosition: "center",
+          // backgroundRepeat: "repeat",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-lg-10 mx-auto">
@@ -224,7 +348,7 @@ const business = () => {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    doSignUp();
+                    handleFormSubmit();
                   }}
                 >
                   <div className="row">
@@ -258,36 +382,7 @@ const business = () => {
                         </div>
                       </div>
                     </div>
-                    {/*Display name */}
-                    <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <i>
-                            <FaRegBuilding />
-                          </i>
-                          <input
-                            type="text"
-                            mandatory={true}
-                            name="Display Name"
-                            value={dname}
-                            label="fullName"
-                            className="form-control"
-                            placeholder="Display Name"
-                            onChange={(e) => {
-                              setDname(e.target.value);
-                              setErrors({ ...errors, name: [null] });
-                            }}
-                          />
-                          {errors && Object.hasOwn(errors, "name") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.name[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                    </div>
+
                     {/*Email address */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -333,15 +428,11 @@ const business = () => {
                             error={!!(errors && Object.hasOwn(errors, "phone"))}
                             patternValidation={"[1-9]{1}[0-9]{9}"}
                             onChange={(e) => {
-                              e.target.value.length <= 10 &&
+                           
                                 setPhone(e.target.value);
                             }}
                           />
-                          {phone && phone.length < 10 && (
-                            <span className="text-sm mt-1 text-red">
-                              Please enter phone number 10 digit
-                            </span>
-                          )}
+
                           {errors && Object.hasOwn(errors, "phone") ? (
                             <span className="text-sm mt-1 text-red  ">
                               {errors.phone[0]}
@@ -382,7 +473,7 @@ const business = () => {
                         </div>
                       </div>
                     </div>
-                    {/*categories  */}
+
                     {/*categories  */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -410,33 +501,7 @@ const business = () => {
                         )}
                       </div>
                     </div>
-                    {/*long description */}
-                    <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <input
-                            type="text"
-                            mandatory={true}
-                            name="Long Description"
-                            value={longDesc}
-                            label="Long Description"
-                            className="form-control"
-                            placeholder="Long Description"
-                            onChange={(e) => {
-                              setLongDesc(e.target.value);
-                              setErrors({ ...errors, name: [null] });
-                            }}
-                          />
-                          {errors && Object.hasOwn(errors, "name") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.name[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
-                    </div>
+
                     {/*short description */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
@@ -444,11 +509,11 @@ const business = () => {
                           <input
                             type="text"
                             mandatory={true}
-                            name="short Description "
+                            name="Description "
                             value={short}
                             label="fullName"
                             className="form-control"
-                            placeholder="Short Description"
+                            placeholder="Description"
                             onChange={(e) => {
                               setShortDesc(e.target.value);
                               setErrors({ ...errors, name: [null] });
@@ -464,26 +529,29 @@ const business = () => {
                         </div>
                       </div>
                     </div>
-                    {/*short description */}
+                    {/* Address */}
+
                     <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="group-img">
                           <input
                             type="text"
-                            mandatory={true}
-                            name="Address  "
-                            value={address}
-                            label="Address"
+                            name="Address Line 1"
+                            value={addressLineOne}
                             className="form-control"
-                            placeholder="Address"
+                            placeholder="Address Line 1"
                             onChange={(e) => {
-                              setAddress(e.target.value);
-                              setErrors({ ...errors, name: [null] });
+                              setAddressLineOne(e.target.value);
+                              setErrors({
+                                ...errors,
+                                address_line_one: [null],
+                              });
                             }}
                           />
-                          {errors && Object.hasOwn(errors, "name") ? (
+                          {errors &&
+                          Object.hasOwn(errors, "address_line_one") ? (
                             <span className="text-sm mt-1 text-qred">
-                              {errors.name[0]}
+                              {errors.address_line_one[0]}
                             </span>
                           ) : (
                             ""
@@ -491,42 +559,72 @@ const business = () => {
                         </div>
                       </div>
                     </div>
-                    {/*Country  */}
+
+                    {/* New Address Line 2 Field */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
-                        <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
-                          <select
+                        <div className="group-img">
+                          <input
+                            type="text"
+                            name="Address Line 2"
+                            value={addressLineTwo}
                             className="form-control"
-                            value={country}
-                            onChange={handleCountryChange}
-                          >
-                            <option value="">Select country</option>
-                            {countryDropdown?.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.name}
-                              </option>
-                            ))}
-                          </select>
+                            placeholder="Address Line 2 (Optional)"
+                            onChange={(e) => {
+                              setAddressLineTwo(e.target.value);
+                              setErrors({
+                                ...errors,
+                                address_line_two: [null],
+                              });
+                            }}
+                          />
+                          {errors &&
+                          Object.hasOwn(errors, "address_line_two") ? (
+                            <span className="text-sm mt-1 text-qred">
+                              {errors.address_line_two[0]}
+                            </span>
+                          ) : (
+                            ""
+                          )}
                         </div>
-                        {errors && errors.country && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.country[0]}
-                          </span>
-                        )}
                       </div>
                     </div>
-                    {/*State  */}
+
+                    {/* New Postal Code Field */}
+                    <div className="col-md-6">
+                      <div className="form-group group-img">
+                        <div className="group-img">
+                          <input
+                            type="text"
+                            name="Postal Code"
+                            value={zipCode}
+                            className="form-control"
+                            placeholder="Postal Code"
+                            onChange={handleZipCodeChange}
+                          />
+                          {zipCodeValidationError && (
+                            <span className="text-sm mt-1 text-qred">
+                              {zipCodeValidationError}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Province Field */}
                     <div className="col-md-6">
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
                           <select
                             className="form-control"
                             value={state}
-                            onChange={handleStateChange}
+                            onChange={(e) => {
+                              setState(e.target.value);
+                              // Fetch cities for the selected state
+                              getcity(e.target.value);
+                            }}
                           >
-                            <option value="">Select state</option>
+                            <option value="">Select Province</option>
                             {stateDropdown?.map((item) => (
                               <option key={item.id} value={item.id}>
                                 {item.name}
@@ -534,90 +632,47 @@ const business = () => {
                             ))}
                           </select>
                         </div>
-                        {errors && errors.country && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.country[0]}
-                          </span>
-                        )}
                       </div>
                     </div>
-                    {/*City  */}
+
+                    {/* City Field */}
                     <div className="col-md-6">
+                     
                       <div className="form-group group-img">
                         <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
-                          <select
-                            className="form-control"
-                            value={city}
-                            onChange={(e) => setcity(e.target.value)}
-                          >
-                            <option value="">Select city</option>
-                            {cityDropdown?.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {errors && errors.country && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.country[0]}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {/* Contact Person Name */}
-                    <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="group-img">
-                          <i className="feather-user" />
                           <input
                             type="text"
-                            mandatory={true}
-                            name="Contact Person Name"
-                            value={contactPersonName}
                             className="form-control"
-                            placeholder="Contact Person Name"
-                            onChange={(e) => {
-                              setContactPersonName(e.target.value);
-                              setErrors({ ...errors, contactPersonName: null });
-                            }}
+                            placeholder="Select or Enter City"
+                            list="cityList"
+                            value={city}
+                            onChange={handleCityChange}
                           />
-                          {errors && errors.contactPersonName && (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.contactPersonName}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    {/* Language */}
-                    <div className="col-md-6">
-                      <div className="form-group group-img">
-                        <div className="select-wrapper d-flex align-items-center">
-                          <i className="feather-globe me-2"></i>
-                          <select
-                            className="form-control"
-                            value={selectedLanguage}
-                            onChange={(e) =>
-                              setSelectedLanguage(e.target.value)
-                            }
-                          >
-                            <option value="">Select Language</option>
-                            {languagesInAsia.map((language, index) => (
-                              <option key={index} value={language.name}>
-                                {language.name}
-                              </option>
+                          <datalist id="cityList">
+                            {cityDropdown?.map((item) => (
+                              <option key={item.id} value={item.name} />
                             ))}
-                          </select>
+                          </datalist>
                         </div>
-                        {errors && errors.language && (
-                          <span className="text-sm mt-1 text-qred">
-                            {errors.language[0]}
-                          </span>
-                        )}
                       </div>
                     </div>
+                    {/* {showMultiCitySelect && (   
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Select Multiple Cities</label>
+                          <MultiSelect
+                            options={prepareMultiCityOptions()}
+                            value={selectedCities}
+                            onChange={setSelectedCities}
+                            labelledBy="Select cities"
+                          />
+                        </div>
+                      </div>
+                    )} */}
+                    {/* Contact Person Name */}
+
+                    {/* Language */}
+
                     {/*Password*/}
                     <div className="col-md-6">
                       <div className="form-group">
@@ -669,79 +724,73 @@ const business = () => {
                         <div className="pass-group group-img">
                           <i className="feather-lock" />
                           <input
-                            type={passwordType}
+                            type={ConfirmPasswordType} // Use the confirm password specific type
                             className="form-control pass-input"
                             placeholder="Confirm Password"
-                            value={confirmPassword}
+                            value={confirmPassword} // Use the confirmPassword state value
                             onChange={(e) => {
                               setConfirmPassword(e.target.value.trim());
                             }}
                           />
-
                           <span
                             className={`toggle-password  ${
-                              passwordType === "password"
+                              ConfirmPasswordType === "password"
                                 ? "feather-eye"
                                 : "feather-eye-off"
                             } `}
-                            onClick={togglePassword}
+                            onClick={toggleConfirmPassword} // Use the confirm password specific toggle
                           ></span>
-                          {passwordInput && passwordInput.length < 8 ? (
-                            <span className="text-sm mt-1 text-qred absolute top-20 left-0">
-                              Please enter password minimum 8 character
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {errors && Object.hasOwn(errors, "password") ? (
-                            <span className="text-sm mt-1 text-qred">
-                              {errors.password[0]}
-                            </span>
-                          ) : (
-                            ""
-                          )}
+                          {confirmPassword &&
+                            confirmPassword !== passwordInput && (
+                              <span className="text-sm mt-1 text-qred">
+                                Passwords do not match
+                              </span>
+                            )}
                         </div>
                       </div>
                     </div>
+                    <div className="col-md-12 mt-3">
+                      <div className="form-check">
+                        <input
+                          type="checkbox"
+                          id="termsCheckbox"
+                          className="form-check-input"
+                          checked={isAgreed}
+                          onChange={handleCheckboxChange}
+                        />
+                        <label
+                          htmlFor="termsCheckbox"
+                          className="form-check-label"
+                        >
+                          I agree to the{" "}
+                          <Link href={`/pages/terms-and-condition`}>
+                            Terms and Conditions
+                          </Link>
+                        </label>
+                      </div>
+                      {/* {!isAgreed && (
+                        <span className="text-sm mt-1 text-qred">
+                          You must agree to the terms and conditions.
+                        </span>
+                      )} */}
+                    </div>
                   </div>
+
                   <button
                     className="btn btn-primary w-100 login-btn"
                     type="submit"
+                    disabled={!isAgreed}
                   >
                     Create Account
                   </button>
                   <div className="register-link text-center">
                     <p>
                       Already have an account?{" "}
-                      <Link className="forgot-link" href="/login">
+                      <Link className="forgot-link" href="/login" replace>
                         Sign In
                       </Link>
                     </p>
                   </div>
-                  {/* <div className="login-or">
-                    <span className="or-line" />
-                    <span className="span-or">
-                      Sign in with Social Media Accounts
-                    </span>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-apple w-100">
-                      <img src={apple} className="me-1" alt="img" />
-                      Sign in with Apple
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-google w-100">
-                      <img src={google} className="me-1" alt="img" />
-                      Sign in with Google
-                    </Link>
-                  </div>
-                  <div className="social-login">
-                    <Link href="#" className="btn btn-facebook w-100 mb-0">
-                      <img src={facebook} className="me-2" alt="img" />
-                      Continue with Facebook
-                    </Link>
-                  </div> */}
                 </form>
                 {/* /Login Form */}
               </div>

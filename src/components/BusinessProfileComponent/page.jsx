@@ -8,6 +8,10 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
+import Image from "next/image";
+
+
+
 
 const BusinessProfileComponent = () => {
   const websiteData = useSelector((state) => state.websiteSetup.data);
@@ -28,7 +32,8 @@ const BusinessProfileComponent = () => {
   const [categories, setCategories] = useState([]);
   const [productTags, setProductTags] = useState([]);
   const tagifyRef = useRef(null);
-
+const [customCityName, setCustomCityName] = useState("");
+const [isCityCustom, setIsCityCustom] = useState(false);
   const [tags, setTags] = useState([]);
 
   const handleTagChange = (newTags) => {
@@ -63,11 +68,29 @@ const BusinessProfileComponent = () => {
 
   useEffect(() => {
     if (profileData) {
-      setSelectedCountry(profileData.country_id);
+      setSelectedCountry("Canada");
       setSelectedState(profileData.state_id);
       setSelectedCity(profileData.city_id);
     }
   }, [profileData]);
+
+
+   const handleCityChange = (e) => {
+     const inputValue = e.target.value;
+
+     // Check if the input matches any dropdown city
+     const matchedCity = cityDropdown.find(
+       (item) => item.name.toLowerCase() === inputValue.toLowerCase()
+     );
+
+     if (matchedCity) {
+       // If input matches a dropdown city, use its ID as city_id
+       setSelectedCity(matchedCity.name.toString());
+     } else {
+       // If no match, use the input value as city_id
+       setSelectedCity(inputValue);
+     }
+   };
 
   useEffect(() => {
     const authData = JSON.parse(localStorage.getItem("auth"));
@@ -118,6 +141,11 @@ const BusinessProfileComponent = () => {
     const formData = new FormData(formRef.current);
 
     formData.append("products", productTags.join(","));
+
+
+     if (selectedCity) {
+       formData.set("city_id", selectedCity);
+     }
 
     const authData = JSON.parse(localStorage.getItem("auth"));
     const token = authData?.access_token;
@@ -194,10 +222,10 @@ const BusinessProfileComponent = () => {
       .catch((err) => console.log(err));
   };
 
-  const getState = (countryId) => {
+  const getState = (countryName) => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/${countryId}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/?name=${countryName}`
       )
       .then((res) => {
         setStateDropdown(res.data?.states || []);
@@ -205,10 +233,10 @@ const BusinessProfileComponent = () => {
       .catch((err) => console.log(err));
   };
 
-  const getCity = (stateId) => {
+  const getCity = (stateName) => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/?name=${stateName}`
       )
       .then((res) => {
         setCityDropdown(res.data?.cities || []);
@@ -217,18 +245,18 @@ const BusinessProfileComponent = () => {
   };
 
   const handleCountryChange = (e) => {
-    const countryId = e.target.value;
-    setSelectedCountry(countryId);
+    const countryName = e.target.value;
+    setSelectedCountry("Canada");
     setSelectedState("");
     setSelectedCity("");
-    getState(countryId);
+    getState(countryName);
   };
 
   const handleStateChange = (e) => {
-    const stateId = e.target.value;
-    setSelectedState(stateId);
+    const stateName = e.target.value;
+    setSelectedState(stateName);
     setSelectedCity("");
-    getCity(stateId);
+    getCity(stateName);
   };
   // ... (keep other functions like getState, getCity, etc.)
 
@@ -236,7 +264,10 @@ const BusinessProfileComponent = () => {
     <>
       {/* ... (keep the breadcrumb section) */}
 
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="profile-content">
             <div className="row dashboard-info">
@@ -252,7 +283,13 @@ const BusinessProfileComponent = () => {
                           {/*profile image */}
                           <div className="profile-photo">
                             <div className="profile-img">
-                              <img src={imagePreview} alt="profile" />
+                              <Image
+                                src={imagePreview}
+                                alt="Logo"
+                                width={200}
+                                height={150}
+                                objectFit="scale-down"
+                              />
                               <div className="settings-upload-btn mt-2">
                                 <input
                                   type="file"
@@ -276,14 +313,12 @@ const BusinessProfileComponent = () => {
                         <div className="col-md-6">
                           <div className="profile-photo">
                             <div className="profile-img">
-                              <img
+                              <Image
                                 src={bannerPreview}
                                 alt="banner"
-                                style={{
-                                  maxHeight: "150px",
-                                  width: "100%",
-                                  objectFit: "cover",
-                                }}
+                                width={200}
+                                height={150}
+                                objectFit="scale-down"
                               />
                               <div className="settings-upload-btn mt-2">
                                 <input
@@ -390,9 +425,10 @@ const BusinessProfileComponent = () => {
                             ></input>
                           </div>
                         </div>
-
                         <div className="col-md-6 form-group">
-                          <label className="col-form-label">Address</label>
+                          <label className="col-form-label">
+                            Address Line 1
+                          </label>
                           <div className="pass-group group-img">
                             <span className="lock-icon">
                               <i className="feather-map-pin" />
@@ -400,8 +436,38 @@ const BusinessProfileComponent = () => {
                             <input
                               type="text"
                               className="form-control"
-                              name="address"
-                              defaultValue={profileData?.address || ""}
+                              name="address_line_one"
+                              defaultValue={profileData?.address_line_one || ""}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">
+                            Address Line 2
+                          </label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-map-pin" />
+                            </span>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="address_line_two"
+                              defaultValue={profileData?.address_line_two || ""}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6 form-group">
+                          <label className="col-form-label">Zip Code</label>
+                          <div className="pass-group group-img">
+                            <span className="lock-icon">
+                              <i className="feather-map-pin" />
+                            </span>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="zip_code"
+                              defaultValue={profileData?.zip_code || ""}
                             />
                           </div>
                         </div>
@@ -412,24 +478,14 @@ const BusinessProfileComponent = () => {
                             <span className="lock-icon">
                               <i className="feather-globe" />
                             </span>
-                            <select
-                              className="form-control"
-                              name="country_id"
-                              value={selectedCountry}
-                              onChange={handleCountryChange}
-                            >
-                              <option value="">Select Country</option>
-                              {countryDropdown.map((country) => (
-                                <option key={country.id} value={country.id}>
-                                  {country.name}
-                                </option>
-                              ))}
+                            <select className="form-control" name="country_id">
+                              <option value="Canada">Canada</option>
                             </select>
                           </div>
                         </div>
                         {/* state */}
                         <div className="col-md-6 form-group">
-                          <label className="col-form-label">State</label>
+                          <label className="col-form-label">Province </label>
                           <div className="pass-group group-img">
                             <span className="lock-icon">
                               <i className="feather-map" />
@@ -441,9 +497,9 @@ const BusinessProfileComponent = () => {
                               onChange={handleStateChange}
                               disabled={!selectedCountry}
                             >
-                              <option value="">Select State</option>
+                              <option value="">Select Province</option>
                               {stateDropdown.map((state) => (
-                                <option key={state.id} value={state.id}>
+                                <option key={state.id} value={state.name}>
                                   {state.name}
                                 </option>
                               ))}
@@ -453,24 +509,31 @@ const BusinessProfileComponent = () => {
                         {/* city */}
                         <div className="col-md-6 form-group">
                           <label className="col-form-label">City</label>
-                          <div className="pass-group group-img">
+                          <div className="pass-group group-img d-flex align-items-center">
                             <span className="lock-icon">
                               <i className="feather-map-pin" />
                             </span>
-                            <select
+                            <input
+                              type="text"
                               className="form-control"
+                              placeholder="Select or Enter City"
+                              list="cityList"
                               name="city_id"
-                              value={selectedCity}
-                              onChange={(e) => setSelectedCity(e.target.value)}
-                              disabled={!selectedState}
-                            >
-                              <option value="">Select City</option>
+                              value={
+                                selectedCity
+                                  ? cityDropdown.find(
+                                      (city) =>
+                                        city.name.toString() === selectedCity
+                                    )?.name || selectedCity
+                                  : ""
+                              }
+                              onChange={handleCityChange}
+                            />
+                            <datalist id="cityList">
                               {cityDropdown.map((city) => (
-                                <option key={city.id} value={city.id}>
-                                  {city.name}
-                                </option>
+                                <option key={city.id} value={city.name} />
                               ))}
-                            </select>
+                            </datalist>
                           </div>
                         </div>
                         {/* business category */}
@@ -691,7 +754,6 @@ const BusinessProfileComponent = () => {
                             />
                           </div>
                         </div>
-
                         {/* Add more fields as needed */}
                       </div>
 

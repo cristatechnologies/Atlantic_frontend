@@ -5,6 +5,9 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import FcmTokenComp from "@/lib/firebaseForeground";
+
+
 
 const LoginComponent = () => {
   const [passwordType, setPasswordType] = useState("password");
@@ -42,7 +45,7 @@ const LoginComponent = () => {
       console.log("API response:", response);
       if (response.data && response.status === 200) {
         toast.success("Verification code sent successfully!");
-        router.push(`/VerificationPage?email=${email}`);
+        router.push(`/verification-page?email=${email}`);
       } else {
         toast.error("Failed to send verification code. Please try again.");
       }
@@ -69,7 +72,7 @@ const LoginComponent = () => {
       );
       if (response.data && response.status === 200) {
         toast.success("Verification code resent successfully!");
-        router.push("/VerificationPage");
+        router.push("/verification-page");
       } else {
         toast.error("Failed to resend verification code. Please try again.");
       }
@@ -86,9 +89,12 @@ const LoginComponent = () => {
    setError("");
 
    try {
+     const fcmToken = localStorage.getItem("fcmToken");
+     const token = fcmToken;
      const response = await axios.post(
        `${process.env.NEXT_PUBLIC_BASE_URL}api/store-login`,
        {
+        fcm_token: token,
          email: email,
          password: passwordInput,
        }
@@ -134,28 +140,14 @@ const LoginComponent = () => {
   return (
     <>
       {/* Breadscrumb Section */}
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Login</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Login
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
+
       {/* /Breadscrumb Section */}
       {/* Login Section */}
-      <div className="login-content">
+      <FcmTokenComp />
+      <div
+        className="login-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-lg-5 mx-auto">
@@ -202,7 +194,6 @@ const LoginComponent = () => {
                     </div>
                   </div>
                   <div className="row">
-                   
                     <div className="col-md-6 col-sm-6">
                       <div className="text-md-end">
                         <Link className="forgot-link" href="/forgot-password">
@@ -225,7 +216,6 @@ const LoginComponent = () => {
                       </Link>
                     </p>
                   </div>
-                
                 </form>
                 {/* /Login Form */}
               </div>

@@ -150,7 +150,7 @@ const MylistingComponent = () => {
               <li>
                 <Link href="/login">
                   <i className="fas fa-light fa-circle-arrow-left" />{" "}
-                  <span>Logout</span>
+                  <span>Signout</span>
                 </Link>
               </li>
             </ul>

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 :root {
+      --primary-color: blue;
+  --secondary-color: red;
+  --primary-text-color:#121234;
+--secondary-text-color:#566432;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;

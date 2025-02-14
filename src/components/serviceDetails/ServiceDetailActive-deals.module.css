@@ -1,0 +1,79 @@
+.imageWrapper {
+  width: 100%;
+  padding-top: 100%; /* Creates a perfect square */
+  position: relative;
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cardTitle {
+  padding: 10px;
+  text-align: center;
+  background-color: #f8f9fa; /* Light background for the title area */
+}
+
+.cardTitle h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333; /* Dark text color */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Prevents wrapping */
+}
+.carouselContainer {
+  position: relative;
+  width: 90%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.navigationButtons {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+}
+
+.prevButton,
+.nextButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.slideItem {
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+
+
+
+/* Add to ServiceDetailActive-deals.module.css */
+.noImagesFound {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.noImagesFound p {
+  margin: 0;
+  font-size: 16px;
+  color: #6c757d;
+}

@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from "./select/page";
 import Banner from "../common/Banner";
 import { Flex } from "antd";
+import LocationInput from "./LocationInput";
+import CarouselActiveDeals from "./Carousel-Active-deals";
 
 
 const HomePage = () => {
@@ -22,25 +24,44 @@ const HomePage = () => {
   const [categories, setCategories] = useState();
   const dispatch = useDispatch();
   const [latestBusiness, setLatestBusiness] = useState();
-const [searchText, setSearchText] = useState("");
-const [selectedLocation, setSelectedLocation] = useState("");
-const [apiData,setApiData] = useState("");
-const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [apiData, setApiData] = useState("");
+  const router = useRouter();
   const [bgImageUrl, setBgImageUrl] = useState("");
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL 
-const handleSearch = (e) => {
-  e.preventDefault();
-  if (searchText.trim() || selectedLocation)  {
-    const searchQuery = encodeURIComponent(searchText);
-    const locationQuery = encodeURIComponent(selectedLocation);
-    router.push(
-      `/search-results?query=${searchQuery}&location=${locationQuery}`
-    );
-  }
-};
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const [dailyOffers, setDailyOffers] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
+  const [fallbackBusinessData, setFallbackBusinessData] = useState(null);
 
+  // Fetch fallback business data
+  const fetchFallbackBusinessData = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}api/business`);
+      if (response.data) {
+        setFallbackBusinessData(response.data);
+        // If no location-based data, use fallback
+        if (!businessData) {
+          setBusinessData(response.data);
+        }
+      }
+    } catch (err) {
+      console.log("Error fetching fallback business data:", err);
+    }
+  };
 
- 
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    // Check if both searchText and selectedLocation are not empty
+    if (searchText.trim() || selectedLocation) {
+      const searchQuery = encodeURIComponent(searchText);
+      const locationQuery = encodeURIComponent(selectedLocation);
+      router.push(
+        `/search-results?query=${searchQuery}&location=${locationQuery}`
+      );
+    }
+  };
 
   const websiteData = useSelector((state) => state.websiteSetup.data);
   console.log("website data in the homepage ", websiteData);
@@ -118,6 +139,81 @@ const handleSearch = (e) => {
     document.querySelector(".switch")?.classList.toggle("switched", isLight);
   }, [isLight]);
 
+const getUserLocation = () => {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchCityName(latitude, longitude);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        // If location is blocked, use fallback data
+        fetchFallbackBusinessData();
+      }
+    );
+  } else {
+    // Geolocation not supported, use fallback data
+    fetchFallbackBusinessData();
+  }
+};
+
+const fetchCityName = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+    );
+    const data = await response.json();
+    const cityName = data.city || data.locality || "Unknown location";
+
+    // Set user location and trigger business search
+    setUserLocation({
+      city: cityName,
+      latitude,
+      longitude,
+    });
+
+     setSelectedLocation(cityName);
+
+    // Fetch businesses based on detected location
+    fetchBusinessesByLocation(cityName);
+  } catch (error) {
+    console.error("Error fetching city name:", error);
+    // If city name fetch fails, use fallback data
+    fetchFallbackBusinessData();
+  }
+};
+  const fetchBusinessesByLocation = async (location) => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}api/business?search=&location=${encodeURIComponent(
+          location
+        )}`
+      );
+
+      if (response.data && response.data.length > 0) {
+        setBusinessData(response.data);
+      } else {
+        // If no businesses found for location, use fallback
+        fetchFallbackBusinessData();
+      }
+    } catch (err) {
+      console.log("Error fetching businesses by location:", err);
+      // If API call fails, use fallback data
+      fetchFallbackBusinessData();
+    }
+  };
+
+
+  const handleLocationChange = (location) => {
+    console.log("Selected location:", location);
+    setSelectedLocation(location);
+  };
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -137,24 +233,22 @@ const handleSearch = (e) => {
     fetchData();
   }, []);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}api`
-          );
-          if (response) {
-            setApiData(response.data);
-          }
-        } catch (err) {
-          console.log(
-            "An error occurred while fetching the data from the api/"
-          );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api`
+        );
+        if (response) {
+          setApiData(response.data);
         }
-      };
+      } catch (err) {
+        console.log("An error occurred while fetching the data from the api/");
+      }
+    };
 
-      fetchData();
-    }, []);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,257 +275,121 @@ const handleSearch = (e) => {
     }
   }, [apiData]);
 
+  useEffect(() => {
+    // Fetch token from local storage on the client side
+
+    const fetchDailyOffers = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers
+`
+        );
+        setDailyOffers(response.data);
+      } catch (error) {
+        console.error("Error fetching daily offers:", error);
+      }
+    };
+
+    fetchDailyOffers();
+  }, []);
+
   return (
     <>
       {/* Banner Section */}
+
+      <div className="bannergallery-section mt-lg-5 ">
+        {/* <Rooms /> */}
+        <img
+          src={`${bgImageUrl}`}
+          alt="Home Banner"
+          className="home-banner-image"
+        />
+      </div>
+
+      {/* Mobile Search Section - Rendered below the banner */}
+      {/* d-lg-none */}
       <section
-        className=""
+        className="mobile-search-section"
         style={{
-          marginTop: "90px",
-          height: "70vh",
-          backgroundImage: `url(${bgImageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundColor: "#f8f9fa",
+          padding: "20px 0",
         }}
       >
-       
-        <div className="container">
-          <div
-            className="row align-items-end"
-            style={{
-              height: "63vh", // This will make the row take the full height of the viewport
-            }}
-          >
-            <div className="col-lg-7 d-flex justify-content-center align-items-end">
-              <div className="search-box">
-                <form
-                  action="listing-grid-sidebar"
-                  className="d-flex"
-                  onSubmit={handleSearch}
-                >
-                  <div className="search-input">
-                    <div className="form-group">
-                      <div className="group-img">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Search"
-                          value={searchText}
-                          onChange={(e) => setSearchText(e.target.value)}
-                        />
-                        <i className="feather-search"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="search-input">
-                    <div className="form-group">
-                      <div className="group-img">
-                        <Select
-                          value={selectedLocation}
-                          onChange={setSelectedLocation}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="search-btn">
-                    <button className="btn btn-primary" type="submit">
-                      <i className="fa fa-search" aria-hidden="true"></i> Search
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div className="col-lg-5">
-              {/* Right side image or other content here */}
-            </div>
-          </div>
-        </div>
-
-        {/* <img
-          src="./img/bannerellipse.png"
-          className="img-fluid banner-elipse"
-          alt="arrow"
-        />
-        <img
-          src="./img/banner-arrow.png"
-          className="img-fluid bannerleftarrow"
-          alt="arrow"
-        /> */}
-      </section>
-      {/* Banner Section */}
-
-      {/* Category Section */}
-      {/* <section className="category-section">
-        <div className="container">
-          <div className="section-heading">
-            <div className="row align-items-center">
-              <div
-                className="col-md-6 aos aos-init aos-animate"
-                data-aos="fade-up"
-              >
-                <h2>
-                  Our <span className="title-left magentaCircle">Cat</span>
-                  egory
-                </h2>
-                <p>Buy and Sell Everything from Used Our Top Category</p>
-              </div>
-              <div
-                className="col-md-6 text-md-end aos aos-init aos-animate"
-                data-aos="fade-up"
-              >
-                <Link href="/categories" className="btn  btn-view">
-                  View All
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            {websiteData?.businessCategories &&
-              websiteData?.businessCategories.map((item, i) => (
-                <div className="col-lg-2 col-md-3 col-sm-6" key={i}>
-                  <Link
-                    href={`/categories/${item.id}`}
-                    className="category-links"
-                  >
-                    <h5>{item.name}</h5>
-
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
-                      alt="icons"
+        <div className="container d-flex justify-content-center ">
+          <div className="search-box lg-w-60 ">
+            <form
+              action="listing-grid-sidebar"
+              className="d-flex flex-column flex-md-row" // Changed to allow row layout on medium screens and up
+              onSubmit={handleSearch}
+            >
+              <div className="search-input flex-grow-1 me-md-2 mb-2 mb-md-0">
+                {" "}
+                {/* Added flex-grow and margin utilities */}
+                <div className="form-group">
+                  <div className="group-img">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search"
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
                     />
-                  </Link>
-                </div>
-              ))}
-          </div>
-        </div>
-      </section> */}
-      {/* Category Section */}
-
-      {/* Featured Ads Section */}
-      <Carousel businessData={businessData} />
-      {/* Featured Ads Section */}
-
-      {/* Popular Location Section */}
-      <section className="popular-locations grid-view featured-slider">
-        <div className="popular-circleimg">
-          <img
-            className="img-fluid"
-            src="./img/popular-img.png"
-            alt="Popular-sections"
-          />
-        </div>
-        <div className="container">
-          <div className="section-heading">
-            <h2>
-              Latest <span className="whiteCircle">Bus</span>inesses
-            </h2>
-            <p>
-              Start by selecting your favuorite location and explore the goods
-            </p>
-          </div>
-          <div className="lateestads-content">
-            <div className="row">
-              {latestBusiness &&
-                latestBusiness.map((item, i) => (
-                  <div className="col-lg-3 col-md-4 col-sm-6 d-flex" key={i}>
-                    <div className="card aos flex-fill" data-aos="fade-up">
-                      <div className="blog-widget">
-                        <div className="blog-img">
-                          <Link href={`business-details/${item.id}`}>
-                            <Image
-                              src={`${
-                                process.env.NEXT_PUBLIC_BASE_URL + item.image
-                              }`}
-                              width={312}
-                              height={252}
-                              className="img-fluid"
-                              alt="blog-img"
-                            />
-                          </Link>
-                          <div className="fav-item">
-                            {/* <span className="Featured-text">Featured</span> */}
-                            {/* <Link href="#" className="fav-icon">
-                              <i className="feather-heart"></i>
-                            </Link> */}
-                          </div>
-                        </div>
-                        <div className="bloglist-content">
-                          <div className="card-body">
-                            <div className="blogfeaturelink">
-                              <div className="grid-author">
-                                <img
-                                  src={`${
-                                    process.env.NEXT_PUBLIC_BASE_URL +
-                                    item.image
-                                  }`}
-                                  alt="author"
-                                />
-                              </div>
-                              <div className="blog-features text-black">
-                                <Link href={`business-details/${item.id}`}>
-                                  <span>
-                                    {" "}
-                                    <i className="fa-regular fa-circle-stop"></i>{" "}
-                                    {item.name}
-                                  </span>
-                                </Link>
-                              </div>
-                              <div className="blog-author text-end text-black">
-                                {/* <span>
-                                  {" "}
-                                  <i className="feather-eye"></i> 4000{" "}
-                                </span> */}
-                              </div>
-                            </div>
-                            {/* <h6 className="text-black">
-                                <Link href="/service-details">
-                                  2017 Gulfsteam Ameri-lite
-                                </Link>
-                              </h6> */}
-                            <div className="blog-location-details text-black">
-                              <div className="location-info">
-                                <i className="feather-map-pin"></i>{" "}
-                                {item.address}
-                              </div>
-                              <div className="location-info">
-                                {/* <FontAwesomeIcon icon="fa-solid fa-calendar-days" /> */}
-                                {item.business_category.name}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                ))}
-            </div>
+                </div>
+              </div>
+              <div className="search-input flex-grow-1 me-md-2 mb-2 mb-md-0">
+                {" "}
+                {/* Added flex-grow and margin utilities */}
+                <div className="form-group">
+                  <div className="group-img">
+                    <LocationInput
+                      selectedLocation={selectedLocation}
+                      onChange={setSelectedLocation}
+                      onLocationChange={handleLocationChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="search-btn flex-shrink-0">
+                {" "}
+                {/* Added flex-shrink to prevent button from growing */}
+                <button className="btn btn-primary w-100" type="submit">
+                  <i className="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+              </div>
+            </form>
           </div>
-          {/* <div className="align-items-center">
-            <Link href="/listing-grid-sidebar" className="browse-btn">
-              Browse Ads
-            </Link>
-          </div> */}
         </div>
       </section>
+
+      {/* Category Section */}
+      {/* Featured Ads Section */}
+      <Carousel
+        businessData={businessData}
+        textColor={`${websiteData?.setting?.secondary_color}`}
+        Heading={
+          userLocation
+            ? `Businesses Near ${userLocation.city}`
+            : "Business Near You"
+        }
+      />
+      {/* Featured Ads Section */}
       {/* Popular Location Section */}
-
+      <CarouselActiveDeals
+        dailyOffers={dailyOffers}
+        color={`#ffff`}
+        textColor={`${websiteData?.setting?.secondary_color}`}
+        Heading={" Active Offers"}
+      />
+      {/* Popular Location Section */}
       {/* Latest ads Section */}
-
       {/* Latest ads Section */}
-
       {/* CTA Section */}
-
       {/* CTA Section */}
-
       {/* Client Testimonial Section */}
-
       {/* Client Testimonial Section */}
-
       {/* Partners Section */}
-      
       {/* Partners Section */}
-
       {/* Pricing Plan Section */}
       {/* <section className="pricingplan-section">
           <div className="section-heading">
@@ -558,15 +516,10 @@ const handleSearch = (e) => {
           </div>
         </section> */}
       {/* Pricing Plan Section */}
-
       {/* Blog Section */}
-
       {/* Blog Section */}
-
       {/* Footer */}
-
       {/* Footer */}
-
       {/* scrollToTop start */}
       <div className="progress-wrap active-progress">
         <svg

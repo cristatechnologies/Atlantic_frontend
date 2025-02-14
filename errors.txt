@@ -1,0 +1,9 @@
+1) bussiness share button 
+2) banner image of the bussiness   ->Pending
+3) show avataar in the user 
+4) lagout button mobile in profile in user
+5) business 
+
+
+1) eye change in business sign up
+2) profile page crash due to default logo

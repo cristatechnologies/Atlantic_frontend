@@ -3,7 +3,7 @@ import { GalleryImg1, GalleryImg2, GalleryImg3, GalleryImg9, gallery_1_jpg, gall
 import Link from "next/link";
 
 import { SlideshowLightbox } from "lightbox.js-react";
-import 'lightbox.js-react/dist/index.css'
+
 
 const Roomsprofile = () => {
       const galleryItems = [

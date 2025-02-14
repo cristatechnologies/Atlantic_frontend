@@ -45,7 +45,7 @@ const YourDealsComponent = () => {
         const auth = JSON.parse(localStorage.getItem("auth"));
         const token = auth?.access_token;
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/business/daily-offers?token=${token}`
         );
         setOffers(response.data);
       } catch (error) {
@@ -54,7 +54,7 @@ const YourDealsComponent = () => {
       }
     };
 
-    fetchOffers();
+    fetchOffers()
   }, []);
 
   const handleStatusToggle = async (id, currentStatus) => {
@@ -82,7 +82,7 @@ const YourDealsComponent = () => {
   };
   const handleEdit = (id) => {
     router.push({
-      pathname: "/your-deals/[id]",
+      pathname: "/my-offers/[id]",
       query: { id: id },
     });
   };
@@ -124,41 +124,37 @@ const YourDealsComponent = () => {
     try {
       const auth = JSON.parse(localStorage.getItem("auth"));
       const token = auth?.access_token;
-      await axios.post(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/store-daily-offer?token=${token}`,
         formData
       );
-      toast.success("New offer added successfully");
+
+      console.log(res);
+      toast.success(res.data.notification);
+      setOffers(res.data.dailyOffers);
       setModalIsOpen(false);
-      router.reload("/your-deals");
-    } catch (error) {
-      console.error("Error adding new offer:", error);
-      toast.error("Failed to add new offer");
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.errors) {
+        // Handle validation errors
+        Object.entries(err.response.data.errors).forEach(([key, value]) => {
+          toast.error(`${value[0]}`);
+        });
+      } else {
+        // Handle other types of errors
+        toast.error("An error occurred. Please try again later.");
+      }
     }
   };
 
+
+  console.log(offers)
+
   return (
     <>
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-12">
-              <h2 className="breadcrumb-title">Your Deals</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    your-deals
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="search-btn px-4">
           <button
             className="btn btn-primary w-full sm:w-auto"
@@ -167,76 +163,88 @@ const YourDealsComponent = () => {
             Add New
           </button>
         </div>
-        <div className="container px-4">
-          <div className="row">
-            <div className="col-12">
-              <div className="card dash-cards">
-                <div className="card-header">
-                  <h4>Your Daily Offers</h4>
-                </div>
-                <div className="card-body">
-                  <div className="offer-header d-none d-md-flex align-items-center mb-3">
-                    <div className="col-md-1">
-                      <strong>Image</strong>
-                    </div>
-                    <div className="col-md-5">
-                      <strong>Name</strong>
-                    </div>
-                    <div className="col-md-3">
-                      <strong>Status</strong>
-                    </div>
-                    <div className="col-md-3">
-                      <strong>Action</strong>
-                    </div>
-                  </div>
 
-                  {offers.map((offer) => (
-                    <div
-                      key={offer.id}
-                      className="offer-item mb-4 p-3 border rounded"
-                    >
-                      <div className="d-flex flex-column flex-md-row align-items-center">
-                        <div className="col-12 col-md-1 mb-3 mb-md-0">
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
-                            alt={offer.title}
-                            className="img-fluid rounded"
-                            style={{ width: "50px", height: "50px" }}
-                          />
-                        </div>
-                        <div className="col-12 col-md-5 mb-3 mb-md-0 text-center text-md-start">
-                          <h5 className="mb-1">{offer.title}</h5>
-                          <p className="mb-0 small">{offer.description}</p>
-                        </div>
-                        <div className="col-12 col-md-3 mb-3 mb-md-0 text-center">
-                          <Switch
-                            checked={offer.status === 1}
-                            onChange={() =>
-                              handleStatusToggle(offer.id, offer.status)
-                            }
-                          />
-                        </div>
-                        <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
-                          <Link href={`/your-deals/${offer.id}`}>
-                            <button className="btn btn-sm btn-primary action-button">
-                              <i className="feather-edit" />
-                            </button>
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(offer.id)}
-                            className="btn btn-sm btn-danger action-button"
-                          >
-                            <i className="feather-trash-2" />
-                          </button>
-                        </div>
+        {offers.length > 0 ? (
+          <div className="container px-4">
+            <div className="row">
+              <div className="col-12">
+                <div className="card dash-cards">
+                  <div className="card-header">
+                    <h4>My Offers</h4>
+                  </div>
+                  <div className="card-body">
+                    <div className="offer-header d-none d-md-flex align-items-center mb-3">
+                      <div className="col-md-1">
+                        <strong>Image</strong>
+                      </div>
+                      <div className="col-md-5">
+                        <strong>Name</strong>
+                      </div>
+                      <div className="col-md-3">
+                        <strong>Status</strong>
+                      </div>
+                      <div className="col-md-3">
+                        <strong>Action</strong>
                       </div>
                     </div>
-                  ))}
+
+                    {offers.map((offer) => (
+                      <div
+                        key={offer.id}
+                        className="offer-item mb-4 p-3 border rounded"
+                      >
+                        <div className="d-flex flex-column flex-md-row align-items-center">
+                          <div className="col-12 col-md-1 mb-3 mb-md-0">
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}
+                              alt={offer.title}
+                              className="img-fluid rounded"
+                              style={{ width: "50px", height: "50px" }}
+                            />
+                          </div>
+                          <div className="col-12 col-md-5 mb-3 mb-md-0 text-center text-md-start">
+                            <Link href={`/active-offers/${offer.slug}`}>
+                              <>
+                                <h5 className="mb-1">{offer.title}</h5>
+
+                                <p className="mb-0 small">
+                                  {offer.description}
+                                </p>
+                              </>
+                            </Link>
+                          </div>
+                          <div className="col-12 col-md-3 mb-3 mb-md-0 text-center">
+                            <Switch
+                              checked={offer.status === 1}
+                              onChange={() =>
+                                handleStatusToggle(offer.id, offer.status)
+                              }
+                            />
+                          </div>
+                          <div className="col-12 col-md-3 d-flex justify-content-center gap-2">
+                            <Link href={`/my-offers/${offer.id}`}>
+                              <button className="btn btn-sm btn-primary action-button">
+                                <i className="feather-edit" />
+                              </button>
+                            </Link>
+                            <button
+                              onClick={() => handleDelete(offer.id)}
+                              className="btn btn-sm btn-danger action-button"
+                            >
+                              <i className="feather-trash-2" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <h3 className="text-center " style={{height:"100vh", paddingTop:"50px"}}>No Active Offers</h3>
+        )}
       </div>
 
       <Modal

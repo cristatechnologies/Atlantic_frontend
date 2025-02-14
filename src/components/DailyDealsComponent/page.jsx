@@ -33,7 +33,8 @@ const DailyDealsComponent = () => {
     const fetchDailyOffers = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/daily-offers`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers
+`
         );
         setDailyOffers(response.data);
       } catch (error) {
@@ -47,31 +48,31 @@ const DailyDealsComponent = () => {
 
   return (
     <>
-      <div className="breadcrumb-bar">
+      {/* <div className="breadcrumb-bar">
         <div className="container">
           <div className="row align-items-center text-center">
             <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Active Deals</h2>
+              <h2 className="breadcrumb-title">Active Offers</h2>
               <nav aria-label="breadcrumb" className="page-breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link href="/">Home</Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Active-deals
+                    Active-Offers
                   </li>
                 </ol>
               </nav>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="list-content">
         <div className="container">
           <div className="row row-cols-1 row-cols-md-3 g-4">
             {dailyOffers.map((offer) => (
               <div className="col" key={offer.id}>
-                <Link href={`/active-deals/${offer.slug}`}>
+                <Link href={`/active-offers/${offer.slug}`}>
                 <div className="card h-100 offer-card">
                   <img
                     src={`${process.env.NEXT_PUBLIC_BASE_URL}${offer.image}`}

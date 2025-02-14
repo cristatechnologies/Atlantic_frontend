@@ -71,29 +71,14 @@ const ForgotPasswordComponent = () => {
   return (
     <>
       {/* Breadcrumb Section */}
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Forgot Password</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Forgot Password
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
+
       {/* /Breadcrumb Section */}
 
       {/* Login Section */}
-      <div className="login-content">
+      <div
+        className="login-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-lg-5 mx-auto">

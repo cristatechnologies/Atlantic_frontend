@@ -90,7 +90,7 @@ const UserHeader = ({parms}) => {
                                         Profile Settings
                                     </Link>
                                     <Link className="dropdown-item" href ="/login">
-                                        Logout
+                                        Signout
                                     </Link>
                                 </div>
                             </li>

@@ -78,255 +78,76 @@ const Footer = () => {
 
   return (
     <footer className="footer">
-      <div className="container">
-        {/* <div className="stay-tuned">
-          <h3>Stay Tuned With Us</h3>
-          <p>
-            Subcribe to our newletter and never miss our latest news and
-            promotions. Our newsletter is sent once a week, every thursday.
-          </p>
-          <form>
-            <div className="form-group">
-              <div className="group-img">
-                <i className="feather-mail"></i>
-                <input
-                  onChange={(e) => setEmail(e.target.value.trim())}
-                  value={email}
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter Email Address"
-                />
-              </div>
-            </div>
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={subscribehandler}
-            >
-              {" "}
-              Subscribe
-            </button>
-          </form>
-        </div> */}
-      </div>
-
-      <div className="footer-top aos" data-aos="fade-up">
+      <div
+        className=" aos"
+        data-aos="fade-up"
+        style={{ marginTop: "20px", paddingBottom: "20px" }}
+      >
         <div className="container">
-          <div className="row">
-            <div className="col-lg-3 col-md-6">
-              <div className="footer-widget">
-                <div className="footer-logo">
-                  <Link href="/">
-                    <Image
-                      src={`${
-                        process.env.NEXT_PUBLIC_BASE_URL +
-                        websiteData?.setting?.logo
-                      }`}
-                      alt="logo"
-                      width={200}
-                      height={100}
-                      style={{
-                        maxWidth: "100%",
-                        height: "auto",
-                        objectFit: "contain",
-                      }}
-                      unoptimized={true}
-                    />
-                  </Link>
-                </div>
-                <div className="footer-content">
-                  <p>{websiteData?.footer?.about_us}</p>
-                </div>
-                <div className="social-icon">
-                  <ul>
-                    {websiteData?.social_links?.map((socialLink) => (
-                      <li key={socialLink.id}>
-                        <Link href={socialLink.link} target="_blank">
-                          <FontAwesomeIcon icon={socialLink.icon} />
-                        </Link>
-                      </li>
+          <div className="row ">
+            {/* First Column: Download Images and Links */}
+            <div className="col-lg-3 col-md-12 mb-4 mb-lg-0 footer-Image ">
+              <p className="text-white Download" style={{ fontSize: "15px" }}>
+                Download the App
+              </p>
+            </div>
+            <div className="col-lg-9 col-md-12">
+              {secondCol && secondCol.col_links.length !== 0 && (
+                <div className="footer-widget footer-menu mb-4">
+                  <div className="row">
+                    {secondCol.col_links.map((item, i) => (
+                      <div
+                        key={i}
+                        className="col-lg-3 col-md-6 text-white"
+                        style={{ fontSize: "15px" }}
+                      >
+                        <div className="footer-copyright footer-image">
+                          <Link href={item.link}>{item.title}</Link>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            {firstCol && firstCol.col_links.length !== 0 && (
-              <>
-                <div className="col-lg-2 col-md-6">
-                  <div className="footer-widget footer-menu">
-                    <h2 className="footer-title"> {firstCol.columnTitle}</h2>
-                    <ul>
-                      {firstCol.col_links.length > 0 &&
-                        firstCol.col_links.map((item, i) => (
-                          <li key={i}>
-                            <Link href={item.link}>{item.title}</Link>
-                          </li>
-                        ))}
-                    </ul>
                   </div>
                 </div>
-              </>
-            )}
-            {secondCol && secondCol.col_links.length !== 0 && (
-              <div className="col-lg-2 col-md-6">
-                <div className="footer-widget footer-menu">
-                  <h2 className="footer-title"> {secondCol.columnTitle}</h2>
-                  <ul>
-                    {secondCol.col_links.length > 0 &&
-                      secondCol.col_links.map((item, i) => (
-                        <li key={i}>
-                          <Link href={item.link}> {item.title}</Link>
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-            {thirdCol && thirdCol.col_links.length !== 0 && (
-              <div className="col-lg-2 col-md-6">
-                <div className="footer-widget footer-menu">
-                  <h2 className="footer-title"> {thirdCol.columnTitle}</h2>
-                  <ul>
-                    {thirdCol.col_links.length > 0 &&
-                      thirdCol.col_links.map((item, i) => (
-                        <li key={i}>
-                          <Link href={item.link}> {item.title}</Link>
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-            <div className="col-lg-3 col-md-6">
-              <div className="footer-widget">
-                <h2 className="footer-title">Communication</h2>
-                <div className="footer-contact-info">
-                  <div className="footer-address">
-                    <img src="img/call-calling.svg" alt="Callus" />
-                    <p>
-                      <span>Call Us</span> <br /> {websiteData?.footer?.phone}{" "}
-                    </p>
-                  </div>
-                  <div className="footer-address">
-                    <img src="/img/sms-tracking.svg" alt="Callus" />
-                    <p>
-                      <span>Send Message</span> <br />{" "}
-                      {websiteData?.footer?.email}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
+          <div className="row align-items-center  ">
+            <div className="col-lg-3 col-md-12 mb-4 mb-lg-0 footer-image">
+              <img
+                src={
+                  "/img/download-image/png-transparent-eco-surv-app-store-apple-itunes-store-thumbnail-removebg-preview.png"
+                }
+                alt="App Store"
+                width={150}
+              />{" "}
+              <img
+                src={
+                  "/img/download-image/png-transparent-google-play-computer-icons-android-google-text-label-logo-removebg-preview.png"
+                }
+                alt="Google Play"
+                width={150}
+              />
+            </div>
+            <div className="col-lg-6 col-md-12">
+              <div className="footer-copyright">
+                <div
+                  className="text-white mb-0 footer-image"
+                  style={{
+                    fontSize: "15px",
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection:"column",
+                    alignItems:"center"
+                  }}
+                >
+      <p style={{marginBottom:"0px"}}>
 
-          <div className="footercount">
-            {/* <div className="row">
-              <div className="col-lg-3 col-md-3">
-                <div className="vistors-details">
-                  <p>Our Unique Visitor</p>
-                  <p className="visitors-value">25,329,532</p>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-3">
-                <div className="vistors-details">
-                  <p>Our Unique Visitor</p>
-                  <p className="visitors-value">25,329,53264546</p>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-3">
-                <div className="vistors-details">
-                  <p>Our Unique Visitor</p>
-                  <p className="visitors-value">25,329,53264546</p>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-3">
-                <div className="vistors-details">
-                  <p>We Accept</p>
-                  <ul className="d-flex">
-                    <li>
-                      <Link href="#">
-                        <img
-                          className="img-fluid"
-                          src="/img/amex-pay.svg"
-                          alt="amex"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#">
-                        <img
-                          className="img-fluid"
-                          src="/img/apple-pay.svg"
-                          alt="pay"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#">
-                        <img
-                          className="img-fluid"
-                          src="/img/gpay.svg"
-                          alt="gpay"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#">
-                        <img
-                          className="img-fluid"
-                          src="/img/master.svg"
-                          alt="paycard"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#">
-                        <img
-                          className="img-fluid"
-                          src="/img/phone.svg"
-                          alt="spay"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#">
-                        <img
-                          className="img-fluid"
-                          src="/img/visa.svg"
-                          alt="visa"
-                        />
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </div>
-
-      <div className="footer-bottom">
-        <div className="container">
-          <div className="copyright">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="copyright-text">
-                  <p className="mb-0">{websiteData?.footer?.copyright}</p>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="copyright-menu">
-                  <ul className="policy-menu">
-                    <li>
-                      <Link href="/privacy-policy">Privacy </Link>
-                    </li>
-                    <li>
-                      <Link href="/faq">Faq </Link>
-                    </li>
-                    <li>
-                      <Link href="/terms-condition">Terms</Link>
-                    </li>
-                  </ul>
+                  {websiteData?.footer?.about_us}
+      </p>
+        <p>
+          
+                   {websiteData?.footer?.copyright}
+          </p> 
                 </div>
               </div>
             </div>

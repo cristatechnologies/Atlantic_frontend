@@ -3,8 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
+
 
 const BusinessGallery = () => {
+  const router = useRouter();
   const [galleryData, setGalleryData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -17,7 +21,11 @@ const BusinessGallery = () => {
     try {
       const auth = JSON.parse(localStorage.getItem("auth") || "null");
       const token = auth?.access_token;
+      if (token == null || auth?.user?.user_type !== 1) {
+        router.push("/login");
+      }
 
+      
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/business-gallery?token=${token}`
       );
@@ -132,34 +140,28 @@ const BusinessGallery = () => {
   return (
     <>
       {/* Breadcrumb Section */}
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Business Gallery</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Gallery
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Gallery Content */}
-      <div className="container mt-4 mb-4">
+      <div
+        className="container mt-4 mb-4"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         {loading ? (
-          <div className="d-flex justify-content-center align-items-center min-vh-50">
-            <p className="fs-4">Loading gallery...</p>
+          // <div className="d-flex justify-content-center align-items-center min-vh-50">
+          //   <p className="fs-4">Loading gallery...</p>
+          // </div>
+          <div class="card_two h-100">
+            <div class="loader">
+              <p>loading</p>
+              <div class="words">
+                <span class="word">Items</span>
+                <span class="word">Images</span>
+                <span class="word">Gallery</span>                
+              </div>
+            </div>
           </div>
         ) : (
-          <div className="card">
+          <div className=" card ">
             <div className="card-header d-flex justify-content-between align-items-center">
               <h4 className="card-title mb-0">Gallery Items</h4>
               <div className="upload-btn-wrapper">

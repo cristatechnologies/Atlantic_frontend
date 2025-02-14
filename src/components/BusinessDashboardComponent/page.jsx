@@ -13,13 +13,14 @@ const BusinessDashboardComponent = () => {
   const [change, setChange] = useState(false);
   const [change1, setChange1] = useState(false);
    const [reviews, setReviews] = useState([]);
-   
+   const [slug,setSlug] = useState("")
   
   useEffect(() => {
     const fetchOffers = async () => {
       try {
         const auth = JSON.parse(localStorage.getItem("auth"));
         const token = auth?.access_token;
+        setSlug(auth?.user?.business?.slug);
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_URL}api/user/daily-offers?token=${token}`
         );
@@ -74,34 +75,18 @@ const BusinessDashboardComponent = () => {
 
   return (
     <>
-      <div className="breadcrumb-bar">
-        <div className="container">
-          <div className="row align-items-center text-center">
-            <div className="col-md-12 col-12">
-              <h2 className="breadcrumb-title">Dashboard</h2>
-              <nav aria-label="breadcrumb" className="page-breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Dashboard
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
       {/* /Breadscrumb Section */}
       {/* Dashboard Content */}
-      <div className="dashboard-content">
+      <div
+        className="dashboard-content"
+        style={{ paddingTop: "170px", paddingBottom: "90px" }}
+      >
         <div className="container">
-          <div className="">
+          {/* <div className="">
             <ul className="dashborad-menus">
               <li className="active">
                 <Link href="/user/dashboard">
-                  <i className="feather-grid" /> <span>Dashboard</span>
+                  <i className="feather-grid" /> <span>Reviews</span>
                 </Link>
               </li>
               <li>
@@ -110,19 +95,23 @@ const BusinessDashboardComponent = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/your-deals">
-                  <i className="feather-list" /> <span>Your Deals</span>
+                <Link href="/my-offers">
+                  <i className="feather-list" /> <span>Your Offers</span>
                 </Link>
               </li>
-
+              <li>
+                <Link href={`/business-details/${slug}`}>
+                  <i className="feather-list" /> <span>My Account</span>
+                </Link>
+              </li>
               <li>
                 <Link href="/login">
                   <i className="feather-power" />
-  <span onClick={handleLogout}>Logout</span>
+                  <span onClick={handleLogout}>Logout</span>
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
           <div className="dashboard-details">
             {/* <div className="row">
                 <div className="col-lg-3 col-md-3">
@@ -297,7 +286,7 @@ const BusinessDashboardComponent = () => {
                   <div className="card-body">
                     {reviews.length > 0 ? (
                       <ul className="review-list">
-                        {reviews.map((review) => (
+                        {reviews.slice(0,5).map((review) => (
                           <li key={review.id} className="review-box">
                             <div className="review-profile">
                               <div className="review-img">
@@ -314,17 +303,17 @@ const BusinessDashboardComponent = () => {
                             </div>
                             <div className="review-details">
                               <h6>{review.user.name}</h6>
-                                <div className="rating-star">
-                                  <StarRatings
-                                    rating={review?.rating || 0}
-                                    starRatedColor="#FFD700"
-                                    starDimension="18px"
-                                    starSpacing="0.1px"
-                                    numberOfStars={5}
-                                    name="rating"
-                                  />
-                                </div>
-                                {/* <div>by: {review.user.name}</div> */}
+                              <div className="rating-star">
+                                <StarRatings
+                                  rating={review?.rating || 0}
+                                  starRatedColor="#FFD700"
+                                  starDimension="18px"
+                                  starSpacing="0.1px"
+                                  numberOfStars={5}
+                                  name="rating"
+                                />
+                              </div>
+                              {/* <div>by: {review.user.name}</div> */}
 
                               <p>{review.reviews}</p>
                             </div>

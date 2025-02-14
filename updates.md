@@ -1,0 +1,7 @@
+-combobox for the city    ->done 
+-remove all the breadcrumb bar from the all the pages-->done  --not removing from businessDetails page
+-change the dimensions of the logo  ->done 
+-1 review per account ->done already 
+-change the gallery image dimensions ->done 
+-decrease the view height in the mobile view for the banner image  ->done 
+-change the page and the route from your-offers to your-offer
