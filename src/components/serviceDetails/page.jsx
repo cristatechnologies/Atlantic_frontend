@@ -28,9 +28,10 @@ import Head from "next/head";
 import ServiceDetailActiveDealsCaruousel from "./ServiceDetailActiveDealsCaruousel";
 import ServiceDetailCaruouselGallery from "./ServiceDetailCaruouselGallery";
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
-const 
-ServiceDetails = ({ data, slug }) => {
+
+const ServiceDetails = ({ data, slug }) => {
   const pathname = usePathname();
   const [fullUrl, setFullUrl] = useState("");
 
@@ -57,31 +58,35 @@ ServiceDetails = ({ data, slug }) => {
 
   const [replyText, setReplyText] = useState({});
   const [businessReviews, setBusinessReviews] = useState([]);
-
+const router = useRouter()
   const [auth, setAuth] = useState(null);
   const [businessProfile, setBusinessProfile] = useState(null);
-  
+
   useEffect(() => {
-    if (!slug) return; // Prevent fetch if slug is not yet available
+    if (!slug) return;
 
     async function fetchData() {
-      if (isFetching.current) return; // Prevent duplicate fetches
+      if (isFetching.current) return;
       isFetching.current = true;
 
       try {
-        const res = await axios
-          .get(`${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`)
-          .then((res) => {
-            setHasReviewed(res?.data?.has_reviewed);
-            setTotalViews(res?.data?.views);
-            setIsFavorite(res?.data?.like);
-            setActiveDeals(res?.data?.business_offers);
-            setBusinessReviews(res?.data?.business_review || []);
-          });
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        const token = auth?.access_token;
+
+        const url = token
+          ? `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}?token=${token}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`;
+
+        const res = await axios.get(url);
+        setHasReviewed(res?.data?.has_reviewed);
+        setTotalViews(res?.data?.views);
+        setIsFavorite(res?.data?.like);
+        setActiveDeals(res?.data?.business_offers);
+        setBusinessReviews(res?.data?.business_review || []);
       } catch (err) {
         console.error("Failed to fetch data", err);
       } finally {
-        isFetching.current = false; // Reset fetch state
+        isFetching.current = false;
       }
     }
 
@@ -121,16 +126,24 @@ ServiceDetails = ({ data, slug }) => {
         review: review,
       };
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/post-review?token=${token}`,
-        payload
-      );
+      if (token) {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/post-review?token=${token}`,
+          payload
+        );
 
-      // Clear form after successful submission
-      setReview("");
-      setRating(0);
-      toast.success("review added successfully");
-
+        // Clear form after successful submission
+        setReview("");
+        setRating(0);
+        toast.success("review added successfully");
+      }
+      else(
+        toast.error("Login to add the review ",setTimeout(()=>
+        {
+          router.push('/login')
+        },3000))
+        
+      )
       // You might want to refresh the reviews list here
       // or show a success message
       fetchBusinessReviews();
@@ -141,10 +154,14 @@ ServiceDetails = ({ data, slug }) => {
   };
   const fetchBusinessReviews = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}`
-      );
-      setBusinessReviews(res?.data?.business_review || []);
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      const token = auth?.access_token;
+      if (token) {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/business/${slug}?token=${token} `
+        );
+        setBusinessReviews(res?.data?.business_review || []);
+      }
     } catch (err) {
       console.error("Failed to fetch reviews", err);
     }
@@ -386,21 +403,23 @@ ServiceDetails = ({ data, slug }) => {
                 </div>
               </div>
 
-             {data.business_gallery.length > 0 ? <div className="card gallery-section ">
-                <div className="card-header ">
-                  <img src="/img/galleryicon.svg" alt="gallery" />
-                  <h4>Gallery</h4>
-                </div>
-                <div className="card-body">
-                  <div className="gallery-content">
-                    {console.log("business_gallery:", data.business_gallery)}
-                    <ServiceDetailCaruouselGallery
-                      data={data.business_gallery}
-                    />
-                    {/* <Roomspics images={data.business_gallery} /> */}
+              {data.business_gallery.length > 0 ? (
+                <div className="card gallery-section ">
+                  <div className="card-header ">
+                    <img src="/img/galleryicon.svg" alt="gallery" />
+                    <h4>Gallery</h4>
+                  </div>
+                  <div className="card-body">
+                    <div className="gallery-content">
+                      {console.log("business_gallery:", data.business_gallery)}
+                      <ServiceDetailCaruouselGallery
+                        data={data.business_gallery}
+                      />
+                      {/* <Roomspics images={data.business_gallery} /> */}
+                    </div>
                   </div>
                 </div>
-              </div> :  null}
+              ) : null}
 
               {activeDeals.length > 0 ? (
                 <div className="card gallery-section ">

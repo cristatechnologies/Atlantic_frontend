@@ -47,7 +47,7 @@ const FaqComponent = () => {
             <div className="page-title">
               <h2>Frequently Asked Questions</h2>
             </div>
-            {faqs.map((faq) => (
+            {faqs.slice().reverse().map((faq) => (
               <div
                 key={faq.id}
                 className="faq-card"
