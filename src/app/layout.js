@@ -15,49 +15,65 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-
-
+import { Head } from 'next/head';
 
 library.add(fab);
 
-
-
-
-
-
-// export const metadata = {
-//   openGraph: {
-//     title: "Next.js",
-//     description: "The React Framework for the Web",
-//     url: "https://nextjs.org",
-//     siteName: "Next.js",
-//     images: [
-//       {
-//         url: "https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png",
-//         width: 800,
-//         height: 600,
-//       },
-//       {
-//         url: "https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png",
-//         width: 1800,
-//         height: 1600,
-//         alt: "My custom alt",
-//       },
-//     ],
-//     locale: "en_US",
-//     type: "website",
-//   },
-// };
-
+export const metadata = {
+  openGraph: {
+    title: "INDOATLANTIC",
+    description: "Sharing our culture, respecting your culture",
+    url: "https://indoatlantic.ca",
+    siteName: "INDOATLANTIC",
+    images: [
+      {
+        url: "./favicon.png",
+        width: 800,
+        height: 600,
+      },
+      {
+        url: "./favicon.png",
+        width: 1800,
+        height: 1600,
+        alt: "My custom alt",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  icons: {
+    icon: [
+      { url: "./favicon.png" },
+      { url: "./favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "./favicon.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "./favicon.png" }],
+  },
+};
 
 export default function RootLayout({ children }) {
   
 
   return (
     <>
-      
       <html lang="en">
         <Providers>
+          <head>
+            <link rel="shortcut icon" href="./favicon.png" />
+            <link rel="apple-touch-icon" href="./favicon.png" />
+            <link
+              rel="icon"
+              type="image/png"
+              sizes="32x32"
+              href="./favicon.png"
+            />
+            <link
+              rel="icon"
+              type="image/png"
+              sizes="16x16"
+              href="./favicon.png"
+            />
+          </head>
           <body>
             <div className="main-wrapper">
               <ClientWrapper>
