@@ -306,7 +306,7 @@ const handleCheckboxChange = (e) => {
     if (stateId) {
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/${stateId}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state?name=${stateId}`
         )
         .then((res) => {
           setCityDropdown(res.data && res.data.cities);
@@ -626,7 +626,7 @@ const handleCheckboxChange = (e) => {
                           >
                             <option value="">Select Province</option>
                             {stateDropdown?.map((item) => (
-                              <option key={item.id} value={item.id}>
+                              <option key={item.id} value={item.name}>
                                 {item.name}
                               </option>
                             ))}
