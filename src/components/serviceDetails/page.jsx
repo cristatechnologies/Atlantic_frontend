@@ -135,6 +135,7 @@ const router = useRouter()
         // Clear form after successful submission
         setReview("");
         setRating(0);
+        setHasReviewed(1);
         toast.success("review added successfully");
       }
       else(
