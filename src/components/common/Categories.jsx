@@ -36,6 +36,12 @@ const Categories = ({ activeMenu }) => {
    setMobileDropdown(false);
  };
   
+
+  const onhandleCloseMenu = () => {
+    var root = document.documentElement;
+    root.classList.remove("menu-opened");
+    setMobileDropdown(false);
+  };
   return (
     <>
       <li className="has-submenu">

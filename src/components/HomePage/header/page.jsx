@@ -40,7 +40,7 @@ export const useClickOutside = (handler) => {
 const Header = ({ parms }) => {
 
     const menuRef = useRef(null);
-
+  const websiteData = useSelector((state) => state.websiteSetup.data);
   const [authData, setAuthData] = useState(null);
   const [drops, setDrops] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,6 +51,8 @@ const Header = ({ parms }) => {
   const [slug, setSlug] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
    const [isMenuOpen, setIsMenuOpen] = useState(false);
+   const [mobileCategories,setMobileCategories] = useState(false)
+    const [dropdownState, setDropdownState] = useState(false);
   // useEffect(() => {
   //   const settings = localStorage.getItem("settings");
   //   setLogo(JSON.parse(settings?.logo));
@@ -67,12 +69,28 @@ const handleModalClose = useCallback(() => {
   setShowDeleteModal(false);
 }, []);
 
+
+
+
+ const handleItemClick = () => {
+   // Close the dropdown when an item is clicked
+   setMobileCategories(false);
+   onhandleCloseMenu();
+ };
+
+  const dropdownClickHandler = () => {
+    // Close the dropdown when an item is clicked
+    setDropdownState(false);
+    onhandleCloseMenu();
+  };
+
 useEffect(() => {
   const handleEscapeKey = (event) => {
     if (event.key === "Escape") {
       handleModalClose();
     }
   };
+
 
   if (showDeleteModal) {
     document.addEventListener("keydown", handleEscapeKey);
@@ -154,16 +172,9 @@ useEffect(() => {
   const handleMobileMenuItemClick = () => {
     // Close both mobile dropdown and main mobile menu
     onhandleCloseMenu();
-
-    handleDropdownItemClick();
+setMobileDropdown(false)
+    // handleDropdownItemClick();
   };
-  // const onhandleCloseMenu = () => {
-  //   var root = document.getElementsByTagName("html")[0];
-  //   root.classList.remove("menu-opened");
-  //   // Reset menu state
-  //   setMenu(false);
-  //   setMobileDropdown(false);
-  // };
 
   const [menu, setMenu] = useState(false);
   const toggleMobileMenu = () => {
@@ -266,13 +277,80 @@ useEffect(() => {
    var root = document.documentElement;
    root.classList.remove("menu-opened");
    setMobileDropdown(false);
+   setMobileCategories(false);
+   setDropdownState(false)
  };
 
 
   // Call the function to set up the event listener
 
   return (
-    <header className="header w-full" onClick={(value) => toggleMobileMenu()}>
+    <header className="header w-full">
+      <style jsx>{`
+        /* Mobile Dropdown */
+        .submenu {
+          display: none;
+          position: static;
+          background: transparent;
+          border: none;
+          padding-left: 15px;
+        }
+
+        .submenu.show {
+          display: block !important;
+        }
+
+        /* Desktop Dropdown */
+        .dropdown-menu {
+          border: 0;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+          margin-top: 10px;
+        }
+
+        .dropdown-item {
+          padding: 8px 20px;
+          transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+          background: #f8f9fa;
+        }
+
+        @media (max-width: 991px) {
+          .submenu {
+            position: relative;
+            width: 100%;
+            box-shadow: none;
+          }
+
+          .dropdown-item {
+            padding: 10px 15px;
+          }
+        }
+
+        .mobile-business-item {
+          list-style: none;
+          position: relative;
+        }
+
+        .mobile-business-link {
+          display: block;
+          text-decoration: none;
+        }
+
+        .mobile-business-link-content {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          color: #333;
+          transition: background 0.2s ease;
+        }
+
+        .mobile-business-link-content:hover {
+          background: #f8f9fa;
+        }
+      `}</style>
       <div className="" style={{ marginLeft: "3px", marginRight: "10px" }}>
         <div className=" w-full">
           <nav className="navbar navbar-expand-lg header-nav w-full">
@@ -297,7 +375,40 @@ useEffect(() => {
                 </Link>
               </div>
               <ul className="main-nav">
-                <Categories activeMenu={parms} />
+                <li className="has-submenu">
+                  <a
+                    className="mobile-user-menu profile-userlink cocolorBlacklor"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setMobileCategories(!mobileCategories);
+                    }}
+                    href="/categories"
+                  >
+                    Categories
+                    <i
+                      className={`feather-arrow-${
+                        mobileCategories ? "up" : "down"
+                      }`}
+                    ></i>
+                  </a>
+                  <ul
+                    className={`submenu ${mobileCategories ? "show" : ""}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {websiteData?.businessCategories.map((item, index) => (
+                      <li key={index}>
+                        <Link
+                          onClick={handleItemClick}
+                          href={`/categories/${item.slug}`}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+                {/* <Categories activeMenu={parms} /> */}
                 {/*
               <PagesMenu activeMenus={parms} />
               <UserPagesMenu />
@@ -313,200 +424,156 @@ useEffect(() => {
                 </li>
                 {/*mobile  business */}
                 {isLoggedIn && userType === 1 && (
-                  <>
-                    <li className="d-lg-none has-submenu">
-                      <a
-                        href="#"
-                        className="mobile-user-menu profile-userlink"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation(); // Stop event bubbling
-                          setMobileDropdown(!mobileDropdown);
-                        }}
-                      >
-                        <div className="user-info">
+                  <li className="has-submenu">
+                    <a
+                      className="mobile-user-menu profile-userlink cocolorBlacklor"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setDropdownState(!dropdownState);
+                      }}
+                      href="/categories"
+                    >
+                      <div className="user-info">
+                        <div className="user-info-left">
                           <img
                             src={
-                              `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.business?.image}` ||
-                              "/img/pngegg.png"
+                              authData.user.image
+                                ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
+                                : "/img/pngegg.png"
                             }
                             alt="User profile"
                           />
                           <span className="user-name">
-                            {authData.user?.business?.name}
+                            {authData.user?.name}
                           </span>
-                          <i
-                            className={`feather-arrow-${
-                              mobileDropdown ? "up" : "down"
-                            }`}
-                          ></i>
                         </div>
-                      </a>
-                      <ul
-                        className={`submenu ${mobileDropdown ? "show" : ""}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setMobileDropdown(false);
-                        }}
-                      >
-                        {/* <li>
-                          <Link
-                            href="/user/review"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-columns"></i> Reviews
-                          </Link>
-                        </li> */}
-                        <li>
-                          <Link
-                            href={`/business-details/${slug}`}
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> My Account
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/business-gallery"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i>Gallery
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/my-offers"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> My Offers
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/user/profile"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Profile
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/change-password"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-handshake"></i> Change Password
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setShowDeleteModal(true);
-                              handleMobileMenuItemClick();
-                            }}
-                          >
-                            <i className="fas fa-user-cog"></i> Delete Account
-                          </Link>
-                        </li>
-                        {/* <li>
-                          <Link
-                            href="/user/notifications"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-handshake"></i> Notifications
-                          </Link>
-                        </li> */}
-                        {/* <li>
-                          <Link
-                            href="/user/delete-account"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-handshake"></i> Delete Account
-                          </Link>
-                        </li> */}
-                      </ul>
-                    </li>
-                  </>
+                        <i
+                          className={`feather-arrow-${
+                            dropdownState ? "up" : "down"
+                          }`}
+                        ></i>
+                      </div>
+                    </a>
+                    <ul
+                      className={`submenu ${dropdownState ? "show" : ""}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href={`/business-details/${slug}`}
+                        >
+                          My Account
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/business-gallery"
+                        >
+                          Gallery
+                        </Link>
+                      </li>
+                      <li>
+                        <Link onClick={dropdownClickHandler} href="/my-offers">
+                          My Offers
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/user/profile"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/change-password"
+                        >
+                          Change Password
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowDeleteModal(true);
+                            handleItemClick();
+                          }}
+                          href="#"
+                        >
+                          Delete Account
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
                 )}
                 {/*mobile user */}
                 {isLoggedIn && userType === 2 && (
-                  <>
-                    <li className="d-lg-none has-submenu" ref={dropdownRef}>
-                      <a
-                        href="#"
-                        className="mobile-user-menu profile-userlink"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setMobileDropdown(!mobileDropdown);
-                        }}
-                      >
-                        <div className="user-info">
-                          <div className="user-info-left">
-                            <img
-                              src={
-                                authData.user.image
-                                  ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
-                                  : "/img/pngegg.png"
-                              }
-                              alt="User profile"
-                            />
-                            <span className="user-name">
-                              {authData.user?.name}
-                            </span>
-                          </div>
-                          <i
-                            className={`feather-arrow-${
-                              mobileDropdown ? "up" : "down"
-                            }`}
-                          ></i>
+                  <li className="has-submenu">
+                    <a
+                      className="mobile-user-menu profile-userlink cocolorBlacklor"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setDropdownState(!dropdownState);
+                      }}
+                      href="/categories"
+                    >
+                      <div className="user-info">
+                        <div className="user-info-left">
+                          <img
+                            src={
+                              authData.user.image
+                                ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
+                                : "/img/pngegg.png"
+                            }
+                            alt="User profile"
+                          />
+                          <span className="user-name">
+                            {authData.user?.name}
+                          </span>
                         </div>
-                      </a>
-                      <ul
-                        className={`submenu ${mobileDropdown ? "show" : ""}`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <li>
-                          <Link
-                            href="/user/profile"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Profile
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/change-password"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Change Password
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href="/user/notifications"
-                            onClick={handleMobileMenuItemClick}
-                          >
-                            <i className="fas fa-user-cog"></i> Notifications
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setShowDeleteModal(true);
-                              handleMobileMenuItemClick();
-                            }}
-                          >
-                            <i className="fas fa-user-cog"></i> Delete Account
-                          </Link>
-                        </li>
-                      </ul>
-                    </li>
-                  </>
+                        <i
+                          className={`feather-arrow-${
+                            dropdownState ? "up" : "down"
+                          }`}
+                        ></i>
+                      </div>
+                    </a>
+                    <ul
+                      className={`submenu ${dropdownState ? "show" : ""}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/user/profile"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/change-password"
+                        >
+                          Change Password
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/user/notifications"
+                        >
+                          Notifications
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
                 )}
                 {!isLoggedIn && (
                   <>
@@ -617,14 +684,31 @@ useEffect(() => {
                       <Link
                         className="dropdown-item"
                         href={`/business-details/${slug}`}
-                        onClick={handleMobileMenuItemClick}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router
+                            .push(`/business-details/${slug}`)
+                            .then(() => {
+                              // Optional: Close menu after successful navigation
+                              // onhandleCloseMenu();
+                              // setMobileDropdown(false);
+                            })
+                            .catch(() => router.refresh());
+                        }}
                       >
                         My Account{" "}
                       </Link>
                       <Link
                         className="dropdown-item"
                         href="/business-gallery"
-                        onClick={handleMobileMenuItemClick}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router
+                            .push("/business-gallery")
+                            .catch(() => router.refresh());
+                        }}
                       >
                         Gallery{" "}
                       </Link>
@@ -698,9 +782,12 @@ useEffect(() => {
                     </Link>
                     <div className="dropdown-menu dropdown-menu-end show">
                       <Link
-                        className="dropdown-item"
                         href="/user/profile"
-                        onClick={handleMobileMenuItemClick}
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push("/user/profile");
+                        }}
                       >
                         Profile
                       </Link>
