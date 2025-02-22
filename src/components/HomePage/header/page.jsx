@@ -424,7 +424,7 @@ setMobileDropdown(false)
                 </li>
                 {/*mobile  business */}
                 {isLoggedIn && userType === 1 && (
-                  <li className="has-submenu">
+                  <li className="d-lg-none has-submenu">
                     <a
                       className="mobile-user-menu profile-userlink cocolorBlacklor"
                       onClick={(e) => {
@@ -513,7 +513,7 @@ setMobileDropdown(false)
                 )}
                 {/*mobile user */}
                 {isLoggedIn && userType === 2 && (
-                  <li className="has-submenu">
+                  <li className="d-lg-none has-submenu">
                     <a
                       className="mobile-user-menu profile-userlink cocolorBlacklor"
                       onClick={(e) => {
