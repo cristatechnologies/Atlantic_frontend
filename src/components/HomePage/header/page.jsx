@@ -659,8 +659,6 @@ setMobileDropdown(false)
                       onClick={() => setDrops(!drops)}
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
-
-                      // className={`${change1===true ? 'dropdown-menu dropdown-menu-end show' : "dropdown-menu dropdown-menu-end"}`}
                     >
                       <img
                         src={
@@ -669,78 +667,71 @@ setMobileDropdown(false)
                         }
                         alt="User profile"
                       />
-
                       <span>{authData.user?.business?.name}</span>
                     </Link>
                     <div className="dropdown-menu dropdown-menu-end show">
-                      {/* <Link
-                        className="dropdown-item"
-                        href="/user/review"
-                        onClick={handleMobileMenuItemClick}
-                      >
-                        Review
-                      </Link> */}
-
                       <Link
                         className="dropdown-item"
                         href={`/business-details/${slug}`}
                         onClick={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
-                          router
-                            .push(`/business-details/${slug}`)
-                            .then(() => {
-                              // Optional: Close menu after successful navigation
-                              // onhandleCloseMenu();
-                              // setMobileDropdown(false);
-                            })
-                            .catch(() => router.refresh());
+                          setTimeout(() => setDrops(false), 300);
+                          router.push(`/business-details/${slug}`);
                         }}
                       >
-                        My Account{" "}
+                        My Account
                       </Link>
                       <Link
                         className="dropdown-item"
                         href="/business-gallery"
                         onClick={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
-                          router
-                            .push("/business-gallery")
-                            .catch(() => router.refresh());
+                          setTimeout(() => setDrops(false), 300);
+                          router.push("/business-gallery");
                         }}
                       >
-                        Gallery{" "}
+                        Gallery
                       </Link>
                       <Link
                         className="dropdown-item"
                         href="/my-offers"
-                        onClick={handleMobileMenuItemClick}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTimeout(() => setDrops(false), 300);
+                          router.push("/my-offers");
+                        }}
                       >
-                        My Offers{" "}
+                        My Offers
                       </Link>
                       <Link
                         className="dropdown-item"
                         href="/user/profile"
-                        onClick={handleMobileMenuItemClick}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTimeout(() => setDrops(false), 300);
+                          router.push("/user/profile");
+                        }}
                       >
                         Profile
                       </Link>
-
                       <Link
                         className="dropdown-item"
                         href="/change-password"
-                        onClick={handleMobileMenuItemClick}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTimeout(() => setDrops(false), 300);
+                          router.push("/change-password");
+                        }}
                       >
-                        Change Password{" "}
+                        Change Password
                       </Link>
                       <Link
                         className="dropdown-item"
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
+                          setTimeout(() => setDrops(false), 300);
                           setShowDeleteModal(true);
-                          handleDropdownItemClick();
                         }}
                       >
                         Delete Account
@@ -748,9 +739,13 @@ setMobileDropdown(false)
                       <Link
                         className="dropdown-item"
                         href="#"
-                        onClick={handleLogout}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setTimeout(() => setDrops(false), 300);
+                          handleLogout(e);
+                        }}
                       >
-                        Signout{" "}
+                        Signout
                       </Link>
                     </div>
                   </li>
@@ -810,8 +805,8 @@ setMobileDropdown(false)
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
+                          setTimeout(() => setDrops(false), 300);
                           setShowDeleteModal(true);
-                          handleDropdownItemClick();
                         }}
                       >
                         Delete Account
