@@ -27,15 +27,9 @@ export const metadata = {
     siteName: "INDOATLANTIC",
     images: [
       {
-        url: "./favicon.png",
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "./favicon.png",
-        width: 1800,
-        height: 1600,
-        alt: "My custom alt",
+        url: "https://indoatlantic.ca/favicon.png",
+        width: 1200,
+        height: 630,
       },
     ],
     locale: "en_US",
@@ -59,20 +53,9 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <Providers>
           <head>
-            <link rel="shortcut icon" href="./favicon.png" />
-            <link rel="apple-touch-icon" href="./favicon.png" />
-            <link
-              rel="icon"
-              type="image/png"
-              sizes="32x32"
-              href="./favicon.png"
-            />
-            <link
-              rel="icon"
-              type="image/png"
-              sizes="16x16"
-              href="./favicon.png"
-            />
+            <link rel="shortcut icon" href="/favicon.ico" />
+            <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" href="/favicon.png" />
           </head>
           <body>
             <div className="main-wrapper">
