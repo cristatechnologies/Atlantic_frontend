@@ -406,7 +406,7 @@ flex-direction:column;
 .headerLogo
 {
   
-  width: 230px;
+  width: 180px;
 
 }
 
@@ -419,7 +419,7 @@ flex-direction:column;
 
 @media (min-width: 850px) {
   .headerLogo {
-     width: 600px;
+     width: 350px;
   }
 }
 
@@ -21164,7 +21164,7 @@ section.advertisement {
   }
   .navbar-header {
     width: 100%;
-    justify-content: center;
+    justify-content: right;
   }
   .blog-pagination .pagination {
     display: flex;
