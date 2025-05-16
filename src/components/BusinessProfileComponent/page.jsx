@@ -15,7 +15,7 @@ import Image from "next/image";
 
 const BusinessProfileComponent = () => {
   const websiteData = useSelector((state) => state.websiteSetup.data);
-  console.log("data in the website data", websiteData);
+
   const router = useRouter();
   const [profileData, setProfileData] = useState(null);
   const [countryDropdown, setCountryDropdown] = useState([]);

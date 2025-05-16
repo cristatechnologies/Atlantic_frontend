@@ -13,7 +13,7 @@ import Categories from "../../common/Categories";
 import { useRef } from "react";
 import DeleteConfirmationModal from "../DeleteConfirmationModal";
 import { toast } from "react-toastify";
-
+import { FaPlus } from "react-icons/fa";
 
 export const useClickOutside = (handler) => {
   const ref = useRef(null);
@@ -38,8 +38,7 @@ export const useClickOutside = (handler) => {
   return ref;
 };
 const Header = ({ parms }) => {
-
-    const menuRef = useRef(null);
+  const menuRef = useRef(null);
   const websiteData = useSelector((state) => state.websiteSetup.data);
   const [authData, setAuthData] = useState(null);
   const [drops, setDrops] = useState(false);
@@ -50,9 +49,9 @@ const Header = ({ parms }) => {
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [slug, setSlug] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-   const [isMenuOpen, setIsMenuOpen] = useState(false);
-   const [mobileCategories,setMobileCategories] = useState(false)
-    const [dropdownState, setDropdownState] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mobileCategories, setMobileCategories] = useState(false);
+  const [dropdownState, setDropdownState] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // const dropdownRef = useRef(null);
 
@@ -75,19 +74,15 @@ const Header = ({ parms }) => {
     setMobileDropdown(false);
   });
 
+  const handleModalClose = useCallback(() => {
+    setShowDeleteModal(false);
+  }, []);
 
-const handleModalClose = useCallback(() => {
-  setShowDeleteModal(false);
-}, []);
-
-
-
-
- const handleItemClick = () => {
-   // Close the dropdown when an item is clicked
-   setMobileCategories(false);
-   onhandleCloseMenu();
- };
+  const handleItemClick = () => {
+    // Close the dropdown when an item is clicked
+    setMobileCategories(false);
+    onhandleCloseMenu();
+  };
 
   const dropdownClickHandler = () => {
     // Close the dropdown when an item is clicked
@@ -95,23 +90,21 @@ const handleModalClose = useCallback(() => {
     onhandleCloseMenu();
   };
 
-useEffect(() => {
-  const handleEscapeKey = (event) => {
-    if (event.key === "Escape") {
-      handleModalClose();
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === "Escape") {
+        handleModalClose();
+      }
+    };
+
+    if (showDeleteModal) {
+      document.addEventListener("keydown", handleEscapeKey);
     }
-  };
 
-
-  if (showDeleteModal) {
-    document.addEventListener("keydown", handleEscapeKey);
-  }
-
-  return () => {
-    document.removeEventListener("keydown", handleEscapeKey);
-  };
-}, [showDeleteModal, handleModalClose]);
-
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [showDeleteModal, handleModalClose]);
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
@@ -124,32 +117,31 @@ useEffect(() => {
     }
   }, []);
 
-
   const handleDeleteAccount = async () => {
-     const auth = JSON.parse(localStorage.getItem("auth"));
-     const token = auth?.access_token;
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const token = auth?.access_token;
 
-     if (token) {
-       axios
-         .delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/remove-account`, {
-           headers: {
-             Authorization: `Bearer ${token}`,
-           },
-         })
-         .then(() => {
-           toast.success("Account deleted successfully");
-           localStorage.removeItem("auth");
+    if (token) {
+      axios
+        .delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/user/remove-account`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          toast.success("Account deleted successfully");
+          localStorage.removeItem("auth");
           setIsLoggedIn(false);
           setUserType(null);
- setShowDeleteModal(false); 
-           router.push("/login");
-         })
-         .catch((err) => {
-           console.error(err);
-           toast.error("Failed to delete account");
-            setShowDeleteModal(false); 
-         });
-     }
+          setShowDeleteModal(false);
+          router.push("/login");
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to delete account");
+          setShowDeleteModal(false);
+        });
+    }
   };
 
   const handleDropdownClick = (e) => {
@@ -183,7 +175,7 @@ useEffect(() => {
   const handleMobileMenuItemClick = () => {
     // Close both mobile dropdown and main mobile menu
     setTimeout(() => setDrops(false), 300);
-setMobileDropdown(false)
+    setMobileDropdown(false);
     // handleDropdownItemClick();
   };
 
@@ -216,102 +208,99 @@ setMobileDropdown(false)
     }
   };
 
- useEffect(() => {
-   const handleClickOutside = (event) => {
-     // Check if we clicked outside the menu wrapper
-     if (
-       document.documentElement.classList.contains("menu-opened") && // Check if menu is open
-       menuRef.current &&
-       !menuRef.current.contains(event.target) &&
-       !event.target.closest("#mobile_btn") // Exclude the mobile menu button
-     ) {
-       onhandleCloseMenu();
-     }
-   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if we clicked outside the menu wrapper
+      if (
+        document.documentElement.classList.contains("menu-opened") && // Check if menu is open
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        !event.target.closest("#mobile_btn") // Exclude the mobile menu button
+      ) {
+        onhandleCloseMenu();
+      }
+    };
 
-   // Add both mouse and touch events
-   document.addEventListener("mousedown", handleClickOutside);
-   document.addEventListener("touchstart", handleClickOutside);
+    // Add both mouse and touch events
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
 
-   return () => {
-     // Clean up
-     document.removeEventListener("mousedown", handleClickOutside);
-     document.removeEventListener("touchstart", handleClickOutside);
-   };
- }, []);
+    return () => {
+      // Clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
 
-//  const onHandleMobileMenu = () => {
-//    setIsMenuOpen(!isMenuOpen);
-//    toggleMobileMenu(!isMenuOpen);
-//  };
+  //  const onHandleMobileMenu = () => {
+  //    setIsMenuOpen(!isMenuOpen);
+  //    toggleMobileMenu(!isMenuOpen);
+  //  };
 
   // Function to handle clicks outside of dropdown
- useEffect(() => {
-   // Ensure this code runs only on the client side (browser)
-   if (typeof window !== "undefined") {
-     const handleDropdownOutsideClick = () => {
-       const dropdownMenu = document.querySelector(
-         ".dropdown-menu.dropdown-menu-end"
-       );
+  useEffect(() => {
+    // Ensure this code runs only on the client side (browser)
+    if (typeof window !== "undefined") {
+      const handleDropdownOutsideClick = () => {
+        const dropdownMenu = document.querySelector(
+          ".dropdown-menu.dropdown-menu-end"
+        );
 
-       document.addEventListener("click", (event) => {
-         if (!dropdownMenu) return;
+        document.addEventListener("click", (event) => {
+          if (!dropdownMenu) return;
 
-         const isDropdownOpen = dropdownMenu.classList.contains("show");
-         const isClickInsideDropdown = dropdownMenu.contains(event.target);
+          const isDropdownOpen = dropdownMenu.classList.contains("show");
+          const isClickInsideDropdown = dropdownMenu.contains(event.target);
 
-         if (isDropdownOpen && !isClickInsideDropdown) {
-           dropdownMenu.classList.remove("show");
-         }
-       });
-     };
+          if (isDropdownOpen && !isClickInsideDropdown) {
+            dropdownMenu.classList.remove("show");
+          }
+        });
+      };
 
-     handleDropdownOutsideClick();
+      handleDropdownOutsideClick();
 
-     // Cleanup the event listener on component unmount
-     return () => {
-       document.removeEventListener("click", handleDropdownOutsideClick);
-     };
-   }
- }, []); 
+      // Cleanup the event listener on component unmount
+      return () => {
+        document.removeEventListener("click", handleDropdownOutsideClick);
+      };
+    }
+  }, []);
 
+  const onHandleMobileMenu = (e) => {
+    e?.preventDefault();
+    var root = document.documentElement;
+    if (!root.classList.contains("menu-opened")) {
+      root.classList.add("menu-opened");
+    }
+  };
 
- const onHandleMobileMenu = (e) => {
-   e?.preventDefault();
-   var root = document.documentElement;
-   if (!root.classList.contains("menu-opened")) {
-     root.classList.add("menu-opened");
-   }
- };
+  const onhandleCloseMenu = () => {
+    var root = document.documentElement;
+    root.classList.remove("menu-opened");
+    setMobileDropdown(false);
+    setMobileCategories(false);
+    setDropdownState(false);
+  };
 
- const onhandleCloseMenu = () => {
-   var root = document.documentElement;
-   root.classList.remove("menu-opened");
-   setMobileDropdown(false);
-   setMobileCategories(false);
-   setDropdownState(false)
- };
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 768); // Adjust the width as needed
+    };
 
- const [isSmallScreen, setIsSmallScreen] = useState(false);
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call initially to set the state based on the initial screen size
 
- useEffect(() => {
-   const handleResize = () => {
-     setIsSmallScreen(window.innerWidth <= 768); // Adjust the width as needed
-   };
-
-   window.addEventListener('resize', handleResize);
-   handleResize(); // Call initially to set the state based on the initial screen size
-
-   return () => window.removeEventListener('resize', handleResize);
- }, []);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Call the function to set up the event listener
 
   return (
     <header className="header w-full">
-      <style jsx>{`
-          `}</style>
+      <style jsx>{``}</style>
       <div className="" style={{ marginLeft: "3px", marginRight: "10px" }}>
         <div className=" w-full">
           <nav className="navbar navbar-expand-lg header-nav w-full">
@@ -336,26 +325,35 @@ setMobileDropdown(false)
                 </Link>
               </div>
               <ul className="main-nav">
-                <li className={`custom-dropdown ${isDropdownOpen ? 'open' : ''}`} ref={dropdownRef}>
+                <li
+                  className={`custom-dropdown ${isDropdownOpen ? "open" : ""}`}
+                  ref={dropdownRef}
+                >
                   <Link
-                        className={`dropdown-item ${isSmallScreen ? `submenu ${dropdownState ? "show" : ""}` : ""}`}
+                    className={`dropdown-item ${
+                      isSmallScreen
+                        ? `submenu ${dropdownState ? "show" : ""}`
+                        : ""
+                    }`}
                     onClick={toggleDropdown}
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: 'inherit',
-                      fontFamily: 'inherit',
-                      fontWeight: '600'
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "inherit",
+                      fontFamily: "inherit",
+                      fontWeight: "600",
                     }}
                     href={"#"}
                   >
                     Categories
-                   
                   </Link>
                   <div className="category-dropdown-menu ">
                     {websiteData?.businessCategories.map((item, index) => (
-                      <div key={index} className="category-dropdown-item-wrapper ">
+                      <div
+                        key={index}
+                        className="category-dropdown-item-wrapper "
+                      >
                         <Link
                           className="dropdown-item"
                           href={`/categories/${item.slug}`}
@@ -420,7 +418,7 @@ setMobileDropdown(false)
                   </Link>
                 </li>
                 {/*mobile business */}
-               
+
                 {isLoggedIn && userType === 1 && (
                   <li className="d-lg-none has-submenu">
                     <a
@@ -439,153 +437,153 @@ setMobileDropdown(false)
                               authData.user.image
                                 ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
                                 : "/img/pngegg.png"
-                          }
-                          alt="User profile"
-                        />
-                        <span className="user-name">
-                          {authData.user?.name}
-                        </span>
+                            }
+                            alt="User profile"
+                          />
+                          <span className="user-name">
+                            {authData.user?.name}
+                          </span>
+                        </div>
+                        <i
+                          className={`feather-arrow-${
+                            dropdownState ? "up" : "down"
+                          }`}
+                        ></i>
                       </div>
-                      <i
-                        className={`feather-arrow-${
-                          dropdownState ? "up" : "down"
-                        }`}
-                      ></i>
-                    </div>
-                  </a>
-                  <ul
-                    className={`submenu ${dropdownState ? "show" : ""}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href={`/business-details/${slug}`}
-                      >
-                        My Account
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href="/business-gallery"
-                      >
-                        Gallery
-                      </Link>
-                    </li>
-                    <li>
-                      <Link onClick={dropdownClickHandler} href="/my-offers">
-                        My Offers
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href="/user/profile"
-                      >
-                        Profile
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href="/change-password"
-                      >
-                        Change Password
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={(e) => {
-                          
-                          dropdownClickHandler();
-                          setShowDeleteModal(true);
-                        }}
-                        href="#"
-                      >
-                         Delete Account
-                      </Link>
-                    </li>
-                
-                  </ul>
-                </li>
-              )}
-              {/*mobile user */}
-              {isLoggedIn && userType === 2 && (
-                <li className="d-lg-none has-submenu">
-                  <a
-                    className="mobile-user-menu profile-userlink cocolorBlacklor"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setDropdownState(!dropdownState);
-                    }}
-                    href="/categories"
-                  >
-                    <div className="user-info">
-                      <div className="user-info-left">
-                        <img
-                          src={
-                            authData.user.image
-                              ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
-                              : "/img/pngegg.png"
-                          }
-                          alt="User profile"
-                        />
-                        <span className="user-name">
-                          {authData.user?.name}
-                        </span>
-                      </div>
-                      <i
-                        className={`feather-arrow-${
-                          dropdownState ? "up" : "down"
-                        }`}
-                      ></i>
-                    </div>
-                  </a>
-                  <ul
-                    className={`submenu ${dropdownState ? "show" : ""}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href="/user/profile"
-                      >
-                        Profile
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href="/change-password"
-                      >
-                        Change Password
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={dropdownClickHandler}
-                        href="/user/notifications"
-                        
-                      >
-                        Notifications
-                      </Link>
+                    </a>
+                    <ul
+                      className={`submenu ${dropdownState ? "show" : ""}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href={`/business-details/${slug}`}
+                        >
+                          My Account
+                        </Link>
                       </li>
                       <li>
-                      <Link
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setShowDeleteModal(true);
-                          handleItemClick();
-                        }}
-                        href="#"
-                      >
-                        Delete Account
-                      </Link>
-                    </li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/business-gallery"
+                        >
+                          Gallery
+                        </Link>
+                      </li>
+                      <li>
+                        <Link onClick={dropdownClickHandler} href="/my-offers">
+                          My Offers
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/user/profile"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={dropdownClickHandler}
+                          href="/change-password"
+                        >
+                          Change Password
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={(e) => {
+                            dropdownClickHandler();
+                            setShowDeleteModal(true);
+                          }}
+                          href="#"
+                        >
+                          Delete Account
+                        </Link>
+                      </li>
                     </ul>
                   </li>
+                )}
+                {/*mobile user */}
+                {/*add the add business for small screen*/}
+                {isLoggedIn && userType === 2 && (
+                  <>
+                    <li className="d-lg-none has-submenu">
+                      <a
+                        className="mobile-user-menu profile-userlink cocolorBlacklor"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setDropdownState(!dropdownState);
+                        }}
+                        href="/categories"
+                      >
+                        <div className="user-info">
+                          <div className="user-info-left">
+                            <img
+                              src={
+                                authData.user.image
+                                  ? `${process.env.NEXT_PUBLIC_BASE_URL}${authData?.user?.image}`
+                                  : "/img/pngegg.png"
+                              }
+                              alt="User profile"
+                            />
+                            <span className="user-name">
+                              {authData.user?.name}
+                            </span>
+                          </div>
+                          <i
+                            className={`feather-arrow-${
+                              dropdownState ? "up" : "down"
+                            }`}
+                          ></i>
+                        </div>
+                      </a>
+                      <ul
+                        className={`submenu ${dropdownState ? "show" : ""}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <li>
+                          <Link
+                            onClick={dropdownClickHandler}
+                            href="/user/profile"
+                          >
+                            Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            onClick={dropdownClickHandler}
+                            href="/change-password"
+                          >
+                            Change Password
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            onClick={dropdownClickHandler}
+                            href="/user/notifications"
+                          >
+                            Notifications
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setShowDeleteModal(true);
+                              handleItemClick();
+                            }}
+                            href="#"
+                          >
+                            Delete Account
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                  </>
                 )}
                 {!isLoggedIn && (
                   <>
@@ -629,6 +627,26 @@ setMobileDropdown(false)
                   className="headerLogo"
                 />
               </Link>
+              <div className="d-lg-none">
+                <Link
+                  href="/user/add-business"
+                  onClick={handleMobileMenuItemClick}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <img
+                    src="/Add business 1.png"
+                    alt="Add Business"
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Link>
+              </div>
             </div>
 
             <ul className="nav header-navbar-rht">
@@ -766,6 +784,26 @@ setMobileDropdown(false)
               {/*user desktop */}
               {isLoggedIn && userType === 2 && (
                 <>
+                  <li className="d-lg-only">
+                    <Link
+                      href="/user/add-business"
+                      onClick={handleMobileMenuItemClick}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        src="/Add business 1.png"
+                        alt="Add Business"
+                        style={{
+                          width: "80px",
+                          height: "80px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Link>
+                  </li>
                   <li
                     className="nav-item dropdown has-arrow logged-item"
                     ref={dropdownRef}
@@ -794,7 +832,7 @@ setMobileDropdown(false)
                         onClick={(e) => {
                           e.preventDefault();
                           setTimeout(() => setDrops(false), 300);
-                         
+
                           router.push("/user/profile");
                         }}
                       >
@@ -807,6 +845,13 @@ setMobileDropdown(false)
                       >
                         Change Password
                       </Link>
+                      {/* <Link
+                        className="dropdown-item"
+                        href="/user/add-business"
+                        onClick={handleMobileMenuItemClick}
+                      >
+                      Add Business
+                      </Link>{" "} */}
                       <Link
                         className="dropdown-item"
                         href="/user/notifications"

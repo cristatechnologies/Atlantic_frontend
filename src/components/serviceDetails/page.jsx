@@ -295,6 +295,7 @@ const router = useRouter()
               <div className="authordetails">
                 <h5>{data.name}</h5>
                 <p>{data.description}</p>
+                <p> {data.is_valid_user_type ? "Customer Added Business " : null}</p>
                 <div className="rating">
                   <StarRatings
                     rating={data.rating || 0}

@@ -11,6 +11,7 @@ const VerificationPage = () => {
   const [resendTimer, setResendTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const [email, setEmail] = useState("");
+  const [redirection, setRedirection] = useState(false);
   const inputRefs = [
     useRef(),
     useRef(),
@@ -28,8 +29,15 @@ const VerificationPage = () => {
     // Get email from URL
     const urlParams = new URLSearchParams(window.location.search);
     const emailFromUrl = urlParams.get("email");
+    const redirectionFromUrl = urlParams.get("redirect");
+
     if (emailFromUrl) {
       setEmail(emailFromUrl);
+    }
+
+    console.log(redirectionFromUrl);
+    if (redirectionFromUrl === "true") {
+      setRedirection(true);
     }
   }, []);
 
@@ -94,11 +102,17 @@ const VerificationPage = () => {
 
         // Set verification result (optional, as we're redirecting immediately)
         setVerificationResult({ success: "Verification successful" });
-
+console.log(redirection)
         // Redirect to login page after a short delay
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500); // 1.5 seconds delay to allow the user to see the success message
+        if (redirection) {
+          setTimeout(() => {
+            router.push(`/update-business?email=${encodeURIComponent(email)} `);
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500);
+        } // 1.5 seconds delay to allow the user to see the success message
       } else {
         // Handle unexpected response
         setVerificationResult({
