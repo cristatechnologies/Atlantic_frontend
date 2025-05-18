@@ -143,7 +143,7 @@ const CreateBusinessPage = () => {
             <div className="col-lg-12">
               <div className="card dash-cards">
                 <div className="card-header">
-                  <h4>Create New Business</h4>
+                  <h4>Add Business</h4>
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>

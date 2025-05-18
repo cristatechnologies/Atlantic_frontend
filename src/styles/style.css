@@ -413,6 +413,7 @@ flex-direction:column;
 @media (min-width: 600px) {
   .headerLogo {
      width: 350px;
+     padding-left: 30px;
   }
 }
 
@@ -18688,6 +18689,13 @@ section.advertisement {
     display: -ms-flexbox;
     display: flex;
     align-items: center;
+  }
+
+  .navbar-header-2{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
   }
   .navbar-header {
     -webkit-box-align: center;

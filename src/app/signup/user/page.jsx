@@ -677,7 +677,7 @@ console.log("response in do sign up :",res.data.notification)
                       <div className="form-group group-img">
                         <input
                           className="form-control"
-                          placeholder={originState}
+                          placeholder="Origin State"
                           type="text"
                           onChange={(e) => setOriginState(e.target.value)}
                         />
