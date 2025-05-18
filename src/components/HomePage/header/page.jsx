@@ -608,7 +608,10 @@ const Header = ({ parms }) => {
                 )}
               </ul>
             </div>
-            <div className="navbar-header">
+            <div className="navbar-header-2">
+              <div>
+
+             
               <Link
                 id="mobile_btn"
                 href="#"
@@ -620,6 +623,10 @@ const Header = ({ parms }) => {
                   <span></span>
                 </span>
               </Link>
+              </div>
+              <div>
+
+           
               <Link href="/" className="">
                 <img
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
@@ -627,14 +634,11 @@ const Header = ({ parms }) => {
                   className="headerLogo"
                 />
               </Link>
+              </div>
               <div className="d-lg-none">
                 <Link
                   href="/user/add-business"
-                  onClick={handleMobileMenuItemClick}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+                  onClick={handleMobileMenuItemClick}             
                 >
                   <img
                     src="/Add business 1.png"

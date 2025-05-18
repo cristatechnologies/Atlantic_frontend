@@ -18689,6 +18689,13 @@ section.advertisement {
     display: flex;
     align-items: center;
   }
+
+  .navbar-header-2{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
   .navbar-header {
     -webkit-box-align: center;
     -ms-flex-align: center;
