@@ -608,10 +608,9 @@ const Header = ({ parms }) => {
                 )}
               </ul>
             </div>
+            {isLoggedIn && userType === 2 ? (
             <div className="navbar-header-2">
-              <div>
-
-             
+              <div >
               <Link
                 id="mobile_btn"
                 href="#"
@@ -632,9 +631,11 @@ const Header = ({ parms }) => {
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                   alt="logo"
                   className="headerLogo"
+                  style={{paddingLeft:"30px"}}
                 />
               </Link>
               </div>
+             
               <div className="d-lg-none">
                 <Link
                   href="/user/add-business"
@@ -651,7 +652,36 @@ const Header = ({ parms }) => {
                   />
                 </Link>
               </div>
-            </div>
+            
+            </div>):
+           (  <div className="navbar-header">
+              
+              <Link
+                id="mobile_btn"
+                href="#"
+                onClick={() => onHandleMobileMenu()}
+              >
+                <span className="bar-icon">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </Link>
+             
+             
+
+           
+              <Link href="/" className="">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
+                  alt="logo"
+                  className="headerLogo"
+                />
+              </Link>
+        
+             
+        
+            </div>)}
 
             <ul className="nav header-navbar-rht">
               {!isLoggedIn ? (
