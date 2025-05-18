@@ -412,7 +412,7 @@ flex-direction:column;
 
 @media (min-width: 600px) {
   .headerLogo {
-     width: 350px;
+     width: 450px;
   }
 }
 
@@ -21171,7 +21171,7 @@ section.advertisement {
   }
   .navbar-header {
     width: 100%;
-    justify-content: right;
+    justify-content: center;
   }
   .blog-pagination .pagination {
     display: flex;
