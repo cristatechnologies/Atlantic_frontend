@@ -101,10 +101,11 @@ const CreateBusinessPage = () => {
     }));
   };
 
+  useEffect(() => {
   const authData = JSON.parse(localStorage.getItem("auth"));
   const token = authData?.access_token;
 
-
+  },[])
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
