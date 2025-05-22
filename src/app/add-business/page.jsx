@@ -24,7 +24,13 @@ const CreateBusinessPage = () => {
   const [stateDropdown, setStateDropdown] = useState([]);
   const [cityDropdown, setCityDropdown] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState("");
 
+  useEffect(() => {
+    const authData = JSON.parse(localStorage.getItem("auth"));
+    setToken(authData?.access_token || "");
+  }, []);
+  
   useEffect(() => {
     fetchCategories();
     fetchStates("Canada"); // Default country is Canada
@@ -101,11 +107,7 @@ const CreateBusinessPage = () => {
     }));
   };
 
-  useEffect(() => {
-  const authData = JSON.parse(localStorage.getItem("auth"));
-  const token = authData?.access_token;
-
-  },[])
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
