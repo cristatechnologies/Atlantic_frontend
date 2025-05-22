@@ -43,7 +43,7 @@ const Header = ({ parms }) => {
   const [authData, setAuthData] = useState(null);
   const [drops, setDrops] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState(null);
+  const [userType, setUserType] = useState(3);
   const router = useRouter();
   const [logo, setLogo] = useState("");
   const [mobileDropdown, setMobileDropdown] = useState(false);
@@ -132,7 +132,7 @@ const Header = ({ parms }) => {
           toast.success("Account deleted successfully");
           localStorage.removeItem("auth");
           setIsLoggedIn(false);
-          setUserType(null);
+          setUserType(3);
           setShowDeleteModal(false);
           router.push("/login");
         })
@@ -158,7 +158,7 @@ const Header = ({ parms }) => {
       setAuthData(userData);
     } else {
       setIsLoggedIn(false);
-      setUserType(null);
+      setUserType(3);
     }
   }, []);
 
@@ -199,7 +199,7 @@ const Header = ({ parms }) => {
         );
         localStorage.removeItem("auth");
         setIsLoggedIn(false);
-        setUserType(null);
+        setUserType(3);
         router.push("/login");
         onhandleCloseMenu();
       } catch (error) {
@@ -608,84 +608,96 @@ const Header = ({ parms }) => {
                 )}
               </ul>
             </div>
-            {isLoggedIn && userType === 2 ? (
-            <div className="navbar-header-2">
-              <div >
-              <Link
-                id="mobile_btn"
-                href="#"
-                onClick={() => onHandleMobileMenu()}
-              >
-                <span className="bar-icon">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </Link>
-              </div>
-              <div>
-
-           
-              <Link href="/" className="">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                  alt="logo"
-                  className="headerLogo"
-                  style={{paddingLeft:"30px"}}
-                />
-              </Link>
-              </div>
-             
-              <div className="d-lg-none">
+            {isLoggedIn && userType == 1 ? (
+              <div className="navbar-header">
                 <Link
-                  href="/user/add-business"
-                  onClick={handleMobileMenuItemClick}             
+                  id="mobile_btn"
+                  href="#"
+                  onClick={() => onHandleMobileMenu()}
                 >
+                  <span className="bar-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </span>
+                </Link>
+
+                <Link href="/" className="">
                   <img
-                    src="/Add business 1.png"
-                    alt="Add Business"
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      objectFit: "contain",
-                    }}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
+                    alt="logo"
+                    className="headerLogo"
                   />
                 </Link>
               </div>
-            
-            </div>):
-           (  <div className="navbar-header">
-              
-              <Link
-                id="mobile_btn"
-                href="#"
-                onClick={() => onHandleMobileMenu()}
-              >
-                <span className="bar-icon">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </Link>
-             
-             
+            ) : (
+              <div className="navbar-header-2">
+                <div>
+                  <Link
+                    id="mobile_btn"
+                    href="#"
+                    onClick={() => onHandleMobileMenu()}
+                  >
+                    <span className="bar-icon">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </span>
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/" className="">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
+                      alt="logo"
+                      className="headerLogo"
+                      style={{ paddingLeft: "30px" }}
+                    />
+                  </Link>
+                </div>
 
-           
-              <Link href="/" className="">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
-                  alt="logo"
-                  className="headerLogo"
-                />
-              </Link>
-        
-             
-        
-            </div>)}
+                <div className="d-lg-none">
+                  <Link
+                    href="/add-business"
+                    onClick={handleMobileMenuItemClick}
+                  >
+                    <img
+                      src="/Add business 1.png"
+                      alt="Add Business"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Link>
+                </div>
+              </div>
+            )}
 
             <ul className="nav header-navbar-rht">
               {!isLoggedIn ? (
                 <>
+                  <li className="d-lg-only">
+                    <Link
+                      href="/add-business"
+                      onClick={handleMobileMenuItemClick}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        src="/Add business 1.png"
+                        alt="Add Business"
+                        style={{
+                          width: "80px",
+                          height: "80px",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       className="nav-link header-reg"
@@ -820,7 +832,7 @@ const Header = ({ parms }) => {
                 <>
                   <li className="d-lg-only">
                     <Link
-                      href="/user/add-business"
+                      href="/add-business"
                       onClick={handleMobileMenuItemClick}
                       style={{
                         display: "flex",
@@ -881,7 +893,7 @@ const Header = ({ parms }) => {
                       </Link>
                       {/* <Link
                         className="dropdown-item"
-                        href="/user/add-business"
+                        href="/add-business"
                         onClick={handleMobileMenuItemClick}
                       >
                       Add Business

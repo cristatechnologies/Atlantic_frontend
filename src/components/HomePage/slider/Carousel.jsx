@@ -63,10 +63,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
               {/* <p>Checkout these latest coo ads from our members</p> */}
             </div>
           </div>
-          <div
-            className="col-md-6 text-md-end  aos"
-            data-aos="fade-up"
-          >
+          <div className="col-md-6 text-md-end  aos" data-aos="fade-up">
             <div className="owl-nav mynav2">
               <button
                 type="button"
@@ -104,13 +101,26 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                       <div className="blog-widget">
                         <div className="blog-img d-flex justify-content-center ">
                           <Link href={`business-details/${item.slug}`}>
-                            <img
-                              src={`${
-                                process.env.NEXT_PUBLIC_BASE_URL + item.image
-                              }`}
-                              className="img-fluid-custom"
-                              alt="blog-img"
-                            />
+                            {item?.is_verified == true ? (
+                              <img
+                                src={`${
+                                  process.env.NEXT_PUBLIC_BASE_URL + item.image
+                                }`}
+                                className="img-fluid-custom"
+                                alt="blog-img"
+                              />
+                            ) : (
+                              <>
+                                <img
+                                  src={`${
+                                    process.env.NEXT_PUBLIC_BASE_URL +
+                                    item.banner_image
+                                  }`}
+                                  className="img-fluid-custom"
+                                  alt="blog-img"
+                                />
+                              </>
+                            )}
                           </Link>
                           {/* <div className="fav-item">
                             <span className="Featured-text">Featured</span>

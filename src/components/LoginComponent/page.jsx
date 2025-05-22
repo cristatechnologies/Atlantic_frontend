@@ -6,7 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import FcmTokenComp from "@/lib/firebaseForeground";
-
+import { useSearchParams } from "next/navigation";
 
 
 const LoginComponent = () => {
@@ -15,6 +15,9 @@ const LoginComponent = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const[region,setRegion ] = useState("");
+  const searchParams = useSearchParams();
+  const redirectedFrom = searchParams.get("redirectedFrom");
+
   const router = useRouter();
 
   const handlePasswordChange = (evnt) => {
@@ -58,6 +61,8 @@ const LoginComponent = () => {
     }
   };
 
+
+  
 
 
   
@@ -105,7 +110,7 @@ const LoginComponent = () => {
        toast.success("Login Success !!");
        localStorage.removeItem("auth");
        localStorage.setItem("auth", JSON.stringify(response.data));
-      redirectToPage("/");
+       redirectToPage(redirectedFrom || "/");
 
      } else {
        setError(

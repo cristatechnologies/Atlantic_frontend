@@ -13,19 +13,30 @@ const BusinessCard = ({ item }) => {
           <div className="blog-widget">
             <div className="blog-img">
               <Link href={`/business-details/${item.slug}`}>
-                <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
-                  className="img-fluid-custom"
-                  alt="blog-img"
-                  height={312}
-                  width={285}
-                />
+                <div>
+                  {item?.is_valid_user_type == true ? (
+                    <>
+                      <img
+                        src={`${
+                          process.env.NEXT_PUBLIC_BASE_URL + item.banner_image
+                        }`}
+                        className="img-fluid-custom"
+                        alt="blog-img"
+                      />
+                    </>
+                  ) : (
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
+                      className="img-fluid-custom"
+                      alt="blog-img"
+                    />
+                  )}
+                </div>
               </Link>
             </div>
             <div className="bloglist-content pe-auto">
               <div className="card-body">
                 <div className="blogfeaturelink">
-                  
                   <div className="blog-features">
                     <Link href={`business-details/${item.slug}`}>
                       <span>

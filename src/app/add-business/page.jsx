@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import AskOption from "./ask-option";
 
 const CreateBusinessPage = () => {
   const router = useRouter();
@@ -100,13 +101,16 @@ const CreateBusinessPage = () => {
     }));
   };
 
+  const authData = JSON.parse(localStorage.getItem("auth"));
+  const token = authData?.access_token;
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const authData = JSON.parse(localStorage.getItem("auth"));
-    const token = authData?.access_token;
-
+   
+   
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/create-business`,
@@ -132,6 +136,9 @@ const CreateBusinessPage = () => {
     }
   };
 
+
+  if(!token) return <AskOption />
+
   return (
     <div
       className="dashboard-content"
@@ -143,7 +150,7 @@ const CreateBusinessPage = () => {
             <div className="col-lg-12">
               <div className="card dash-cards">
                 <div className="card-header">
-                  <h4>Add Business</h4>
+                  <h4>Add Business as a customer</h4>
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>
@@ -169,7 +176,7 @@ const CreateBusinessPage = () => {
 
                       <div className="col-md-6 form-group">
                         <label className="col-form-label">
-                          Mobile Number *
+                          Business Phone Number *
                         </label>
                         <div className="pass-group group-img">
                           <span className="lock-icon">
@@ -185,7 +192,24 @@ const CreateBusinessPage = () => {
                           />
                         </div>
                       </div>
-
+                      <div className="col-md-6 form-group">
+                        <label className="col-form-label">
+                          Business Email *
+                        </label>
+                        <div className="pass-group group-img">
+                          <span className="lock-icon">
+                            <i className="feather-mail" />
+                          </span>
+                          <input
+                            type="email"
+                            className="form-control"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                      </div>
                       <div className="col-md-6 form-group">
                         <label className="col-form-label">
                           Address Line 1 *
@@ -222,7 +246,9 @@ const CreateBusinessPage = () => {
                       </div>
 
                       <div className="col-md-6 form-group">
-                        <label className="col-form-label">Zip Code *</label>
+                        <label className="col-form-label">
+                          Postal Code / Zip Code *
+                        </label>
                         <div className="pass-group group-img">
                           <span className="lock-icon">
                             <i className="feather-map-pin" />
@@ -235,47 +261,6 @@ const CreateBusinessPage = () => {
                             onChange={handleInputChange}
                             required
                           />
-                        </div>
-                      </div>
-
-                      <div className="col-md-6 form-group">
-                        <label className="col-form-label">Country *</label>
-                        <div className="pass-group group-img">
-                          <span className="lock-icon">
-                            <i className="feather-globe" />
-                          </span>
-                          <select
-                            className="form-control"
-                            name="country_id"
-                            value={formData.country_id}
-                            onChange={handleInputChange}
-                            disabled
-                          >
-                            <option value="Canada">Canada</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="col-md-6 form-group">
-                        <label className="col-form-label">Province *</label>
-                        <div className="pass-group group-img">
-                          <span className="lock-icon">
-                            <i className="feather-map" />
-                          </span>
-                          <select
-                            className="form-control"
-                            name="state_id"
-                            value={formData.state_id}
-                            onChange={handleStateChange}
-                            required
-                          >
-                            <option value="">Select Province</option>
-                            {stateDropdown.map((state) => (
-                              <option key={state.id} value={state.name}>
-                                {state.name}
-                              </option>
-                            ))}
-                          </select>
                         </div>
                       </div>
 
@@ -304,6 +289,49 @@ const CreateBusinessPage = () => {
                       </div>
 
                       <div className="col-md-6 form-group">
+                        <label className="col-form-label">
+                          Province / State *
+                        </label>
+                        <div className="pass-group group-img">
+                          <span className="lock-icon">
+                            <i className="feather-map" />
+                          </span>
+                          <select
+                            className="form-control"
+                            name="state_id"
+                            value={formData.state_id}
+                            onChange={handleStateChange}
+                            required
+                          >
+                            <option value="">Select Province / State</option>
+                            {stateDropdown.map((state) => (
+                              <option key={state.id} value={state.name}>
+                                {state.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="col-md-6 form-group">
+                        <label className="col-form-label">Country *</label>
+                        <div className="pass-group group-img">
+                          <span className="lock-icon">
+                            <i className="feather-globe" />
+                          </span>
+                          <select
+                            className="form-control"
+                            name="country_id"
+                            value={formData.country_id}
+                            onChange={handleInputChange}
+                            disabled
+                          >
+                            <option value="Canada">Canada</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="col-md-6 form-group">
                         <label htmlFor="business_category_id">
                           Business Category *
                         </label>
@@ -323,23 +351,6 @@ const CreateBusinessPage = () => {
                           ))}
                         </select>
                       </div>
-
-                      <div className="col-md-6 form-group">
-                        <label className="col-form-label">Email *</label>
-                        <div className="pass-group group-img">
-                          <span className="lock-icon">
-                            <i className="feather-mail" />
-                          </span>
-                          <input
-                            type="email"
-                            className="form-control"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            required
-                          />
-                        </div>
-                      </div>
                     </div>
 
                     <div className="d-flex align-items-center justify-content-between mt-4">
@@ -348,7 +359,7 @@ const CreateBusinessPage = () => {
                         type="submit"
                         disabled={isLoading}
                       >
-                        {isLoading ? "Creating..." : "Create Business"}
+                        {isLoading ? "Creating..." : "Add Business"}
                       </button>
                     </div>
                   </form>
