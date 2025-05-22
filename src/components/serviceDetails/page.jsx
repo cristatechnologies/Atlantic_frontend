@@ -30,7 +30,6 @@ import ServiceDetailCaruouselGallery from "./ServiceDetailCaruouselGallery";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
-
 const ServiceDetails = ({ data, slug }) => {
   const pathname = usePathname();
   const [fullUrl, setFullUrl] = useState("");
@@ -58,7 +57,7 @@ const ServiceDetails = ({ data, slug }) => {
 
   const [replyText, setReplyText] = useState({});
   const [businessReviews, setBusinessReviews] = useState([]);
-const router = useRouter()
+  const router = useRouter();
   const [auth, setAuth] = useState(null);
   const [businessProfile, setBusinessProfile] = useState(null);
 
@@ -137,14 +136,13 @@ const router = useRouter()
         setRating(0);
         setHasReviewed(1);
         toast.success("review added successfully");
-      }
-      else(
-        toast.error("Login to add the review ",setTimeout(()=>
-        {
-          router.push('/login')
-        },3000))
-        
-      )
+      } else
+        toast.error(
+          "Login to add the review ",
+          setTimeout(() => {
+            router.push("/login");
+          }, 3000)
+        );
       // You might want to refresh the reviews list here
       // or show a success message
       fetchBusinessReviews();
@@ -295,7 +293,24 @@ const router = useRouter()
               <div className="authordetails">
                 <h5>{data.name}</h5>
                 <p>{data.description}</p>
-                <p> {data.is_valid_user_type ? "Customer Added Business " : null}</p>
+
+                {data?.is_verified == false ? (
+                  <>
+                    <p style={{ fontSize: "15px", color: "gray" }}>
+                      Customer Added Business
+                    </p>
+                    <Link
+                      href={`/verification-page?email=${encodeURIComponent(
+                        data.contact_person_email
+                      )}?redirect=true`}
+                    >
+                      <button className="btn btn-primary submit-btn">
+                        Claim this Business{" "}
+                      </button>
+                    </Link>
+                  </>
+                ) : null}
+
                 <div className="rating">
                   <StarRatings
                     rating={data.rating || 0}
