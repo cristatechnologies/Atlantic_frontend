@@ -403,10 +403,11 @@ flex-direction:column;
   
 }
 
-.headerLogo
+/* .headerLogo
 {
   
   width: 250px;
+  padding-left:40px;
 
 }
 
@@ -416,13 +417,42 @@ flex-direction:column;
 
   }
 }
+@media (min-width: 1000px) {
+  .headerLogo {
+     width: 550px;
+  }
+}
 
 
 @media (min-width: 850px) {
   .headerLogo {
      width: 350px;
   }
+} */
+
+
+.headerLogo {
+  width: 250px;
+  padding-left: 40px; /* Consider moving this to a media query if needed */
 }
+
+/* Tablet (600px and up): 350px */
+@media (min-width: 340) {
+  .headerLogo {
+    width: 350px;
+    padding-left:0;
+  }
+}
+
+/* Desktop (1000px and up): 550px */
+@media (min-width: 850px) {
+  .headerLogo {
+    width: 450px;
+  }
+}
+
+
+
 
 
 .service-banner-image{

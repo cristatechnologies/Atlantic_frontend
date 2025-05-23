@@ -101,7 +101,8 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                       <div className="blog-widget">
                         <div className="blog-img d-flex justify-content-center ">
                           <Link href={`business-details/${item.slug}`}>
-                            {item?.is_verified == true ? (
+                            {item?.is_valid_user_type === false &&
+                            item?.is_verified == true ? (
                               <img
                                 src={`${
                                   process.env.NEXT_PUBLIC_BASE_URL + item.image
@@ -112,10 +113,12 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                             ) : (
                               <>
                                 <img
-                                  src={`${
-                                    process.env.NEXT_PUBLIC_BASE_URL +
-                                    item.banner_image
-                                  }`}
+                                  src={
+                                    item.banner_image &&
+                                    item.banner_image.trim() !== ""
+                                      ? `${process.env.NEXT_PUBLIC_BASE_URL}${item.banner_image}`
+                                      : `${process.env.NEXT_PUBLIC_BASE_URL}default/become_seller_avatar.jpg`
+                                  }
                                   className="img-fluid-custom"
                                   alt="blog-img"
                                 />

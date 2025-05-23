@@ -300,9 +300,7 @@ const ServiceDetails = ({ data, slug }) => {
                       Customer Added Business
                     </p>
                     <Link
-                      href={`/verification-page?email=${encodeURIComponent(
-                        data.contact_person_email
-                      )}?redirect=true`}
+                      href={`/claim-business?email=${data.contact_person_email}`}
                     >
                       <button className="btn btn-primary submit-btn">
                         Claim this Business{" "}

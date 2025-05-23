@@ -11,7 +11,7 @@ const VerificationPage = () => {
   const [resendTimer, setResendTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const [email, setEmail] = useState("");
-  const [redirection, setRedirection] = useState(false);
+
   const inputRefs = [
     useRef(),
     useRef(),
@@ -29,16 +29,13 @@ const VerificationPage = () => {
     // Get email from URL
     const urlParams = new URLSearchParams(window.location.search);
     const emailFromUrl = urlParams.get("email");
-    const redirectionFromUrl = urlParams.get("redirect");
+   
 
     if (emailFromUrl) {
       setEmail(emailFromUrl);
     }
 
-    console.log(redirectionFromUrl);
-    if (redirectionFromUrl === "true") {
-      setRedirection(true);
-    }
+   
   }, []);
 
   useEffect(() => {
@@ -89,11 +86,21 @@ const VerificationPage = () => {
 
     console.log("Attempting to verify OTP:", otpString);
 
+    // Get sendMail parameter from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sendMail = urlParams.get("sendMail");
+
     try {
       console.log("Making API call...");
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user-verification/${otpString}`
-      );
+      // Build the base URL
+      let apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}api/user-verification/${otpString}`;
+
+      // Add email to query only if sendMail is "true"
+      if (sendMail === "true") {
+        apiUrl += `?email=${email}`;
+      }
+
+      const response = await axios.get(apiUrl);
       console.log("API response:", response);
 
       if (response.data && response.status === 200) {
@@ -102,33 +109,29 @@ const VerificationPage = () => {
 
         // Set verification result (optional, as we're redirecting immediately)
         setVerificationResult({ success: "Verification successful" });
-console.log(redirection)
+
         // Redirect to login page after a short delay
-        if (redirection) {
-          setTimeout(() => {
-            router.push(`/update-business?email=${encodeURIComponent(email)} `);
-          }, 1500);
-        } else {
+     
           setTimeout(() => {
             router.push("/login");
-          }, 1500);
-        } // 1.5 seconds delay to allow the user to see the success message
+          }, 1500)
+        
       } else {
         // Handle unexpected response
         setVerificationResult({
-          error: "Verification failed. Please try again.",
+          error: response.data.notification,
         });
-        toast.error("Verification failed. Please try again.");
+        toast.error(response.notification);
       }
     } catch (error) {
       console.error("API call error:", error);
       setVerificationResult({
         error:
-          error.response?.data?.message ||
+          error.response?.data?.notification ||
           "Verification failed. Please try again.",
       });
       toast.error(
-        error.response?.data?.message ||
+        error.response?.data?.notification ||
           "Verification failed. Please try again."
       );
     }
