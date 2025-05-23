@@ -651,7 +651,7 @@ const Header = ({ parms }) => {
                       src={`${process.env.NEXT_PUBLIC_BASE_URL}${logo}`}
                       alt="logo"
                       className="headerLogo"
-                      style={{ paddingLeft: "30px" }}
+                      // style={{ paddingLeft: "40px" }}
                     />
                   </Link>
                 </div>
