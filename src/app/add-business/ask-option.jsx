@@ -17,14 +17,17 @@ const AskOption = () => {
         }}
       >
         <Container
-          className="d-flex align-items-center justify-content-center"
+          className="d-flex align-items-center justify-content-center flex-column text-center"
           style={{ height: "100vh" }}
         >
+          <Row className="w-100 justify-content-center mb-4">
+            <p style={{color:"black", fontSize:"20px", fontWeight:"bold"}}>To add a business as customer, please Signup/Signin</p>
+          </Row>
           <Row className="w-100 justify-content-center">
             <Col
               xs={12}
               md={5}
-              className="d-flex justify-content-md-center mb-3 mb-md-0"
+              className="d-flex justify-content-md-end mb-3 mb-md-0"
             >
               <Link href="/signup/user" passHref>
                 <Button variant="primary" className="py-2 px-4">
@@ -33,9 +36,9 @@ const AskOption = () => {
               </Link>
             </Col>
             <Col xs={12} md={5} className="d-flex justify-content-md-start">
-              <Link href="/login?redirectedFrom=add-business" >
+              <Link href="/login?redirectedFrom=add-business">
                 <Button variant="primary" className="py-2 px-4">
-               Sign In
+                  Sign In
                 </Button>
               </Link>
             </Col>

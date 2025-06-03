@@ -9,12 +9,17 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import { Suspense } from "react";
 import Link from "next/link";
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
+
+
 const UpdateBusinessPage = ({ params }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const [productTags, setProductTags] = useState([]);
   const websiteData = useSelector((state) => state.websiteSetup.data);
   const [responseData, setResponseData] = useState(null);
+  
   const [formData, setFormData] = useState({
     // business_name: "",
     reg_no: "",
@@ -50,28 +55,28 @@ const UpdateBusinessPage = ({ params }) => {
   const [cityDropdown, setCityDropdown] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
- 
-  
+
+
 
   useEffect(() => {
-    const email = searchParams.get("email");
-    console.log("email", email);
+    const phone = searchParams.get("phone");
+    console.log("email", phone);
 
-    if (email) {
-      fetchBusinessData(email);
+    if (phone) {
+      fetchBusinessData(phone);
       fetchCategories();
       // fetchStates("Canada");
     } else {
       setIsFetching(false);
-      toast.error("Email parameter is missing");
+      toast.error("phone parameter is missing");
     }
   }, [searchParams]);
 
-  const fetchBusinessData = async (email) => {
+  const fetchBusinessData = async (phone) => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/business-profile-data`,
-        { email }
+        { phone }
       );
       setResponseData(response.data);
 
@@ -81,9 +86,9 @@ const UpdateBusinessPage = ({ params }) => {
       setFormData({
         business_name: business?.name || "",
         reg_no: business?.reg_no || "",
-      
+
         description: business?.description || "",
-       
+
         address_line_one:
           business?.address_line_one || user?.address_line_one || "",
         address_line_two:
@@ -91,12 +96,12 @@ const UpdateBusinessPage = ({ params }) => {
         business_category_id: business?.business_category_id || "",
         phone: business?.contact_person_number || user?.phone || "",
         email: business?.contact_person_email || user?.email || "",
-      
+
         country_id: business?.country_id || user?.country_id || "Canada",
         state_id: business?.state_id || user?.state_id || "",
         city_id: business?.city_id || user?.city_id || "",
         zip_code: business?.zip_code || user?.zip_code || "",
-    
+
         password: "",
       });
 
@@ -105,8 +110,6 @@ const UpdateBusinessPage = ({ params }) => {
       // }
 
       // Store original image paths for comparison later
-      
-     
     } catch (error) {
       console.error("Error fetching business data:", error);
       toast.error("Failed to load business data");
@@ -255,6 +258,7 @@ const UpdateBusinessPage = ({ params }) => {
     }
   };
 
+
   useEffect(() => {
     // Check if we need to redirect after refresh
     if (sessionStorage.getItem("redirectToLogin") === "true") {
@@ -368,7 +372,6 @@ const UpdateBusinessPage = ({ params }) => {
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            disabled
                           />
                         </div>
                       </div>
@@ -574,6 +577,8 @@ const UpdateBusinessPage = ({ params }) => {
                           </datalist>
                         </div>
                       </div>
+
+                  
                       {/* Password Field */}
                       <div className="col-md-6 form-group">
                         <label className="col-form-label">Password *</label>

@@ -563,7 +563,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                         </div>
                         {/* products */}
                         <div className="col-md-6 form-group">
-                          <label className="col-form-label">Products</label>
+                          <label className="col-form-label">Products/Services</label>
                           <div className="custom-tags-input">
                             <TagsInput
                               value={productTags}
