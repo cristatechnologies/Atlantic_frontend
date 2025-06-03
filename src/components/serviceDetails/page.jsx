@@ -300,7 +300,7 @@ const ServiceDetails = ({ data, slug }) => {
                       Customer Added Business
                     </p>
                     <Link
-                      href={`/claim-business?email=${data.contact_person_email}`}
+                      href={`/claim-business?phone=${data.contact_person_number}`}
                     >
                       <button className="btn btn-primary submit-btn">
                         Claim this Business{" "}

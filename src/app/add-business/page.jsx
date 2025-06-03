@@ -4,6 +4,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import AskOption from "./ask-option";
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
+
+
 
 const CreateBusinessPage = () => {
   const router = useRouter();
@@ -18,6 +22,7 @@ const CreateBusinessPage = () => {
     state_id: "",
     city_id: "",
     email: "",
+    description:"",
   });
 
   const [categories, setCategories] = useState([]);
@@ -108,6 +113,7 @@ const CreateBusinessPage = () => {
   };
 
   
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -115,6 +121,8 @@ const CreateBusinessPage = () => {
    
    
     try {
+     
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/user/create-business`,
         formData,
@@ -173,6 +181,7 @@ const CreateBusinessPage = () => {
                             value={formData.business_name}
                             onChange={handleInputChange}
                             required
+                            placeholder="Business Name "
                           />
                         </div>
                       </div>
@@ -192,13 +201,12 @@ const CreateBusinessPage = () => {
                             value={formData.phone}
                             onChange={handleInputChange}
                             required
+                            placeholder="Business Phone Number"
                           />
                         </div>
                       </div>
                       <div className="col-md-6 form-group">
-                        <label className="col-form-label">
-                          Business Email *
-                        </label>
+                        <label className="col-form-label">Business Email</label>
                         <div className="pass-group group-img">
                           <span className="lock-icon">
                             <i className="feather-mail" />
@@ -209,7 +217,21 @@ const CreateBusinessPage = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            required
+                            placeholder="Business Email Address"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6 form-group">
+                        <label className="col-form-label">Description</label>
+                        <div className="pass-group group-img">
+                          <span className="lock-icon"></span>
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            placeholder="Add Description of the business (eg: Services, products)  "
                           />
                         </div>
                       </div>
@@ -228,6 +250,7 @@ const CreateBusinessPage = () => {
                             value={formData.address_line_one}
                             onChange={handleInputChange}
                             required
+                            placeholder="Address Line 1 "
                           />
                         </div>
                       </div>
@@ -244,6 +267,7 @@ const CreateBusinessPage = () => {
                             name="address_line_two"
                             value={formData.address_line_two}
                             onChange={handleInputChange}
+                            placeholder="Address Line 2"
                           />
                         </div>
                       </div>
@@ -263,6 +287,7 @@ const CreateBusinessPage = () => {
                             value={formData.zip_code}
                             onChange={handleInputChange}
                             required
+                            placeholder="Postal Code"
                           />
                         </div>
                       </div>
@@ -354,6 +379,20 @@ const CreateBusinessPage = () => {
                           ))}
                         </select>
                       </div>
+                      {/* <div className="col-md-6 form-group">
+                        <label className="col-form-label">Products</label>
+                        <div className="custom-tags-input">
+                          <TagsInput
+                            value={formData.products}
+                            onChange={handleProductTagChange}
+                            inputProps={{
+                              className: "react-tagsinput-input ",
+                              placeholder: "Type and Press Enter  ",
+                            }}
+                            
+                          />
+                        </div>
+                      </div> */}
                     </div>
 
                     <div className="d-flex align-items-center justify-content-between mt-4">
