@@ -426,40 +426,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                           </div>
 
                           {/* Phone Number */}
-                          <div className="col-md-6 form-group">
-                            <label className="col-form-label">
-                              Phone Number
-                            </label>
-                            <div className="pass-group group-img">
-                              <span className="lock-icon">
-                                <i className="feather-phone-call" />
-                              </span>
-                              <input
-                                type="tel"
-                                className="form-control"
-                                name="phone"
-                                defaultValue={profileData?.phone}
-                              />
-                            </div>
-                          </div>
-
-                          {/* Email Address */}
-                          <div className="col-md-6 form-group">
-                            <label className="col-form-label">
-                              Email Address
-                            </label>
-                            <div className="pass-group group-img">
-                              <span className="lock-icon">
-                                <i className="feather-mail" />
-                              </span>
-                              <input
-                                type="text"
-                                className="form-control"
-                                name="email"
-                                defaultValue={profileData?.email}
-                              />
-                            </div>
-                          </div>
+                       
 
                           {/* Country */}
                           <div className="col-md-6 form-group">
@@ -474,29 +441,6 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                                 onChange={handleCountryChange}
                               >
                                 <option value="Canada">Canada</option>
-                              </select>
-                            </div>
-                          </div>
-
-                          {/* Update the State dropdown */}
-                          <div className="col-md-6 form-group">
-                            <label className="col-form-label">State</label>
-                            <div className="pass-group group-img">
-                              <span className="lock-icon">
-                                <i className="feather-map" />
-                              </span>
-                              <select
-                                className="form-control"
-                                value={state}
-                                onChange={handleStateChange}
-                                disabled={!country}
-                              >
-                                <option value="">Select State</option>
-                                {stateDropdown.map((item) => (
-                                  <option key={item.id} value={item.name}>
-                                    {item.name}
-                                  </option>
-                                ))}
                               </select>
                             </div>
                           </div>
@@ -523,28 +467,6 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                               </select>
                             </div>
                           </div> */}
-
-                          <div className="col-md-6 form-group">
-                            <label className="col-form-label">City</label>
-                            <div className="pass-group group-img">
-                              <span className="lock-icon">
-                                <i className="feather-map-pin" />
-                              </span>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Select or Enter City"
-                                list="cityList"
-                                value={city}
-                                onChange={handleCityChange}
-                              />
-                              <datalist id="cityList">
-                                {cityDropdown?.map((item) => (
-                                  <option key={item.id} value={item.name} />
-                                ))}
-                              </datalist>
-                            </div>
-                          </div>
 
                           {/* Line 1 */}
                           <div className="col-md-6 form-group">
@@ -581,6 +503,29 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                             </div>
                           </div>
 
+                          {/* Update the City dropdown */}
+                          <div className="col-md-6 form-group">
+                            <label className="col-form-label">City</label>
+                            <div className="pass-group group-img">
+                              <span className="lock-icon">
+                                <i className="feather-map-pin" />
+                              </span>
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Select or Enter City"
+                                list="cityList"
+                                value={city}
+                                onChange={handleCityChange}
+                              />
+                              <datalist id="cityList">
+                                {cityDropdown?.map((item) => (
+                                  <option key={item.id} value={item.name} />
+                                ))}
+                              </datalist>
+                            </div>
+                          </div>
+
                           {/* Zip Code */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">Zip Code</label>
@@ -596,8 +541,30 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                               />
                             </div>
                           </div>
+                          {/* Update the State dropdown */}
+                          <div className="col-md-6 form-group">
+                            <label className="col-form-label">State</label>
+                            <div className="pass-group group-img">
+                              <span className="lock-icon">
+                                <i className="feather-map" />
+                              </span>
+                              <select
+                                className="form-control"
+                                value={state}
+                                onChange={handleStateChange}
+                                disabled={!country}
+                              >
+                                <option value="">Select State</option>
+                                {stateDropdown.map((item) => (
+                                  <option key={item.id} value={item.name}>
+                                    {item.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
 
-                          {/* Language*/}
+                          {/* Email Address */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">
                               Email Address
@@ -614,6 +581,43 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                               />
                             </div>
                           </div>
+
+                          {/* Phone Number */}
+                          <div className="col-md-6 form-group">
+                            <label className="col-form-label">
+                              Phone Number
+                            </label>
+                            <div className="pass-group group-img">
+                              <span className="lock-icon">
+                                <i className="feather-phone-call" />
+                              </span>
+                              <input
+                                type="tel"
+                                className="form-control"
+                                name="phone"
+                                defaultValue={profileData?.phone}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Email Address*/}
+                          <div className="col-md-6 form-group">
+                            <label className="col-form-label">
+                              Email Address
+                            </label>
+                            <div className="pass-group group-img">
+                              <span className="lock-icon">
+                                <i className="feather-mail" />
+                              </span>
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="email"
+                                defaultValue={profileData?.email}
+                              />
+                            </div>
+                          </div>
+
                           {/* Region  */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">Region</label>
@@ -633,7 +637,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                           {/* Origin Country */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">
-                              Origin Country
+                               Country of Origin
                             </label>
                             <div className="pass-group group-img">
                               <span className="lock-icon">
@@ -659,7 +663,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                           {/* Origin State */}
                           <div className="col-md-6 form-group">
                             <label className="col-form-label">
-                              Origin State
+                             State / Province of Origin
                             </label>
                             <div className="pass-group group-img">
                               <span className="lock-icon">
