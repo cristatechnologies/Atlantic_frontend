@@ -8,39 +8,39 @@ import { Suspense } from "react";
 import { MdAppRegistration } from "react-icons/md";
 import BusinessCard from "@/components/HomePage/slider/BusinessCard";
 
-
 const Search = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
-  const location = searchParams.get("location")
+  const location = searchParams.get("location");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchSearchResults = async () => {
+      try {
+        setLoading(true);
 
-        try {
-          setLoading(true);
-          const response = await axios.get(
-            `${
-              process.env.NEXT_PUBLIC_BASE_URL
-            }api/business?search=${encodeURIComponent(
-              query
-            )}&location=${encodeURIComponent(location)}`
-          );
-          setSearchResults(response.data || []);
-          setLoading(false);
-        } catch (err) {
-          console.error("Error fetching search results:", err);
-          setError("An error occurred while fetching search results.");
-          setLoading(false);
-        }
-      
+        // Build query parameters object
+        const params = new URLSearchParams();
+        if (query) params.append("search", query);
+        if (location) params.append("location", location);
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/business?${params.toString()}`
+        );
+
+        setSearchResults(response.data || []);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching search results:", err);
+        setError("An error occurred while fetching search results.");
+        setLoading(false);
+      }
     };
 
     fetchSearchResults();
-  }, [query]);
+  }, [query, location]);
 
   return (
     <>
@@ -74,16 +74,13 @@ const Search = () => {
                   </Link>
                 </div>
               ) : (
-                   <div className="lateestads-content">
-                <div className="row">
-                  {searchResults.map((item, index) => (
-                    
-                    
-                    <BusinessCard item={item} />
-                    
-                  ))}
-                </div>
+                <div className="lateestads-content">
+                  <div className="row">
+                    {searchResults.map((item, index) => (
+                      <BusinessCard item={item} key={index} />
+                    ))}
                   </div>
+                </div>
               )}
             </>
           )}
@@ -92,9 +89,6 @@ const Search = () => {
     </>
   );
 };
-
-
-
 
 const SearchResults = () => {
   return (
