@@ -201,7 +201,7 @@ const [isCityCustom, setIsCityCustom] = useState(false);
     formData.append("origin_country_id", originCountry);
     formData.append("origin_state_id", originState);
      formData.append("address_line_two", lineTwo);
-      formData.append("address_line_two", lineOne);
+      formData.append("address_line_one", lineOne);
     formData.append(
       "language",
       languageTags.length > 0 ? languageTags.join(",") : null
