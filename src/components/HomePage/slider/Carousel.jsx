@@ -104,11 +104,16 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                             {item?.is_valid_user_type === false &&
                             item?.is_verified == true ? (
                               <img
-                                src={`${
-                                  process.env.NEXT_PUBLIC_BASE_URL + item.image
-                                }`}
+                                src={
+                                  item.image.trim() !== ""
+                                    ? `${
+                                        process.env.NEXT_PUBLIC_BASE_URL +
+                                        item.image
+                                      }`
+                                    : `${process.env.NEXT_PUBLIC_BASE_URL}default/become_seller_avatar.jpg`
+                                }
                                 className="img-fluid-custom"
-                                alt="blog-img"
+                                alt="logo"
                               />
                             ) : (
                               <>
@@ -120,7 +125,7 @@ export default function Carousel({ businessData, color, textColor, Heading }) {
                                       : `${process.env.NEXT_PUBLIC_BASE_URL}default/become_seller_avatar.jpg`
                                   }
                                   className="img-fluid-custom"
-                                  alt="blog-img"
+                                  alt="banner"
                                 />
                               </>
                             )}

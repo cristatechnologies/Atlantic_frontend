@@ -46,7 +46,7 @@ const BusinessCard = ({ item }) => {
                       </span>
                     </Link>
                   </div>
-                  {item.reg_no && (
+                  {/* {item.reg_no && (
                     <div className="blog-author text-end">
                       <span>
                         {" "}
@@ -54,7 +54,7 @@ const BusinessCard = ({ item }) => {
                         {item.reg_no}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <h6>
                   <Link href={`business-details/${item.slug}`}>
