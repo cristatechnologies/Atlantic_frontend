@@ -286,7 +286,11 @@ const ServiceDetails = ({ data, slug }) => {
             <div className="about-headings">
               <div className="author-img">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL + data.image}`}
+                  src={
+                    data.image?.trim() !== ""
+                      ? `${process.env.NEXT_PUBLIC_BASE_URL + data.image}`
+                      : `${process.env.NEXT_PUBLIC_BASE_URL}${data.business_category.image}`
+                  }
                   alt="authorimg"
                 />
               </div>

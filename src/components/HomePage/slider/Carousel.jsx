@@ -70,30 +70,30 @@ export default function Carousel({
               <div className="blog-widget">
                 <div className="blog-img d-flex justify-content-center">
                   <Link href={`business-details/${item.slug}`}>
-                    {item?.is_valid_user_type === false &&
-                    item?.is_verified === true ? (
+                    {/* {item?.is_valid_user_type === false &&
+                    item?.is_verified === true ? ( */}
                       <img
                         src={
                           item.image?.trim() !== ""
                             ? `${process.env.NEXT_PUBLIC_BASE_URL + item.image}`
-                            : `${process.env.NEXT_PUBLIC_BASE_URL}default/become_seller_avatar.jpg`
+                            : `${process.env.NEXT_PUBLIC_BASE_URL}${item.business_category.image}`
                         }
                         className="img-fluid-custom"
                         alt="logo"
                       />
-                    ) : (
+                    {/* ) : (
                       <>
                         <img
                           src={
                             item.banner_image?.trim() !== ""
                               ? `${process.env.NEXT_PUBLIC_BASE_URL}${item.banner_image}`
-                              : `${process.env.NEXT_PUBLIC_BASE_URL}default/become_seller_avatar.jpg`
+                              : `${process.env.NEXT_PUBLIC_BASE_URL}${item.business_category.image}`
                           }
                           className="img-fluid-custom"
                           alt="banner"
                         />
                       </>
-                    )}
+                    )} */}
                   </Link>
                 </div>
                 <div className="bloglist-content pe-auto">
@@ -191,8 +191,8 @@ export default function Carousel({
                     <div className="blog-widget">
                       <div className="blog-img d-flex justify-content-center">
                         <Link href={`business-details/${item.slug}`}>
-                          {item?.is_valid_user_type === false &&
-                          item?.is_verified === true ? (
+                          {/* {item?.is_valid_user_type === false &&
+                          item?.is_verified === true ? ( */}
                             <img
                               src={
                                 item.image?.trim() !== ""
@@ -200,12 +200,12 @@ export default function Carousel({
                                       process.env.NEXT_PUBLIC_BASE_URL +
                                       item.image
                                     }`
-                                  : `${process.env.NEXT_PUBLIC_BASE_URL}default/become_seller_avatar.jpg`
+                                  : `${process.env.NEXT_PUBLIC_BASE_URL}${item.business_category.image}`
                               }
                               className="img-fluid-custom"
                               alt="logo"
                             />
-                          ) : (
+                          {/* ) : (
                             <>
                               <img
                                 src={
@@ -217,7 +217,7 @@ export default function Carousel({
                                 alt="banner"
                               />
                             </>
-                          )}
+                          )} */}
                         </Link>
                       </div>
                       <div className="bloglist-content pe-auto">
