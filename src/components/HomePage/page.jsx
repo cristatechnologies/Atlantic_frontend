@@ -186,7 +186,7 @@ const fetchCityName = async (latitude, longitude) => {
   const fetchBusinessesByLocation = async (location) => {
     try {
       const response = await axios.get(
-        `${baseUrl}api/business?search=&location=${encodeURIComponent(
+        `${baseUrl}api/business?location=${encodeURIComponent(
           location
         )}`
       );
