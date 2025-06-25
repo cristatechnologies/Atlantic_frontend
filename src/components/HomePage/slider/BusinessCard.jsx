@@ -14,23 +14,15 @@ const BusinessCard = ({ item }) => {
             <div className="blog-img">
               <Link href={`/business-details/${item.slug}`}>
                 <div>
-                  {item?.is_valid_user_type == true ? (
-                    <>
-                      <img
-                        src={`${
-                          process.env.NEXT_PUBLIC_BASE_URL + item.banner_image
-                        }`}
-                        className="img-fluid-custom"
-                        alt="blog-img"
-                      />
-                    </>
-                  ) : (
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL + item.image}`}
-                      className="img-fluid-custom"
-                      alt="blog-img"
-                    />
-                  )}
+                  <img
+                    src={
+                      item.image?.trim() !== ""
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL + item.image}`
+                        : `${process.env.NEXT_PUBLIC_BASE_URL}${item.business_category.image}`
+                    }
+                    className="img-fluid-custom"
+                    alt="logo"
+                  />
                 </div>
               </Link>
             </div>
