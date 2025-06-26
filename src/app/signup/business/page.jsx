@@ -11,9 +11,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { MultiSelect } from "react-multi-select-component";
 import FcmTokenComp from "@/lib/firebaseForeground";
-
-
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 const business = () => {
+  const searchParams = useSearchParams();
   const websiteData = useSelector((state) => state.websiteSetup.data);
   console.log("Website Setup Data is ", websiteData);
   const [bname, setBname] = useState("");
@@ -66,6 +67,7 @@ const handleCityChange = (e) => {
 
 
 
+const referral_code = searchParams.get("referral_code");
 
 const handleCheckboxChange = (e) => {
   setIsAgreed(e.target.checked);
@@ -182,11 +184,11 @@ const handleCheckboxChange = (e) => {
           business_category_id: selectedCategoryId,
           // address: address,
           state_id: state,
-          fcm_token:token,
+          fcm_token: token,
           // display_name: dname,
-           reg_no: regno,
+          reg_no: regno,
           city_id: city,
-           description: short,
+          description: short,
           // long_description: longDesc,
           address_line_one: addressLineOne, // New field
           address_line_two: addressLineTwo, // New field
@@ -198,6 +200,7 @@ const handleCheckboxChange = (e) => {
           password_confirmation: confirmPassword,
           agree: 1,
           language: selectedLanguage,
+          referral_code,
         }
       );
 
@@ -317,10 +320,13 @@ const handleCheckboxChange = (e) => {
     }
   };
 
+
+  console.log("Referral Code is ", referral_code);
   
 
   return (
     <>
+    <Suspense fallback={<div>Loading...</div>}>
       {/* Login Section */}
       <FcmTokenComp />
       <div
@@ -800,6 +806,7 @@ const handleCheckboxChange = (e) => {
       </div>
 
       {/* /Login Section */}
+    </Suspense>
     </>
   );
 };
