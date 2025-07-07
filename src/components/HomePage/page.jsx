@@ -35,20 +35,20 @@ const HomePage = () => {
   const [fallbackBusinessData, setFallbackBusinessData] = useState(null);
 
   // Fetch fallback business data
-  const fetchFallbackBusinessData = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}api/business`);
-      if (response.data) {
-        setFallbackBusinessData(response.data);
-        // If no location-based data, use fallback
-        if (!businessData) {
-          setBusinessData(response.data);
-        }
-      }
-    } catch (err) {
-      console.log("Error fetching fallback business data:", err);
-    }
-  };
+  // const fetchFallbackBusinessData = async () => {
+  //   try {
+  //     const response = await axios.get(`${baseUrl}api/business`);
+  //     if (response.data) {
+  //       setFallbackBusinessData(response.data);
+  //       // If no location-based data, use fallback
+  //       if (!businessData) {
+  //         setBusinessData(response.data);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log("Error fetching fallback business data:", err);
+  //   }
+  // };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -180,7 +180,7 @@ const fetchCityName = async (latitude, longitude) => {
   } catch (error) {
     console.error("Error fetching city name:", error);
     // If city name fetch fails, use fallback data
-    fetchFallbackBusinessData();
+   
   }
 };
   const fetchBusinessesByLocation = async (location) => {
@@ -193,14 +193,12 @@ const fetchCityName = async (latitude, longitude) => {
 
       if (response.data && response.data.length > 0) {
         setBusinessData(response.data);
-      } else {
-        // If no businesses found for location, use fallback
-        fetchFallbackBusinessData();
-      }
+      } 
     } catch (err) {
+      
       console.log("Error fetching businesses by location:", err);
       // If API call fails, use fallback data
-      fetchFallbackBusinessData();
+    
     }
   };
 
