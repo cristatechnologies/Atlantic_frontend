@@ -32,7 +32,7 @@ const HomePage = () => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const [dailyOffers, setDailyOffers] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
-  const [fallbackBusinessData, setFallbackBusinessData] = useState(null);
+  const [locationFetched, setLocationFetched] = useState(false);
 
   // Fetch fallback business data
   // const fetchFallbackBusinessData = async () => {
@@ -145,16 +145,19 @@ const getUserLocation = () => {
       (position) => {
         const { latitude, longitude } = position.coords;
         fetchCityName(latitude, longitude);
+        setLocationFetched(true)
       },
       (error) => {
+        setLocationFetched(false)
         console.error("Error getting location:", error);
         // If location is blocked, use fallback data
-        fetchFallbackBusinessData();
+     
       }
     );
   } else {
+    setBusinessData(undefined)
     // Geolocation not supported, use fallback data
-    fetchFallbackBusinessData();
+
   }
 };
 
@@ -248,23 +251,23 @@ const fetchCityName = async (latitude, longitude) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}api/business`
-        );
-        if (response) {
-          setBusinessData(response.data);
-          setBusinessLength(setBusinessData.length);
-        }
-      } catch (err) {
-        console.log("An error occurred while fetching the data");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_BASE_URL}api/business`
+  //       );
+  //       if (response) {
+  //         setBusinessData(response.data);
+  //         setBusinessLength(setBusinessData.length);
+  //       }
+  //     } catch (err) {
+  //       console.log("An error occurred while fetching the data");
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     // Check if apiData and sliders array exist and have at least one item
@@ -290,6 +293,9 @@ const fetchCityName = async (latitude, longitude) => {
 
     fetchDailyOffers();
   }, []);
+
+
+  console.log(businessData)
 
   return (
     <>
@@ -363,6 +369,7 @@ const fetchCityName = async (latitude, longitude) => {
       {/* Category Section */}
       {/* Featured Ads Section */}
       <Carousel
+      locationFetched={locationFetched}
         businessData={businessData}
         textColor={`${websiteData?.setting?.secondary_color}`}
         Heading={

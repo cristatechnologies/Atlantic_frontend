@@ -303,7 +303,7 @@ const businessSignupComponent = () => {
     }
   };
 
-  console.log("Referral Code is ", referral_code);
+  console.log("Referral Code is ",);
 
   return (
     <>
