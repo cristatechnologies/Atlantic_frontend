@@ -13,7 +13,7 @@ import { MultiSelect } from "react-multi-select-component";
 import FcmTokenComp from "@/lib/firebaseForeground";
 import { useSearchParams } from "next/navigation";
 
-const businessSignupComponent = () => {
+const BusinessSignupComponent = () => {
   const searchParams = useSearchParams();
   const websiteData = useSelector((state) => state.websiteSetup.data);
   console.log("Website Setup Data is ", websiteData);
@@ -793,4 +793,4 @@ const businessSignupComponent = () => {
     </>
   );
 };
-export default businessSignupComponent;
+export default BusinessSignupComponent;

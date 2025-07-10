@@ -1,11 +1,11 @@
 const { Suspense } = require("react");
-import businessSignupComponent from "@/components/signupComponent/businessSignupcomponent/page";
+import BusinessSignupComponent from "@/components/signupComponent/BusinessSignupcomponent/page";
 const BusinessSignup = () =>{
   return (
-    <Suspense >
-      <businessSignupComponent />
+    <Suspense>
+      <BusinessSignupComponent />
     </Suspense>
-  )
+  );
 }
 
 
