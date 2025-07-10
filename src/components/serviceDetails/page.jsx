@@ -261,6 +261,9 @@ const ServiceDetails = ({ data, slug }) => {
     );
   };
 
+
+  console.log(data)
+
   return (
     <>
       {/* <Header /> */}
@@ -276,7 +279,17 @@ const ServiceDetails = ({ data, slug }) => {
           />
         </div>
       ) : (
-        <div style={{ paddingTop: "170px", paddingBottom: "90px" }}></div>
+        <div className="bannergallery-section mt-lg-5 ">
+          {/* <Rooms /> */}
+          <img
+            src={`${
+              process.env.NEXT_PUBLIC_BASE_URL +
+              data.business_category.banner_image
+            }`}
+            alt="Service Banner"
+            className="service-banner-image"
+          />
+        </div>
       )}
       {/* {showFancyBox && <PhotoAlbum photos={imagess} layout="rows" />} */}
 
