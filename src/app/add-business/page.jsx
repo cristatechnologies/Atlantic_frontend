@@ -141,7 +141,7 @@ const CreateBusinessPage = () => {
       }
     } catch (error) {
       console.error("Error creating business:", error);
-      toast.error(error.response?.data?.message || "Failed to create business");
+      toast.error(error.response?.data?.error || "Failed to create business");
     } finally {
       setIsLoading(false);
     }

@@ -251,7 +251,11 @@ const UpdateBusinessPage = ({ params }) => {
           toast.error(message);
         });
       } else {
-        toast.error(error.response?.data?.message || "Failed to update business");
+        toast.error(
+          error.response?.data?.message ||
+            error.response?.data?.error ||
+            "Failed to update business"
+        );
       }
     } finally {
       setIsLoading(false);
