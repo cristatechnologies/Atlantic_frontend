@@ -65,7 +65,7 @@ const CreateBusinessPage = () => {
   const fetchStates = async (countryName) => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/?name=${countryName}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country?name=${countryName}`
       );
       setStateDropdown(response.data?.states || []);
     } catch (error) {
@@ -77,7 +77,7 @@ const CreateBusinessPage = () => {
   const fetchCities = async (stateName) => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state/?name=${stateName}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/city-by-state?name=${stateName}`
       );
       setCityDropdown(response.data?.cities || []);
     } catch (error) {
