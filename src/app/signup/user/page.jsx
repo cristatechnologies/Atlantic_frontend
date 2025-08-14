@@ -160,85 +160,139 @@ const user = () => {
     setPasswordType("password");
   };
 
-  const doSignUp = async () => {
-    try {
-      //  if (!city || city.trim() === "") {
-      //    toast.error("Please select a city.");
-      //      setError("Please select a valid city.");
-      //    return; // Stop submission if validation fails
-      //  }
-      const fcmToken = localStorage.getItem("fcmToken");
-      const token = fcmToken;
-      await axios
-        .post(`${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`, {
-          name: fname,
-          email: email,
-          password: passwordInput,
-          password_confirmation: confirmPassword,
-          agree: 1,
-          language: languageTags.length > 0 ? languageTags.join(",") : null,
-          phone: phone ? phone : "",
-          user_type: 2,
-          region: region,
-          address_line_one: line1,
-          address_line_two: line2,
-          zip_code: postalCode,
-          city_id: city,
-          state_id: state,
-          country_id: "Canada",
-          origin_country_id: originCountry,
-          origin_state_id: originState,
-          fcm_token: token,
-        })
-        .then((res) => {
-          setFname("");
-          setEmail("");
-          setPasswordInput("");
-          setConfirmPassword("");
-          setCheck(false);
-          setRegion("");
-          setLine1("");
-          setLine2("");
-          setPostalCode("");
-          setCity("");
-          setState("");
-          setCountry("");
-          setOriginCountry("");
-          setOriginState("");
-          setLanguageTags([]);
-console.log("response in do sign up :",res.data.notification)
-          toast.success(res.data.notification);
-          router.push(`/verification-page?email=${encodeURIComponent(email)}`);
-        });
-
-      // Reset form fields
-    } catch (err) {
-      if (
-        err.response &&
-        err.response.data.errors &&
-        err.response.data.errors.email
-      ) {
-        toast.error(err.response.data.errors.email[0], {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      } else {
-        console.error(err);
-        toast.error("An error occurred. Please try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
+const doSignUp = async () => {
+  try {
+    // Validate required fields
+    if (!email || email.trim() === "") {
+      toast.error("Email is required");
+      return;
     }
-  };
+
+    // Validate email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Validate password
+    if (!passwordInput || passwordInput.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+
+    // Validate password match
+    if (passwordInput !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    // Validate terms agreement
+    if (!isAgreed) {
+      toast.error("You must agree to the terms and conditions");
+      return;
+    }
+
+    const fcmToken = localStorage.getItem("fcmToken");
+    const token = fcmToken;
+
+    // Construct base payload with required fields
+    const payload = {
+      name: fname,
+      email: email.trim(),
+      password: passwordInput,
+      password_confirmation: confirmPassword,
+      agree: 1,
+      user_type: 2,
+      fcm_token: token,
+    };
+
+    // Add optional phone number if provided
+    if (phone && phone.trim() !== "") {
+      payload.phone = phone.trim();
+    }
+
+    // Add other optional fields if they have values
+    if (languageTags.length > 0) {
+      payload.language = languageTags.join(",");
+    }
+    if (region && region.trim() !== "") {
+      payload.region = region.trim();
+    }
+    if (line1 && line1.trim() !== "") {
+      payload.address_line_one = line1.trim();
+    }
+    if (line2 && line2.trim() !== "") {
+      payload.address_line_two = line2.trim();
+    }
+    if (postalCode && postalCode.trim() !== "") {
+      payload.zip_code = postalCode.trim();
+    }
+    if (city) {
+      payload.city_id = city;
+    }
+    if (state) {
+      payload.state_id = state;
+    }
+    if (originCountry) {
+      payload.origin_country_id = originCountry;
+    }
+    if (originState) {
+      payload.origin_state_id = originState;
+    }
+
+    // Make API request
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/store-register`,
+      payload
+    );
+
+    // Reset form fields
+    setFname("");
+    setLname("");
+    setEmail("");
+    setPhone("");
+    setPasswordInput("");
+    setConfirmPassword("");
+    setSelectedLanguage("");
+    setRegion("");
+    setLine1("");
+    setLine2("");
+    setPostalCode("");
+    setCity("");
+    setState("");
+    setCountry("");
+    setOriginCountry("");
+    setOriginState("");
+    setLanguageTags([]);
+    setIsAgreed(false);
+
+    // Show success message
+    toast.success(res.data.notification);
+
+    // Redirect based on verification flag
+    if (res.data.verification === 1) {
+      router.push(`/verification-page?email=${encodeURIComponent(email)}`);
+    } else {
+      router.push("/login");
+    }
+  } catch (err) {
+    console.error("Registration error:", err);
+
+    // Handle known error responses
+    if (err.response?.data?.errors) {
+      const errors = err.response.data.errors;
+
+      // Display the first error encountered
+      const firstErrorKey = Object.keys(errors)[0];
+      const firstErrorMessage = errors[firstErrorKey][0];
+
+      toast.error(firstErrorMessage);
+    } else {
+      toast.error("An error occurred during registration. Please try again.");
+    }
+  }
+};
 
   const handleInputChange = (emailValue) => {
     const inputEmail = emailValue;
