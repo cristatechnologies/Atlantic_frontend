@@ -83,77 +83,61 @@ const Footer = () => {
         data-aos="fade-up"
         style={{ marginTop: "20px", paddingBottom: "20px" }}
       >
-        <div className="container">
-          <div className="row ">
-            {/* First Column: Download Images and Links */}
-            <div className="col-lg-3 col-md-12 mb-4 mb-lg-0 footer-Image ">
-              <p className="text-white Download" style={{ fontSize: "15px" }}>
-                Download the App
-              </p>
-            </div>
-            <div className="col-lg-9 col-md-12">
-              {secondCol && secondCol.col_links.length !== 0 && (
-                <div className="footer-widget footer-menu mb-4">
-                  <div className="row">
-                    {secondCol.col_links.map((item, i) => (
-                      <div
-                        key={i}
-                        className="col-lg-3 col-md-6 text-white"
-                        style={{ fontSize: "15px" }}
-                      >
-                        <div className="footer-copyright footer-image">
-                          <Link href={item.link}>{item.title}</Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="row align-items-center  ">
-            <div className="col-lg-3 col-md-12 mb-4 mb-lg-0 footer-image">
-              <img
-                src={
-                  "/img/download-image/png-transparent-eco-surv-app-store-apple-itunes-store-thumbnail-removebg-preview.png"
-                }
-                alt="App Store"
-                width={150}
-              />{" "}
-              <img
-                src={
-                  "/img/download-image/png-transparent-google-play-computer-icons-android-google-text-label-logo-removebg-preview.png"
-                }
-                alt="Google Play"
-                width={150}
-              />
-            </div>
-            <div className="col-lg-6 col-md-12">
-              <div className="footer-copyright">
-                <div
-                  className="text-white mb-0 footer-image"
-                  style={{
-                    fontSize: "15px",
-                    display: "flex",
-                    justifyContent: "center",
-                    flexDirection:"column",
-                    alignItems:"center"
-                  }}
-                >
-      <p style={{marginBottom:"0px"}}>
+       <div className="container">
+  {secondCol && secondCol.col_links.length !== 0 && (
+    <div className="footer-widget footer-menu mb-4">
+      <div className="row">
+        <div className="col-12">
+          <div className="d-flex flex-wrap align-items-center justify-content-between text-white" style={{ fontSize: "15px" }}>
+            
+            {/* Download button */}
+            <p className="mb-0 me-3">Download the App</p>
 
-                  {websiteData?.footer?.about_us}
-      </p>
-        <p>
-          
-                   {websiteData?.footer?.copyright}
-          </p> 
-                </div>
-              </div>
-            </div>
+            {/* Dynamic footer links */}
+            {secondCol.col_links.map((item, i) => (
+              <Link
+                key={i}
+                href={item.link}
+                className="text-white text-decoration-none me-3"
+              >
+                {item.title}
+              </Link>
+            ))}
+
           </div>
         </div>
       </div>
+    </div>
+  )}
+</div>
+{/* Second row */}
+<div className="row justify-content-center text-center mt-4">
+  {/* App Store + Google Play */}
+  <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
+    <img
+      src="/img/download-image/png-transparent-eco-surv-app-store-apple-itunes-store-thumbnail-removebg-preview.png"
+      alt="App Store"
+      width={150}
+      className="me-2"
+    />
+    <img
+      src="/img/download-image/png-transparent-google-play-computer-icons-android-google-text-label-logo-removebg-preview.png"
+      alt="Google Play"
+      width={150}
+    />
+  </div>
+
+  {/* About us + Copyright */}
+  <div className="col-lg-6 col-md-12">
+    <div className="text-white" style={{ fontSize: "15px" }}>
+      <p className="mb-1">{websiteData?.footer?.about_us}</p>
+      <p className="mb-0">{websiteData?.footer?.copyright}</p>
+    </div>
+  </div>
+</div>
+</div>
+
+      
     </footer>
   );
 };
