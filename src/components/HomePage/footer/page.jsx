@@ -114,17 +114,21 @@ const Footer = () => {
 <div className="row justify-content-center text-center mt-4">
   {/* App Store + Google Play */}
   <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
+    <Link href="https://apps.apple.com/us/app/indoatlantic/id6749743789">
     <img
       src="/img/download-image/png-transparent-eco-surv-app-store-apple-itunes-store-thumbnail-removebg-preview.png"
       alt="App Store"
       width={150}
       className="me-2"
-    />
+      />
+      </Link>
+      <Link href="https://play.google.com/store/apps/details?id=com.app.indoatlantic">
     <img
       src="/img/download-image/png-transparent-google-play-computer-icons-android-google-text-label-logo-removebg-preview.png"
       alt="Google Play"
       width={150}
-    />
+      />
+      </Link>
   </div>
 
   {/* About us + Copyright */}
