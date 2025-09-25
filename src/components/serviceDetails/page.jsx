@@ -270,24 +270,27 @@ const ServiceDetails = ({ data, slug }) => {
 
       {/*Galler Slider Section*/}
       {data && data.banner_image !== "" ? (
-  <div className="bannergallery-section mt-lg-5 text-center">
-    <img
-      src={`${process.env.NEXT_PUBLIC_BASE_URL + data.banner_image}`}
-      alt="Service Banner"
-      className="service-banner-image img-fluid rounded shadow"
-    />
-  </div>
-) : (
-  <div className="bannergallery-section mt-lg-5">
-    <div className="d-flex justify-content-center align-items-center  text-white p-5 rounded "
-         style={{ minHeight: "300px" }}>
-      <h1 className="display-4 fw-bold text-uppercase">
-        {data.name}
-      </h1>
-    </div>
-  </div>
-)}
-
+        <div className="bannergallery-section mt-lg-5 ">
+          {/* <Rooms /> */}
+          <img
+            src={`${process.env.NEXT_PUBLIC_BASE_URL + data.banner_image}`}
+            alt="Service Banner"
+            className="service-banner-image"
+          />
+        </div>
+      ) : (
+        <div className="bannergallery-section mt-lg-5 ">
+          {/* <Rooms /> */}
+          <img
+            src={`${
+              process.env.NEXT_PUBLIC_BASE_URL +
+              data.business_category.banner_image
+            }`}
+            alt="Service Banner"
+            className="service-banner-image"
+          />
+        </div>
+      )}
       {/* {showFancyBox && <PhotoAlbum photos={imagess} layout="rows" />} */}
 
       <section className="details-description">

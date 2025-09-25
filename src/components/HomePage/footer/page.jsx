@@ -87,11 +87,11 @@ const Footer = () => {
   {secondCol && secondCol.col_links.length !== 0 && (
     <div className="footer-widget footer-menu mb-4">
       <div className="row">
-        <div className="col-12">
+        <div className="lg-col-12 md-col-6">
           <div className="d-flex flex-wrap align-items-center justify-content-between text-white" style={{ fontSize: "15px" }}>
             
             {/* Download button */}
-            <p className="mb-0 me-3">Download the App</p>
+            {/* <p className="mb-0 me-3">Download the App</p> */}
 
             {/* Dynamic footer links */}
             {secondCol.col_links.map((item, i) => (
