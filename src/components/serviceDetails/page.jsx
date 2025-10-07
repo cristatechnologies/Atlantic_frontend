@@ -714,7 +714,9 @@ const ServiceDetails = ({ data, slug }) => {
 
                    
                   </div>
- {data.working_hours && (() => {
+                  <div className="mb-4"> 
+                  
+                    {data.working_hours && (() => {
                     try {
                       const workingHours = typeof data.working_hours === 'string' 
                         ? JSON.parse(data.working_hours) 
@@ -748,6 +750,7 @@ const ServiceDetails = ({ data, slug }) => {
                       return null;
                     }
                   })()}
+                  </div>
                   <div className="card mb-0">
                     <h4>
                       <i className="feather-phone-call" /> Contact Business
