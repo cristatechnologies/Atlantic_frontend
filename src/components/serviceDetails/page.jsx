@@ -711,8 +711,43 @@ const ServiceDetails = ({ data, slug }) => {
                         )}
                       </ul>
                     </div>
-                  </div>
 
+                   
+                  </div>
+ {data.working_hours && (() => {
+                    try {
+                      const workingHours = typeof data.working_hours === 'string' 
+                        ? JSON.parse(data.working_hours) 
+                        : data.working_hours;
+                      
+                      return (
+                        <div className="card mb-0">
+                          <h4>
+                            <i className="feather-clock" /> Working Hours
+                          </h4>
+                          <div className="working-hours-content">
+                            <ul className="working-hours-list">
+                              {Object.entries(workingHours).map(([day, hours]) => (
+                                <li key={day} className="d-flex justify-content-between align-items-center">
+                                  <span className="day-name">{day.charAt(0).toUpperCase() + day.slice(1)}</span>
+                                  <span className="hours-time">
+                                    {!hours.active || hours.start === '' || hours.end === '' ? (
+                                      <span className="text-muted">Closed</span>
+                                    ) : (
+                                      <span>{hours.start} - {hours.end}</span>
+                                    )}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      );
+                    } catch (error) {
+                      console.error('Error parsing working hours:', error);
+                      return null;
+                    }
+                  })()}
                   <div className="card mb-0">
                     <h4>
                       <i className="feather-phone-call" /> Contact Business

@@ -134,7 +134,21 @@ const BusinessProfileComponent = () => {
   const router = useRouter();
   const [profileData, setProfileData] = useState(null);
   const [countryDropdown, setCountryDropdown] = useState([]);
-  const [stateDropdown, setStateDropdown] = useState([]);
+  const [stateDropdown, setStateDropdown] = useState([
+    {"id":36,"name":"Alberta"},
+    {"id":37,"name":"British Columbia"},
+    {"id":38,"name":"Manitoba"},
+    {"id":39,"name":"New Brunswick"},
+    {"id":40,"name":"Newfoundland and Labrador"},
+    {"id":41,"name":"Northwest Territories"},
+    {"id":42,"name":"Nova Scotia"},
+    {"id":43,"name":"Nunavut"},
+    {"id":44,"name":"Ontario"},
+    {"id":45,"name":"Prince Edward Island"},
+    {"id":46,"name":"Quebec"},
+    {"id":47,"name":"Saskatchewan"},
+    {"id":48,"name":"Yukon"}
+  ]);
   const [cityDropdown, setCityDropdown] = useState([]);
   const formRef = useRef(null);
   const [imagePreview, setImagePreview] = useState("/img/profile.jpg");
@@ -374,14 +388,9 @@ const [workingHours, setWorkingHours] = useState(null);
   };
 
   const getState = (countryName) => {
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/user/state-by-country/?name=${countryName}`
-      )
-      .then((res) => {
-        setStateDropdown(res.data?.states || []);
-      })
-      .catch((err) => console.log(err));
+    // Since we're using static Canadian provinces, no API call needed
+    // The stateDropdown is already initialized with static data
+    console.log('Using static provinces for:', countryName);
   };
 
   const getCity = (stateName) => {
