@@ -13,6 +13,121 @@ import Image from "next/image";
 
 
 
+const WorkingHoursInput = ({ workingHours, onChange }) => {
+  const days = [
+    { key: "monday", label: "Monday" },
+    { key: "tuesday", label: "Tuesday" },
+    { key: "wednesday", label: "Wednesday" },
+    { key: "thursday", label: "Thursday" },
+    { key: "friday", label: "Friday" },
+    { key: "saturday", label: "Saturday" },
+    { key: "sunday", label: "Sunday" },
+  ];
+
+  const defaultHours = {
+    monday: { active: true, start: "09:00", end: "17:00" },
+    tuesday: { active: true, start: "09:00", end: "17:00" },
+    wednesday: { active: true, start: "09:00", end: "17:00" },
+    thursday: { active: true, start: "09:00", end: "17:00" },
+    friday: { active: true, start: "09:00", end: "17:00" },
+    saturday: { active: false, start: "", end: "" },
+    sunday: { active: false, start: "", end: "" },
+  };
+
+  const [hours, setHours] = useState(workingHours || defaultHours);
+
+  useEffect(() => {
+    if (workingHours) {
+      setHours(workingHours);
+    }
+  }, [workingHours]);
+
+  const handleDayChange = (day, field, value) => {
+    const updatedHours = {
+      ...hours,
+      [day]: {
+        ...hours[day],
+        [field]: value,
+      },
+    };
+    setHours(updatedHours);
+    onChange(updatedHours);
+  };
+
+  const toggleDayActive = (day) => {
+    const updatedHours = {
+      ...hours,
+      [day]: {
+        ...hours[day],
+        active: !hours[day].active,
+        start: !hours[day].active ? "09:00" : "",
+        end: !hours[day].active ? "17:00" : "",
+      },
+    };
+    setHours(updatedHours);
+    onChange(updatedHours);
+  };
+
+  return (
+    <div className="working-hours-container">
+      <label className="col-form-label mb-3">Business Working Hours</label>
+      <div className="working-hours-list">
+        {days.map((day) => (
+          <div
+            key={day.key}
+            className="working-day-row mb-3 p-3 border rounded"
+          >
+            <div className="row align-items-center">
+              <div className="col-md-3">
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    checked={hours[day.key]?.active || false}
+                    onChange={() => toggleDayActive(day.key)}
+                    id={`active-${day.key}`}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`active-${day.key}`}
+                  >
+                    {day.label}
+                  </label>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <label>Start Time</label>
+                <input
+                  type="time"
+                  className="form-control"
+                  value={hours[day.key]?.start || ""}
+                  onChange={(e) =>
+                    handleDayChange(day.key, "start", e.target.value)
+                  }
+                  disabled={!hours[day.key]?.active}
+                />
+              </div>
+              <div className="col-md-4">
+                <label>End Time</label>
+                <input
+                  type="time"
+                  className="form-control"
+                  value={hours[day.key]?.end || ""}
+                  onChange={(e) =>
+                    handleDayChange(day.key, "end", e.target.value)
+                  }
+                  disabled={!hours[day.key]?.active}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
 const BusinessProfileComponent = () => {
   const websiteData = useSelector((state) => state.websiteSetup.data);
 
@@ -35,7 +150,15 @@ const BusinessProfileComponent = () => {
 const [customCityName, setCustomCityName] = useState("");
 const [isCityCustom, setIsCityCustom] = useState(false);
   const [tags, setTags] = useState([]);
+const [workingHours, setWorkingHours] = useState(null);
 
+
+
+
+
+  const handleWorkingHoursChange = (hours) => {
+    setWorkingHours(hours);
+  };
   const handleTagChange = (newTags) => {
     console.log("Type of newTags:", typeof newTags);
     console.log(
@@ -71,6 +194,20 @@ const [isCityCustom, setIsCityCustom] = useState(false);
       setSelectedCountry("Canada");
       setSelectedState(profileData.state_id);
       setSelectedCity(profileData.city_id);
+        if (profileData.working_hours) {
+          try {
+            // If it's already an object, use it directly
+            if (typeof profileData.working_hours === "object") {
+              setWorkingHours(profileData.working_hours);
+            } else {
+              // If it's a string, parse it as JSON
+              setWorkingHours(JSON.parse(profileData.working_hours));
+            }
+          } catch (error) {
+            console.error("Error parsing working hours:", error);
+            setWorkingHours(null);
+          }
+        }
     }
   }, [profileData]);
 
@@ -116,6 +253,18 @@ const [isCityCustom, setIsCityCustom] = useState(false);
             : "/img/banner-default-old.jpg"
         );
 
+           if (businessData.working_hours) {
+             try {
+               if (typeof businessData.working_hours === "object") {
+                 setWorkingHours(businessData.working_hours);
+               } else {
+                 setWorkingHours(JSON.parse(businessData.working_hours));
+               }
+             } catch (error) {
+               console.error("Error parsing working hours:", error);
+             }
+           }
+
         // Initialize productTags from the auth data
         if (businessData.products) {
           setProductTags(
@@ -141,7 +290,9 @@ const [isCityCustom, setIsCityCustom] = useState(false);
     const formData = new FormData(formRef.current);
 
     formData.append("products", productTags.join(","));
-
+  if (workingHours) {
+    formData.append("working_hours", JSON.stringify(workingHours));
+  } 
 
      if (selectedCity) {
        formData.set("city_id", selectedCity);
@@ -563,7 +714,9 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                         </div>
                         {/* products */}
                         <div className="col-md-6 form-group">
-                          <label className="col-form-label">Products/Services</label>
+                          <label className="col-form-label">
+                            Products/Services
+                          </label>
                           <div className="custom-tags-input">
                             <TagsInput
                               value={productTags}
@@ -751,6 +904,15 @@ const [isCityCustom, setIsCityCustom] = useState(false);
                               className="form-control"
                               name="website"
                               defaultValue={profileData?.website || ""}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="row mt-4">
+                          <div className="col-12">
+                            <WorkingHoursInput
+                              workingHours={workingHours}
+                              onChange={handleWorkingHoursChange}
                             />
                           </div>
                         </div>
