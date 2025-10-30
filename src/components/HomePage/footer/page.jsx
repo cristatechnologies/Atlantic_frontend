@@ -6,7 +6,7 @@ import {
   Amexpay,
   Applepay,
   CallCallingSvg,
-  FooterLogo,  
+  FooterLogo,
   Gpay,
   Master,
   Phone,
@@ -83,65 +83,73 @@ const Footer = () => {
         data-aos="fade-up"
         style={{ marginTop: "20px", paddingBottom: "20px" }}
       >
-       <div className="container">
-  {secondCol && secondCol.col_links.length !== 0 && (
-    <div className="footer-widget footer-menu mb-4">
-      <div className="row">
-        <div className="lg-col-12 md-col-6">
-          <div className="d-flex flex-wrap align-items-center justify-content-between text-white" style={{ fontSize: "15px" }}>
-            
-            {/* Download button */}
-            {/* <p className="mb-0 me-3">Download the App</p> */}
+        <div className="container">
 
-            {/* Dynamic footer links */}
-            {secondCol.col_links.map((item, i) => (
-              <Link
-                key={i}
-                href={item.link}
-                className="text-white text-decoration-none me-3"
-              >
-                {item.title}
+          <div>
+            {secondCol && secondCol.col_links.length !== 0 && (
+              <div className="footer-widget footer-menu mb-4">
+                <div className="row">
+                  <div className="lg-col-12 md-col-6">
+                    <div className="d-flex flex-wrap align-items-center justify-content-between text-white" style={{ fontSize: "15px" }}>
+
+                      {/* Download button */}
+                      {/* <p className="mb-0 me-3">Download the App</p> */}
+
+                      {/* Dynamic footer links */}
+                      {secondCol.col_links.map((item, i) => (
+                        <Link
+                          key={i}
+                          href={item.link}
+                          className="text-white text-decoration-none me-3"
+                        >
+                          {item.title}
+                        </Link>
+                      ))}
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="row text-center mt-4 mb-2">
+            {/* App Store + Google Play */}
+            <div className="col-lg-12 col-md-12 mb-4 d-flex align-items-lg-start justify-content-lg-start justify-content-center ms-lg-1 px-1 mb-lg-0">
+              <Link href="https://apps.apple.com/us/app/indoatlantic/id6749743789">
+                <img
+                  src="/img/download-image/png-transparent-eco-surv-app-store-apple-itunes-store-thumbnail-removebg-preview.png"
+                  alt="App Store"
+                  width={150}
+                  className="me-2"
+                />
               </Link>
-            ))}
+              <Link href="https://play.google.com/store/apps/details?id=com.app.indoatlantic">
+                <img
+                  src="/img/download-image/png-transparent-google-play-computer-icons-android-google-text-label-logo-removebg-preview.png"
+                  alt="Google Play"
+                  width={150}
+                />
+              </Link>
+            </div>
 
           </div>
+
+          <div className="row text-center">
+            <div className="col-lg-12 col-md-12">
+              <div className="text-white" style={{ fontSize: "15px" }}>
+                <p className="mb-1">{websiteData?.footer?.about_us}</p>
+                <p className="mb-0">{websiteData?.footer?.copyright}</p>
+              </div>
+            </div>
+          </div>
+
         </div>
+        
+
       </div>
-    </div>
-  )}
-</div>
-{/* Second row */}
-<div className="row justify-content-center text-center mt-4">
-  {/* App Store + Google Play */}
-  <div className="col-lg-3 col-md-12 mb-4 mb-lg-0">
-    <Link href="https://apps.apple.com/us/app/indoatlantic/id6749743789">
-    <img
-      src="/img/download-image/png-transparent-eco-surv-app-store-apple-itunes-store-thumbnail-removebg-preview.png"
-      alt="App Store"
-      width={150}
-      className="me-2"
-      />
-      </Link>
-      <Link href="https://play.google.com/store/apps/details?id=com.app.indoatlantic">
-    <img
-      src="/img/download-image/png-transparent-google-play-computer-icons-android-google-text-label-logo-removebg-preview.png"
-      alt="Google Play"
-      width={150}
-      />
-      </Link>
-  </div>
 
-  {/* About us + Copyright */}
-  <div className="col-lg-6 col-md-12">
-    <div className="text-white" style={{ fontSize: "15px" }}>
-      <p className="mb-1">{websiteData?.footer?.about_us}</p>
-      <p className="mb-0">{websiteData?.footer?.copyright}</p>
-    </div>
-  </div>
-</div>
-</div>
 
-      
     </footer>
   );
 };
