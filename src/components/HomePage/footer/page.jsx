@@ -6,7 +6,7 @@ import {
   Amexpay,
   Applepay,
   CallCallingSvg,
-  FooterLogo,
+  FooterLogo,  
   Gpay,
   Master,
   Phone,
